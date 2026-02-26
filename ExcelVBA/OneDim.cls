@@ -2,15 +2,15 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "Araya1"
+Attribute VB_Name = "OneDim"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Private OneDimArr As Variant  '一次元配列本体
-Private mLoaded As Boolean    'OneDimArrが正常に読み込まれたフラグ
+Private mOneDim As Variant  '一次元配列本体
+Private mLoaded As Boolean    'mOneDimが正常に読み込まれたフラグ
 
 '----------------------------
 ' 読み込み系
@@ -21,10 +21,10 @@ Public Sub Read_ColRange(ByVal rng As Range)
     If rng.Cells.Count = 1 Then
         Dim tmp1(1 To 1) As Variant
         tmp1(1) = rng.value
-        OneDimArr = tmp1
+        mOneDim = tmp1
     Else
         ' 縦Range → 1次元配列
-        OneDimArr = Application.index(rng.value, 0, 1)
+        mOneDim = Application.index(rng.value, 0, 1)
     End If
     
     mLoaded = True
@@ -36,10 +36,10 @@ Public Sub Read_RowRange(ByVal rng As Range)
     If rng.Cells.Count = 1 Then
         Dim tmp1(1 To 1) As Variant
         tmp1(1) = rng.value
-        OneDimArr = tmp1
+        mOneDim = tmp1
     Else
         ' 横Range → 1次元配列
-        OneDimArr = Application.index(rng.value, 1, 0)
+        mOneDim = Application.index(rng.value, 1, 0)
     End If
     
     mLoaded = True
@@ -62,7 +62,7 @@ Public Sub Read_Array(ByVal arr As Variant)
     Err.Clear
     On Error GoTo 0
     
-    OneDimArr = arr
+    mOneDim = arr
     mLoaded = True
 End Sub
 
@@ -75,39 +75,39 @@ End Property
 
 Public Property Get Data() As Variant
     EnsureLoaded
-    Data = OneDimArr
+    Data = mOneDim
 End Property
 
 Public Property Get Count() As Long
     EnsureLoaded
-    Count = UBound(OneDimArr) - LBound(OneDimArr) + 1
+    Count = UBound(mOneDim) - LBound(mOneDim) + 1
 End Property
 
 Public Property Get Item(ByVal index As Long) As Variant
     EnsureLoaded
-    If index < LBound(OneDimArr) Or index > UBound(OneDimArr) Then
+    If index < LBound(mOneDim) Or index > UBound(mOneDim) Then
         Err.Raise vbObjectError + 1005, "Araya1.Item", "index が範囲外です。"
     End If
-    Item = OneDimArr(index)
+    Item = mOneDim(index)
 End Property
 
 Public Function TypeNames() As Variant
     EnsureLoaded
     
     Dim lb As Long, ub As Long, i As Long
-    lb = LBound(OneDimArr)
-    ub = UBound(OneDimArr)
+    lb = LBound(mOneDim)
+    ub = UBound(mOneDim)
     
     Dim res() As Variant
     ReDim res(lb To ub)
     
     For i = lb To ub
-        If IsError(OneDimArr(i)) Then
+        If IsError(mOneDim(i)) Then
             res(i) = "Error"
-        ElseIf IsEmpty(OneDimArr(i)) Then
+        ElseIf IsEmpty(mOneDim(i)) Then
             res(i) = "Empty"
         Else
-            res(i) = TypeName(OneDimArr(i))  ' "Double" "String" "Date" など
+            res(i) = TypeName(mOneDim(i))  ' "Double" "String" "Date" など
         End If
     Next
     
@@ -123,22 +123,22 @@ Public Sub CastToDoubleSafe(Optional ByVal emptyAsZero As Boolean = False, _
     EnsureLoaded
     
     Dim i As Long
-    For i = LBound(OneDimArr) To UBound(OneDimArr)
+    For i = LBound(mOneDim) To UBound(mOneDim)
         
-        If IsError(OneDimArr(i)) Or IsEmpty(OneDimArr(i)) Then
-            OneDimArr(i) = IIf(emptyAsZero, 0#, Empty)
+        If IsError(mOneDim(i)) Or IsEmpty(mOneDim(i)) Then
+            mOneDim(i) = IIf(emptyAsZero, 0#, Empty)
         
-        ElseIf VarType(OneDimArr(i)) = vbString And Trim$(CStr(OneDimArr(i))) = "" Then
-            OneDimArr(i) = IIf(emptyAsZero, 0#, Empty)
+        ElseIf VarType(mOneDim(i)) = vbString And Trim$(CStr(mOneDim(i))) = "" Then
+            mOneDim(i) = IIf(emptyAsZero, 0#, Empty)
         
-        ElseIf IsDate(OneDimArr(i)) And treatDateAsInvalid Then
-            OneDimArr(i) = IIf(invalidAsZero, 0#, Empty)
+        ElseIf IsDate(mOneDim(i)) And treatDateAsInvalid Then
+            mOneDim(i) = IIf(invalidAsZero, 0#, Empty)
         
-        ElseIf IsNumeric(OneDimArr(i)) Then
-            OneDimArr(i) = CDbl(OneDimArr(i))
+        ElseIf IsNumeric(mOneDim(i)) Then
+            mOneDim(i) = CDbl(mOneDim(i))
         
         Else
-            OneDimArr(i) = IIf(invalidAsZero, 0#, Empty)
+            mOneDim(i) = IIf(invalidAsZero, 0#, Empty)
         End If
         
     Next i
@@ -149,20 +149,20 @@ Public Sub CastToStringSafe(Optional ByVal emptyAsBlank As Boolean = True, _
     EnsureLoaded
     
     Dim i As Long
-    For i = LBound(OneDimArr) To UBound(OneDimArr)
+    For i = LBound(mOneDim) To UBound(mOneDim)
         
-        If IsError(OneDimArr(i)) Then
+        If IsError(mOneDim(i)) Then
             If errorAsBlank Then
-                OneDimArr(i) = ""
+                mOneDim(i) = ""
             Else
                 Err.Raise vbObjectError + 1201, "Araya1.CastToStringSafe", "Error値が含まれています。"
             End If
         
-        ElseIf IsEmpty(OneDimArr(i)) Then
-            OneDimArr(i) = IIf(emptyAsBlank, "", Empty)
+        ElseIf IsEmpty(mOneDim(i)) Then
+            mOneDim(i) = IIf(emptyAsBlank, "", Empty)
         
         Else
-            OneDimArr(i) = CStr(OneDimArr(i))
+            mOneDim(i) = CStr(mOneDim(i))
         End If
         
     Next i
@@ -172,20 +172,20 @@ Public Sub CastToDateSafe(Optional ByVal invalidAsEmpty As Boolean = True)
     EnsureLoaded
     
     Dim i As Long
-    For i = LBound(OneDimArr) To UBound(OneDimArr)
+    For i = LBound(mOneDim) To UBound(mOneDim)
         
-        If IsError(OneDimArr(i)) Or IsEmpty(OneDimArr(i)) Then
-            OneDimArr(i) = Empty
+        If IsError(mOneDim(i)) Or IsEmpty(mOneDim(i)) Then
+            mOneDim(i) = Empty
         
-        ElseIf VarType(OneDimArr(i)) = vbString And Trim$(CStr(OneDimArr(i))) = "" Then
-            OneDimArr(i) = Empty
+        ElseIf VarType(mOneDim(i)) = vbString And Trim$(CStr(mOneDim(i))) = "" Then
+            mOneDim(i) = Empty
         
-        ElseIf IsDate(OneDimArr(i)) Then
-            OneDimArr(i) = CDate(OneDimArr(i))
+        ElseIf IsDate(mOneDim(i)) Then
+            mOneDim(i) = CDate(mOneDim(i))
         
         Else
             If invalidAsEmpty Then
-                OneDimArr(i) = Empty
+                mOneDim(i) = Empty
             Else
                 Err.Raise vbObjectError + 1202, "Araya1.CastToDateSafe", "日付に変換できない値が含まれています。"
             End If
@@ -202,7 +202,7 @@ Public Sub ToRangeVertical(ByVal topLeft As Range)
     If topLeft Is Nothing Then Err.Raise vbObjectError + 1006, "Araya1.ToRangeVertical", "topLeft が Nothing です。"
     
     Dim n As Long: n = Me.Count
-    topLeft.Resize(n, 1).value = Application.WorksheetFunction.Transpose(OneDimArr)
+    topLeft.Resize(n, 1).value = Application.WorksheetFunction.Transpose(mOneDim)
 End Sub
 
 Public Sub ToRangeHorizontal(ByVal topLeft As Range)
@@ -210,11 +210,11 @@ Public Sub ToRangeHorizontal(ByVal topLeft As Range)
     If topLeft Is Nothing Then Err.Raise vbObjectError + 1007, "Araya1.ToRangeHorizontal", "topLeft が Nothing です。"
     
     Dim n As Long: n = Me.Count
-    topLeft.Resize(1, n).value = OneDimArr
+    topLeft.Resize(1, n).value = mOneDim
 End Sub
 
 Public Sub Clear()
-    OneDimArr = Empty
+    mOneDim = Empty
     mLoaded = False
 End Sub
 

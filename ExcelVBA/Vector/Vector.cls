@@ -9,21 +9,21 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Private mOneDim As Variant  'ˆêŸŒ³”z—ñ–{‘Ì
-Private mLoaded As Boolean    'mOneDim‚ª³í‚É“Ç‚İ‚Ü‚ê‚½ƒtƒ‰ƒO
+Private mOneDim As Variant  'ï¿½êŸï¿½ï¿½ï¿½zï¿½ï¿½{ï¿½ï¿½
+Private mLoaded As Boolean    'mOneDimï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É“Ç‚İï¿½ï¿½Ü‚ê‚½ï¿½tï¿½ï¿½ï¿½O
 
 '----------------------------
-' “Ç‚İ‚İŒn
+' ï¿½Ç‚İï¿½ï¿½İŒn
 '----------------------------
 Public Sub Read_ColRange(ByVal rng As Range)
-    If rng Is Nothing Then Err.Raise vbObjectError + 1001, "Araya1.Read_ColRange", "rng ‚ª Nothing ‚Å‚·B"
+    If rng Is Nothing Then Err.Raise vbObjectError + 1001, "Araya1.Read_ColRange", "rng ï¿½ï¿½ Nothing ï¿½Å‚ï¿½ï¿½B"
     
     If rng.Cells.Count = 1 Then
         Dim tmp1(1 To 1) As Variant
         tmp1(1) = rng.value
         mOneDim = tmp1
     Else
-        ' cRange ¨ 1ŸŒ³”z—ñ
+        ' ï¿½cRange ï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½
         mOneDim = Application.index(rng.value, 0, 1)
     End If
     
@@ -31,14 +31,14 @@ Public Sub Read_ColRange(ByVal rng As Range)
 End Sub
 
 Public Sub Read_RowRange(ByVal rng As Range)
-    If rng Is Nothing Then Err.Raise vbObjectError + 1002, "Araya1.Read_RowRange", "rng ‚ª Nothing ‚Å‚·B"
+    If rng Is Nothing Then Err.Raise vbObjectError + 1002, "Araya1.Read_RowRange", "rng ï¿½ï¿½ Nothing ï¿½Å‚ï¿½ï¿½B"
     
     If rng.Cells.Count = 1 Then
         Dim tmp1(1 To 1) As Variant
         tmp1(1) = rng.value
         mOneDim = tmp1
     Else
-        ' ‰¡Range ¨ 1ŸŒ³”z—ñ
+        ' ï¿½ï¿½Range ï¿½ï¿½ 1ï¿½ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½
         mOneDim = Application.index(rng.value, 1, 0)
     End If
     
@@ -47,17 +47,17 @@ End Sub
 
 Public Sub Read_Array(ByVal arr As Variant)
     If Not IsArray(arr) Then
-        Err.Raise vbObjectError + 1003, "Araya1.Read_Array", "”z—ñ‚Å‚Í‚ ‚è‚Ü‚¹‚ñB"
+        Err.Raise vbObjectError + 1003, "Araya1.Read_Array", "ï¿½zï¿½ï¿½Å‚Í‚ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
     End If
     
-    ' 1ŸŒ³‚©ƒ`ƒFƒbƒNi2ŸŒ³‚¾‚Æ UBound(arr,2) ‚ªæ‚ê‚Ä‚µ‚Ü‚¤j
+    ' 1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½Nï¿½i2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ UBound(arr,2) ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½j
     On Error Resume Next
     Dim t As Long
     t = UBound(arr, 2)
     If Err.Number = 0 Then
         Err.Clear
         On Error GoTo 0
-        Err.Raise vbObjectError + 1004, "Araya1.Read_Array", "2ŸŒ³”z—ñ‚Íó‚¯•t‚¯‚Ü‚¹‚ñi1ŸŒ³‚Ì‚İjB"
+        Err.Raise vbObjectError + 1004, "Araya1.Read_Array", "2ï¿½ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½Íó‚¯•tï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½i1ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚İjï¿½B"
     End If
     Err.Clear
     On Error GoTo 0
@@ -67,7 +67,7 @@ Public Sub Read_Array(ByVal arr As Variant)
 End Sub
 
 '----------------------------
-' QÆŒni‚¨‚·‚·‚ßj
+' ï¿½Qï¿½ÆŒnï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ßj
 '----------------------------
 Public Property Get IsLoaded() As Boolean
     IsLoaded = mLoaded
@@ -86,7 +86,7 @@ End Property
 Public Property Get Item(ByVal index As Long) As Variant
     EnsureLoaded
     If index < LBound(mOneDim) Or index > UBound(mOneDim) Then
-        Err.Raise vbObjectError + 1005, "Araya1.Item", "index ‚ª”ÍˆÍŠO‚Å‚·B"
+        Err.Raise vbObjectError + 1005, "Araya1.Item", "index ï¿½ï¿½ï¿½ÍˆÍŠOï¿½Å‚ï¿½ï¿½B"
     End If
     Item = mOneDim(index)
 End Property
@@ -107,7 +107,7 @@ Public Function TypeNames() As Variant
         ElseIf IsEmpty(mOneDim(i)) Then
             res(i) = "Empty"
         Else
-            res(i) = TypeName(mOneDim(i))  ' "Double" "String" "Date" ‚È‚Ç
+            res(i) = TypeName(mOneDim(i))  ' "Double" "String" "Date" ï¿½È‚ï¿½
         End If
     Next
     
@@ -115,7 +115,7 @@ Public Function TypeNames() As Variant
 End Function
 
 '----------------------------
-' Œ^“ˆêiTransformj
+' ï¿½^ï¿½ï¿½ï¿½ï¿½iTransformï¿½j
 '----------------------------
 Public Sub CastToDoubleSafe(Optional ByVal emptyAsZero As Boolean = False, _
                             Optional ByVal invalidAsZero As Boolean = False, _
@@ -155,7 +155,7 @@ Public Sub CastToStringSafe(Optional ByVal emptyAsBlank As Boolean = True, _
             If errorAsBlank Then
                 mOneDim(i) = ""
             Else
-                Err.Raise vbObjectError + 1201, "Araya1.CastToStringSafe", "Error’l‚ªŠÜ‚Ü‚ê‚Ä‚¢‚Ü‚·B"
+                Err.Raise vbObjectError + 1201, "Araya1.CastToStringSafe", "Errorï¿½lï¿½ï¿½ï¿½Ü‚Ü‚ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½B"
             End If
         
         ElseIf IsEmpty(mOneDim(i)) Then
@@ -187,7 +187,7 @@ Public Sub CastToDateSafe(Optional ByVal invalidAsEmpty As Boolean = True)
             If invalidAsEmpty Then
                 mOneDim(i) = Empty
             Else
-                Err.Raise vbObjectError + 1202, "Araya1.CastToDateSafe", "“ú•t‚É•ÏŠ·‚Å‚«‚È‚¢’l‚ªŠÜ‚Ü‚ê‚Ä‚¢‚Ü‚·B"
+                Err.Raise vbObjectError + 1202, "Araya1.CastToDateSafe", "ï¿½ï¿½ï¿½tï¿½É•ÏŠï¿½ï¿½Å‚ï¿½ï¿½È‚ï¿½ï¿½lï¿½ï¿½ï¿½Ü‚Ü‚ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½B"
             End If
         End If
         
@@ -195,11 +195,11 @@ Public Sub CastToDateSafe(Optional ByVal invalidAsEmpty As Boolean = True)
 End Sub
 
 '----------------------------
-' o—ÍŒn
+' ï¿½oï¿½ÍŒn
 '----------------------------
 Public Sub ToRangeVertical(ByVal topLeft As Range)
     EnsureLoaded
-    If topLeft Is Nothing Then Err.Raise vbObjectError + 1006, "Araya1.ToRangeVertical", "topLeft ‚ª Nothing ‚Å‚·B"
+    If topLeft Is Nothing Then Err.Raise vbObjectError + 1006, "Araya1.ToRangeVertical", "topLeft ï¿½ï¿½ Nothing ï¿½Å‚ï¿½ï¿½B"
     
     Dim n As Long: n = Me.Count
     topLeft.Resize(n, 1).value = Application.WorksheetFunction.Transpose(mOneDim)
@@ -207,7 +207,7 @@ End Sub
 
 Public Sub ToRangeHorizontal(ByVal topLeft As Range)
     EnsureLoaded
-    If topLeft Is Nothing Then Err.Raise vbObjectError + 1007, "Araya1.ToRangeHorizontal", "topLeft ‚ª Nothing ‚Å‚·B"
+    If topLeft Is Nothing Then Err.Raise vbObjectError + 1007, "Araya1.ToRangeHorizontal", "topLeft ï¿½ï¿½ Nothing ï¿½Å‚ï¿½ï¿½B"
     
     Dim n As Long: n = Me.Count
     topLeft.Resize(1, n).value = mOneDim
@@ -219,10 +219,10 @@ Public Sub Clear()
 End Sub
 
 '----------------------------
-' “à•”
+' ï¿½ï¿½ï¿½ï¿½
 '----------------------------
 Private Sub EnsureLoaded()
     If Not mLoaded Then
-        Err.Raise vbObjectError + 1099, "Araya1", "ƒf[ƒ^‚ª–¢“Ç‚İ‚İ‚Å‚·BRead_ColRange / Read_RowRange / Read_Array ‚ğæ‚ÉŒÄ‚ñ‚Å‚­‚¾‚³‚¢B"
+        Err.Raise vbObjectError + 1099, "Araya1", "ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚İï¿½ï¿½İ‚Å‚ï¿½ï¿½BRead_ColRange / Read_RowRange / Read_Array ï¿½ï¿½ï¿½ÉŒÄ‚ï¿½Å‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B"
     End If
 End Sub

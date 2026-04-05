@@ -40,7 +40,7 @@ Public Sub Read_ColRange(ByVal rng As Range)
 End Sub
 
 Public Sub Read_RowRange(ByVal rng As Range)
-    Ifガード系 Is Nothing Then Err.Raise vbObjectError + 1010, "Vector.Read_RowRange", "引数rngがNothingです。"
+    If rng Is Nothing Then Err.Raise vbObjectError + 1010, "Vector.Read_RowRange", "引数rngがNothingです。"
     
     If rng.Rows.Count <> 1 Then
         Err.Raise vbObjectError + 1012, "Vector.Read_RowRange", "1行のRangeのみ指定してください。"

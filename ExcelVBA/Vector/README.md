@@ -85,7 +85,7 @@ End Sub
       <td>型名配列を返す</td>
     </tr>
     <tr>
-      <td rowspan="6">条件</td>
+      <td rowspan="5">条件</td>
       <td><code>eq</code></td>
       <td>等値判定マスクを返す</td>
     </tr>
@@ -104,10 +104,6 @@ End Sub
     <tr>
       <td><code>is_empty</code></td>
       <td>欠損判定マスクを返す</td>
-    </tr>
-    <tr>
-      <td><code>eq</code> / <code>gt</code> など</td>
-      <td><code>Variant</code> のブール配列を返す</td>
     </tr>
     <tr>
       <td rowspan="5">加工</td>
@@ -131,7 +127,7 @@ End Sub
       <td>公開関数を各要素へ適用する</td>
     </tr>
     <tr>
-      <td rowspan="4">集計</td>
+      <td rowspan="3">集計</td>
       <td><code>unique</code></td>
       <td>重複なし配列を返す</td>
     </tr>
@@ -142,10 +138,6 @@ End Sub
     <tr>
       <td><code>mean</code></td>
       <td>平均を返す</td>
-    </tr>
-    <tr>
-      <td><code>sum</code> / <code>mean</code></td>
-      <td>数値型に揃えてから使うと安全</td>
     </tr>
     <tr>
       <td rowspan="3">出力</td>
@@ -163,15 +155,21 @@ End Sub
   </tbody>
 </table>
 
-条件系メソッドの補足:
+## 区分ごとの補足
+
+### 条件系メソッドの補足
 
 - `eq` `ne` `gt` `ge` `lt` `le` `is_empty` は、後続処理に渡しやすい `Variant` のブール配列を返します。
 - `Table.set_by_mask` や `Matrix.filter_rows` と組み合わせる前提で使うと効果的です。
 
-加工・集計系メソッドの補足:
+### 加工系メソッドの補足
 
 - 加工系メソッドは内部配列をその場で更新します。
+
+### 集計系メソッドの補足
+
 - `sum` や `mean` の前に `cast_to_double_safe` を通すと扱いやすくなります。
+- `unique` は最初に出現した値を残す仕様です。
 
 ## よく使うレシピ
 
@@ -187,7 +185,7 @@ vec.cast_to_double_safe emptyAsZero:=True, invalidAsZero:=True
 Debug.Print vec.sum
 ```
 
-### 特定の値に一致する行の条件マスクを作る
+### 条件マスクを作って別モジュールへ渡す
 
 ```vb
 Dim vec As New Vector
@@ -210,7 +208,9 @@ scoreVec.cast_to_double_safe emptyAsZero:=True, invalidAsZero:=True
 Debug.Print scoreVec.mean
 ```
 
-## 詳細仕様
+## 全メソッド解説
+
+### 読込系
 
 <details>
 <summary><code>read_col_range(ByVal rng As Range)</code></summary>
@@ -318,6 +318,37 @@ vec.read_array arr
 
 </details>
 
+### 参照系
+
+<details>
+<summary><code>is_loaded() As Boolean</code></summary>
+
+読込済みかを返します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | なし |
+| 戻り値 | `Boolean` |
+| 実行内容 | 読込済みなら `True`、未読込なら `False` を返す |
+| 代表ユースケース | 実行前チェック、デバッグ確認 |
+
+```vb
+Dim vec As New Vector
+
+Debug.Print vec.is_loaded
+vec.read_array Array(1, 2, 3)
+Debug.Print vec.is_loaded
+```
+
+出力イメージ:
+
+| 実行順 | 値 |
+| --- | --- |
+| 読込前 | `False` |
+| 読込後 | `True` |
+
+</details>
+
 <details>
 <summary><code>data() As Variant</code></summary>
 
@@ -348,6 +379,93 @@ values = vec.data
 | 2 | `30` |
 
 </details>
+
+<details>
+<summary><code>count() As Long</code></summary>
+
+要素数を返します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること |
+| 戻り値 | `Long` |
+| 実行内容 | 内部配列の要素数を返す |
+| 代表ユースケース | ループ回数の決定、件数確認 |
+
+```vb
+Dim vec As New Vector
+
+vec.read_array Array("A", "B", "C")
+Debug.Print vec.count
+```
+
+出力イメージ:
+
+| 項目 | 値 |
+| --- | --- |
+| `vec.count` | `3` |
+
+</details>
+
+<details>
+<summary><code>item(ByVal index As Long) As Variant</code></summary>
+
+指定要素を返します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること、`index` が範囲内であること |
+| 入力 | `index As Long` |
+| 戻り値 | 指定位置の `Variant` 値 |
+| 注意点 | 範囲外の添字はエラー |
+| 代表ユースケース | 特定位置の値確認 |
+
+```vb
+Dim vec As New Vector
+
+vec.read_array Array("A", "B", "C")
+Debug.Print vec.item(1)
+```
+
+出力イメージ:
+
+| 項目 | 値 |
+| --- | --- |
+| `vec.item(1)` | `"B"` |
+
+</details>
+
+<details>
+<summary><code>type_names() As Variant</code></summary>
+
+各要素の型名を返します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること |
+| 戻り値 | `Variant` の一次元配列 |
+| 実行内容 | 各要素に対応する `TypeName`、または `Error` / `Empty` を返す |
+| 代表ユースケース | 型混在データの調査 |
+
+```vb
+Dim vec As New Vector
+Dim result As Variant
+
+vec.read_array Array(10, "A", Empty)
+result = vec.type_names
+```
+
+出力イメージ:
+
+| 行 | 型名 |
+| --- | --- |
+| 1 | `Integer` または `Long` |
+| 2 | `String` |
+| 3 | `Empty` |
+
+</details>
+
+### 条件系
 
 <details>
 <summary><code>eq(ByVal matchValue As Variant) As Variant</code></summary>
@@ -385,6 +503,45 @@ mask = vec.eq("対象")
 | 1 | `True` |
 | 2 | `False` |
 | 3 | `True` |
+
+</details>
+
+<details>
+<summary><code>ne(ByVal matchValue As Variant) As Variant</code></summary>
+
+非等値判定マスクを返します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること |
+| 入力 | `matchValue As Variant` |
+| 戻り値 | `Variant` のブール配列 |
+| 注意点 | `Null` / `Error` / 比較不能値は `False` |
+| 代表ユースケース | 特定値以外の抽出条件作成 |
+
+入力イメージ:
+
+| 値 |
+| --- |
+| A |
+| B |
+| A |
+
+```vb
+Dim vec As New Vector
+Dim mask As Variant
+
+vec.read_array Array("A", "B", "A")
+mask = vec.ne("A")
+```
+
+出力イメージ:
+
+| 行 | 判定結果 |
+| --- | --- |
+| 1 | `False` |
+| 2 | `True` |
+| 3 | `False` |
 
 </details>
 
@@ -429,6 +586,123 @@ mask = vec.gt(100)
 </details>
 
 <details>
+<summary><code>ge(ByVal threshold As Variant) As Variant</code></summary>
+
+`>=` 判定マスクを返します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること |
+| 入力 | `threshold As Variant` |
+| 戻り値 | `Variant` のブール配列 |
+| 注意点 | 比較不能値は `False` |
+| 代表ユースケース | 下限値以上の抽出 |
+
+入力イメージ:
+
+| 値 |
+| --- |
+| 80 |
+| 100 |
+| 150 |
+
+```vb
+Dim vec As New Vector
+Dim mask As Variant
+
+vec.read_array Array(80, 100, 150)
+mask = vec.ge(100)
+```
+
+出力イメージ:
+
+| 行 | 判定結果 |
+| --- | --- |
+| 1 | `False` |
+| 2 | `True` |
+| 3 | `True` |
+
+</details>
+
+<details>
+<summary><code>lt(ByVal threshold As Variant) As Variant</code></summary>
+
+`<` 判定マスクを返します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること |
+| 入力 | `threshold As Variant` |
+| 戻り値 | `Variant` のブール配列 |
+| 注意点 | 比較不能値は `False` |
+| 代表ユースケース | 上限値未満の抽出 |
+
+入力イメージ:
+
+| 値 |
+| --- |
+| 80 |
+| 100 |
+| 150 |
+
+```vb
+Dim vec As New Vector
+Dim mask As Variant
+
+vec.read_array Array(80, 100, 150)
+mask = vec.lt(100)
+```
+
+出力イメージ:
+
+| 行 | 判定結果 |
+| --- | --- |
+| 1 | `True` |
+| 2 | `False` |
+| 3 | `False` |
+
+</details>
+
+<details>
+<summary><code>le(ByVal threshold As Variant) As Variant</code></summary>
+
+`<=` 判定マスクを返します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること |
+| 入力 | `threshold As Variant` |
+| 戻り値 | `Variant` のブール配列 |
+| 注意点 | 比較不能値は `False` |
+| 代表ユースケース | 上限値以下の抽出 |
+
+入力イメージ:
+
+| 値 |
+| --- |
+| 80 |
+| 100 |
+| 150 |
+
+```vb
+Dim vec As New Vector
+Dim mask As Variant
+
+vec.read_array Array(80, 100, 150)
+mask = vec.le(100)
+```
+
+出力イメージ:
+
+| 行 | 判定結果 |
+| --- | --- |
+| 1 | `True` |
+| 2 | `True` |
+| 3 | `False` |
+
+</details>
+
+<details>
 <summary><code>is_empty(Optional ByVal treatBlankStringAsEmpty As Boolean = True) As Variant</code></summary>
 
 欠損判定マスクを返します。
@@ -466,6 +740,8 @@ mask = vec.is_empty(True)
 | 3 | `True` |
 
 </details>
+
+### 加工系
 
 <details>
 <summary><code>cast_to_double_safe(Optional emptyAsZero As Boolean = False, Optional invalidAsZero As Boolean = False, Optional treatDateAsInvalid As Boolean = True)</code></summary>
@@ -507,6 +783,84 @@ vec.cast_to_double_safe emptyAsZero:=True, invalidAsZero:=True
 </details>
 
 <details>
+<summary><code>cast_to_string_safe(Optional emptyAsBlank As Boolean = True, Optional errorAsBlank As Boolean = True)</code></summary>
+
+要素を文字列へ変換します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること |
+| 入力 | `emptyAsBlank As Boolean` `errorAsBlank As Boolean` |
+| 出力 | 内部配列を上書き更新 |
+| 実行内容 | `CStr` を使って文字列化し、空やエラー値は設定に応じて処理する |
+| 注意点 | `errorAsBlank=False` でエラー値を含むとエラー |
+| 代表ユースケース | 表示用整形、文字列比較前の変換 |
+
+入力イメージ:
+
+| 値 |
+| --- |
+| 100 |
+| Empty |
+| `ABC` |
+
+```vb
+Dim vec As New Vector
+
+vec.read_array Array(100, Empty, "ABC")
+vec.cast_to_string_safe emptyAsBlank:=True, errorAsBlank:=True
+```
+
+実行後イメージ:
+
+| 行 | 変換後 |
+| --- | --- |
+| 1 | `"100"` |
+| 2 | `""` |
+| 3 | `"ABC"` |
+
+</details>
+
+<details>
+<summary><code>cast_to_date_safe(Optional ByVal invalidAsEmpty As Boolean = True)</code></summary>
+
+要素を日付へ変換します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること |
+| 入力 | `invalidAsEmpty As Boolean` |
+| 出力 | 内部配列を上書き更新 |
+| 実行内容 | `IsDate` 判定可能な値を `CDate` 変換する |
+| 注意点 | 日付化不能値は `Empty` またはエラー |
+| 代表ユースケース | 日付列の正規化 |
+
+入力イメージ:
+
+| 値 |
+| --- |
+| `2024/01/01` |
+| `abc` |
+| Empty |
+
+```vb
+Dim vec As New Vector
+
+vec.read_array Array("2024/01/01", "abc", Empty)
+vec.cast_to_date_safe True
+```
+
+実行後イメージ:
+
+| 行 | 変換後 |
+| --- | --- |
+| 1 | `Date` 値 |
+| 2 | `Empty` |
+| 3 | `Empty` |
+
+</details>
+
+<details>
 <summary><code>fill_empty(ByVal fillValue As Variant, Optional ByVal treatBlankStringAsEmpty As Boolean = True)</code></summary>
 
 欠損値を指定値で埋めます。
@@ -544,6 +898,43 @@ vec.fill_empty 0
 | 3 | `0` |
 
 </details>
+
+<details>
+<summary><code>map(ByVal functionName As String)</code></summary>
+
+公開関数を各要素へ適用します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること、`functionName` が空でないこと、`Application.Run` で呼べる公開関数があること |
+| 入力 | `functionName As String` |
+| 出力 | 内部配列を上書き更新 |
+| 実行内容 | 各要素に対して `(value, index)` を渡して関数実行し、戻り値で置換する |
+| 注意点 | 関数名誤りや実行失敗時はエラー |
+| 代表ユースケース | 独自整形ルールの一括適用 |
+
+```vb
+Public Function AddPrefix(ByVal value As Variant, ByVal index As Long) As Variant
+    AddPrefix = "ID-" & CStr(value)
+End Function
+
+Dim vec As New Vector
+
+vec.read_array Array(10, 20, 30)
+vec.map "AddPrefix"
+```
+
+実行後イメージ:
+
+| 行 | 変換後 |
+| --- | --- |
+| 1 | `"ID-10"` |
+| 2 | `"ID-20"` |
+| 3 | `"ID-30"` |
+
+</details>
+
+### 集計系
 
 <details>
 <summary><code>unique() As Variant</code></summary>
@@ -654,6 +1045,8 @@ Debug.Print vec.mean
 
 </details>
 
+### 出力系
+
 <details>
 <summary><code>to_range_vertical(ByVal topLeft As Range)</code></summary>
 
@@ -704,6 +1097,42 @@ vec.to_range_vertical Sheet1.Range("H2")
 | 出力 | ワークシート上のセル範囲 |
 | 実行内容 | `topLeft` を左上として 1 行に書込み |
 | 代表ユースケース | 一次元配列を横持ちで出力する |
+
+</details>
+
+<details>
+<summary><code>to_range_horizontal(ByVal topLeft As Range)</code></summary>
+
+内部データを横方向に書き戻します。
+
+| 項目 | 内容 |
+| --- | --- |
+| 前提条件 | 読込済みであること、`topLeft` が `Nothing` でないこと |
+| 入力 | `topLeft As Range` |
+| 出力 | ワークシート上のセル範囲 |
+| 実行内容 | `topLeft` を左上として 1 行に書込み |
+| 代表ユースケース | 一次元配列を横持ちで出力する |
+
+入力イメージ:
+
+| 内部配列 |
+| --- |
+| A |
+| B |
+| C |
+
+```vb
+Dim vec As New Vector
+
+vec.read_array Array("A", "B", "C")
+vec.to_range_horizontal Sheet1.Range("H2")
+```
+
+出力イメージ:
+
+| H | I | J |
+| --- | --- | --- |
+| A | B | C |
 
 </details>
 

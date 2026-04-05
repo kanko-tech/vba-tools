@@ -1,5 +1,5 @@
 '----------------------------
-'クラスモジュールの属性
+'クラスモジュールのメタ属性
 '----------------------------
 VERSION 1.0 CLASS
 BEGIN
@@ -12,6 +12,9 @@ Attribute VB_PredeclaredId = False      'Newせずとも使用可とするか（
 Attribute VB_Exposed = False            'クラスを外部に公開するか（通常はFalse）
 Option Explicit                         '変数の明示宣言を強制
 
+'----------------------------
+' プロパティ
+'----------------------------
 Private VECTOR As Variant               '
 Private VECTOR_IS_LOADED As Boolean     '
 

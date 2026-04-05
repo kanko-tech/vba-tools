@@ -1,22 +1,25 @@
+'----------------------------
+'クラスモジュールの属性
+'----------------------------
 VERSION 1.0 CLASS
 BEGIN
-  MultiUse = -1  'True
+  MultiUse = -1                         'クラスのインスタンスを複数生成できるか（-1：True（可能）、0:False（不可））
 END
-Attribute VB_Name = "OneDim"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
-Option Explicit
+Attribute VB_Name = "Vector"            'クラス名定義
+Attribute VB_GlobalNameSpace = False    'グローバル名前空間に公開するか（通常はFalse）
+Attribute VB_Creatable = False          '外部（他アプリ）から CreateObject で生成できるか（False：外部から生成不可（通常）、True：COMとして公開する場合のみ使用）  
+Attribute VB_PredeclaredId = False      'Newせずとも使用可とするか（Trueにするとシングルトン的挙動に。通常はFalse）
+Attribute VB_Exposed = False            'クラスを外部に公開するか（通常はFalse）
+Option Explicit                         '変数の明示宣言を強制
 
-Private mOneDim As Variant  '�ꎟ���z��{��
-Private mLoaded As Boolean    'mOneDim������ɓǂݍ��܂ꂽ�t���O
+Private VECTOR As Variant               '
+Private VECTOR_IS_LOADED As Boolean     '
 
 '----------------------------
-' �ǂݍ��݌n
+' 読込系
 '----------------------------
 Public Sub Read_ColRange(ByVal rng As Range)
-    If rng Is Nothing Then Err.Raise vbObjectError + 1001, "Araya1.Read_ColRange", "rng �� Nothing �ł��B"
+    If rng Is Nothing Then Err.Raise vbObjectError + 1001, "Vector.Read_ColRange", "rng  Nothing "
     
     If rng.Cells.Count = 1 Then
         Dim tmp1(1 To 1) As Variant
@@ -31,7 +34,7 @@ Public Sub Read_ColRange(ByVal rng As Range)
 End Sub
 
 Public Sub Read_RowRange(ByVal rng As Range)
-    If rng Is Nothing Then Err.Raise vbObjectError + 1002, "Araya1.Read_RowRange", "rng �� Nothing �ł��B"
+    If rng Is Nothing Then Err.Raise vbObjectError + 1002, "Vector.Read_RowRange", "rng �� Nothing �ł��B"
     
     If rng.Cells.Count = 1 Then
         Dim tmp1(1 To 1) As Variant
@@ -47,7 +50,7 @@ End Sub
 
 Public Sub Read_Array(ByVal arr As Variant)
     If Not IsArray(arr) Then
-        Err.Raise vbObjectError + 1003, "Araya1.Read_Array", "�z��ł͂���܂���B"
+        Err.Raise vbObjectError + 1003, "Vector.Read_Array", "�z��ł͂���܂���B"
     End If
     
     ' 1�������`�F�b�N�i2�������� UBound(arr,2) �����Ă��܂��j
@@ -57,7 +60,7 @@ Public Sub Read_Array(ByVal arr As Variant)
     If Err.Number = 0 Then
         Err.Clear
         On Error GoTo 0
-        Err.Raise vbObjectError + 1004, "Araya1.Read_Array", "2�����z��͎󂯕t���܂���i1�����̂݁j�B"
+        Err.Raise vbObjectError + 1004, "Vector.Read_Array", "2�����z��͎󂯕t���܂���i1�����̂݁j�B"
     End If
     Err.Clear
     On Error GoTo 0
@@ -86,7 +89,7 @@ End Property
 Public Property Get Item(ByVal index As Long) As Variant
     EnsureLoaded
     If index < LBound(mOneDim) Or index > UBound(mOneDim) Then
-        Err.Raise vbObjectError + 1005, "Araya1.Item", "index ���͈͊O�ł��B"
+        Err.Raise vbObjectError + 1005, "Vector.Item", "index ���͈͊O�ł��B"
     End If
     Item = mOneDim(index)
 End Property
@@ -155,7 +158,7 @@ Public Sub CastToStringSafe(Optional ByVal emptyAsBlank As Boolean = True, _
             If errorAsBlank Then
                 mOneDim(i) = ""
             Else
-                Err.Raise vbObjectError + 1201, "Araya1.CastToStringSafe", "Error�l���܂܂�Ă��܂��B"
+                Err.Raise vbObjectError + 1201, "Vector.CastToStringSafe", "Error�l���܂܂�Ă��܂��B"
             End If
         
         ElseIf IsEmpty(mOneDim(i)) Then
@@ -187,7 +190,7 @@ Public Sub CastToDateSafe(Optional ByVal invalidAsEmpty As Boolean = True)
             If invalidAsEmpty Then
                 mOneDim(i) = Empty
             Else
-                Err.Raise vbObjectError + 1202, "Araya1.CastToDateSafe", "���t�ɕϊ��ł��Ȃ��l���܂܂�Ă��܂��B"
+                Err.Raise vbObjectError + 1202, "Vector.CastToDateSafe", "���t�ɕϊ��ł��Ȃ��l���܂܂�Ă��܂��B"
             End If
         End If
         
@@ -199,7 +202,7 @@ End Sub
 '----------------------------
 Public Sub ToRangeVertical(ByVal topLeft As Range)
     EnsureLoaded
-    If topLeft Is Nothing Then Err.Raise vbObjectError + 1006, "Araya1.ToRangeVertical", "topLeft �� Nothing �ł��B"
+    If topLeft Is Nothing Then Err.Raise vbObjectError + 1006, "Vector.ToRangeVertical", "topLeft �� Nothing �ł��B"
     
     Dim n As Long: n = Me.Count
     topLeft.Resize(n, 1).value = Application.WorksheetFunction.Transpose(mOneDim)
@@ -207,7 +210,7 @@ End Sub
 
 Public Sub ToRangeHorizontal(ByVal topLeft As Range)
     EnsureLoaded
-    If topLeft Is Nothing Then Err.Raise vbObjectError + 1007, "Araya1.ToRangeHorizontal", "topLeft �� Nothing �ł��B"
+    If topLeft Is Nothing Then Err.Raise vbObjectError + 1007, "Vector.ToRangeHorizontal", "topLeft �� Nothing �ł��B"
     
     Dim n As Long: n = Me.Count
     topLeft.Resize(1, n).value = mOneDim
@@ -223,6 +226,6 @@ End Sub
 '----------------------------
 Private Sub EnsureLoaded()
     If Not mLoaded Then
-        Err.Raise vbObjectError + 1099, "Araya1", "�f�[�^�����ǂݍ��݂ł��BRead_ColRange / Read_RowRange / Read_Array ���ɌĂ�ł��������B"
+        Err.Raise vbObjectError + 1099, "Vector", "�f�[�^�����ǂݍ��݂ł��BRead_ColRange / Read_RowRange / Read_Array ���ɌĂ�ł��������B"
     End If
 End Sub

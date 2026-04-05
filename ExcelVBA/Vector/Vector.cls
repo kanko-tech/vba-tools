@@ -144,7 +144,8 @@ End Property
 
 Public Property Get data() As Variant
     ensure_loaded
-    data = VECTOR
+    ' 配列をコピーして返すことで、外部からの変更から VECTOR を保護
+    data = Application.Index(VECTOR, 0)
 End Property
 
 Public Property Get count() As Long
@@ -155,7 +156,7 @@ End Property
 Public Property Get item(ByVal index As Long) As Variant
     ensure_loaded
     If index < LBound(VECTOR) Or index > UBound(VECTOR) Then
-        Err.Raise vbObjectError + 1005, "Vector.item", "index ���͈͊O�ł��B"
+        Err.Raise vbObjectError + 1005, "Vector.Item", "index が範囲外です。"
     End If
     item = VECTOR(index)
 End Property
@@ -176,7 +177,7 @@ Public Function type_names() As Variant
         ElseIf IsEmpty(VECTOR(i)) Then
             res(i) = "Empty"
         Else
-            res(i) = TypeName(VECTOR(i))  ' "Double" "String" "Date" �Ȃ�
+            res(i) = TypeName(VECTOR(i))  ' "Double"や"String"や"Date"など
         End If
     Next
     
@@ -224,7 +225,7 @@ Public Sub cast_to_string_safe(Optional ByVal emptyAsBlank As Boolean = True, _
             If errorAsBlank Then
                 VECTOR(i) = ""
             Else
-                Err.Raise vbObjectError + 1201, "Vector.cast_to_string_safe", "Error�l���܂܂�Ă��܂��B"
+                Err.Raise vbObjectError + 1201, "Vector.cast_to_string_safe", "Error値が含まれています。"
             End If
         
         ElseIf IsEmpty(VECTOR(i)) Then
@@ -256,7 +257,7 @@ Public Sub cast_to_date_safe(Optional ByVal invalidAsEmpty As Boolean = True)
             If invalidAsEmpty Then
                 VECTOR(i) = Empty
             Else
-                Err.Raise vbObjectError + 1202, "Vector.cast_to_date_safe", "���t�ɕϊ��ł��Ȃ��l���܂܂�Ă��܂��B"
+                Err.Raise vbObjectError + 1202, "Vector.cast_to_date_safe", "日付に変換できない値が含まれています。"
             End If
         End If
         
@@ -268,7 +269,7 @@ End Sub
 '----------------------------
 Public Sub to_range_vertical(ByVal topLeft As Range)
     ensure_loaded
-    If topLeft Is Nothing Then Err.Raise vbObjectError + 1006, "Vector.to_range_vertical", "topLeft �� Nothing �ł��B"
+    If topLeft Is Nothing Then Err.Raise vbObjectError + 1006, "Vector.to_range_vertical", "topLeft が Nothing です。"
     
     Dim n As Long: n = Me.count
     topLeft.Resize(n, 1).value = Application.WorksheetFunction.Transpose(VECTOR)
@@ -276,7 +277,7 @@ End Sub
 
 Public Sub to_range_horizontal(ByVal topLeft As Range)
     ensure_loaded
-    If topLeft Is Nothing Then Err.Raise vbObjectError + 1007, "Vector.to_range_horizontal", "topLeft �� Nothing �ł��B"
+    If topLeft Is Nothing Then Err.Raise vbObjectError + 1007, "Vector.to_range_horizontal", "topLeft が Nothing です。"
     
     Dim n As Long: n = Me.count
     topLeft.Resize(1, n).value = VECTOR

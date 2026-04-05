@@ -40,7 +40,7 @@ Public Sub Read_ColRange(ByVal rng As Range)
 End Sub
 
 Public Sub Read_RowRange(ByVal rng As Range)
-    If rng Is Nothing Then Err.Raise vbObjectError + 1010, "Vector.Read_RowRange", "引数rngがNothingです。"
+    Ifガード系 Is Nothing Then Err.Raise vbObjectError + 1010, "Vector.Read_RowRange", "引数rngがNothingです。"
     
     If rng.Rows.Count <> 1 Then
         Err.Raise vbObjectError + 1012, "Vector.Read_RowRange", "1行のRangeのみ指定してください。"
@@ -69,7 +69,7 @@ Public Sub Read_Array(ByVal arr As Variant)
     If Err.Number = 0 Then  '成功(0)なら2次元以上のためエラー
         Err.Clear
         On Error GoTo 0
-        Err.Raise vbObjectError + 1031, "Vector.Read_Array", "2次元以上の配列は受け付けません（1次元のみ）。"
+        Err.Raise vbObjectError + 1031, "Vector.Read_Array", "2次元以上の配列は受け付けません。"
     End If
     Err.Clear
     On Error GoTo 0
@@ -79,7 +79,7 @@ Public Sub Read_Array(ByVal arr As Variant)
 End Sub
 
 '----------------------------
-' 内部前提系
+' ガード（内部前提）系
 '----------------------------
 Private Sub EnsureLoaded(Optional ByVal caller As String = "")
     If Not VECTOR_IS_LOADED Then
@@ -93,6 +93,46 @@ Private Sub EnsureLoaded(Optional ByVal caller As String = "")
                   "Vector.EnsureLoaded", _
                   msg
     End If
+End Sub
+
+Private Sub EnsureStrictNumericVector()
+    Dim i As Long
+    Dim vt As VbVarType
+    Dim msg As String
+    
+    For i = LBound(VECTOR) To UBound(VECTOR)
+        If IsEmpty(VECTOR(i)) Then
+            Err.Raise vbObjectError + 1111, _
+                      "Vector.EnsureStrictNumericVector", _
+                      "VECTOR に Empty が含まれています。添字: " & CStr(i)
+        End If
+        If IsError(VECTOR(i)) Then
+            Err.Raise vbObjectError + 1112, _
+                      "Vector.EnsureStrictNumericVector", _
+                      "VECTOR に Excel のエラー値が含まれています。添字: " & CStr(i)
+        End If
+        If IsNull(VECTOR(i)) Then
+            Err.Raise vbObjectError + 1113, _
+                      "Vector.EnsureStrictNumericVector", _
+                      "VECTOR に Null が含まれています。添字: " & CStr(i)
+        End If
+        
+        vt = VarType(VECTOR(i))
+        
+        Select Case vt
+            Case vbByte, vbInteger, vbLong, vbSingle, vbDouble, vbCurrency, vbDecimal
+                ' 許可
+            Case Else
+                msg = "VECTOR に数値型でない要素が含まれています。" & _
+                      " 添字: " & CStr(i) & _
+                      " / 値: " & CStr(VECTOR(i)) & _
+                      " / VarType: " & CStr(vt)
+                
+                Err.Raise vbObjectError + 1114, _
+                          "Vector.EnsureStrictNumericVector", _
+                          msg
+        End Select
+    Next i
 End Sub
 
 '----------------------------

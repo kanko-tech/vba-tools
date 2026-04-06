@@ -115,6 +115,32 @@ body::before {
   margin-top: 26px;
 }
 
+.page-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.page-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 76, 58, 0.12);
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.page-nav a.current {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
 .hero-actions a,
 .directory-item a,
 .link-tile {
@@ -285,6 +311,11 @@ main {
   display: block;
   margin-bottom: 6px;
   font-weight: 700;
+}
+
+.feature-link {
+  border-width: 2px;
+  background: linear-gradient(135deg, rgba(244, 251, 247, 0.96), rgba(255, 250, 241, 0.96));
 }
 
 .link-tile small {

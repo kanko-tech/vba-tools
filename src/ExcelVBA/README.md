@@ -1,10 +1,11 @@
 # ExcelVBA
 
-`ExcelVBA` ディレクトリには、Excel VBA で再利用しやすいクラスモジュールを整理して配置しています。  
+`src/ExcelVBA` ディレクトリには、Excel VBA で再利用しやすいクラスモジュールを整理して配置しています。  
 現在は、一次元配列を扱う `Vector`、二次元配列を扱う `Matrix`、列名付きテーブルを扱う `Table` を中心に構成しています。
 
 ## まず見るページ
 
+- ルート README: `README.md`
 - GitHub Pages トップ: `docs/index.html`
 - `Vector` 詳細: `docs/vector.html`
 - `Matrix` 詳細: `docs/matrix.html`
@@ -48,9 +49,9 @@
 
 ## ディレクトリ一覧
 
-- `ExcelVBA/Vector`
-- `ExcelVBA/Matrix`
-- `ExcelVBA/Table`
+- `src/ExcelVBA/Vector`
+- `src/ExcelVBA/Matrix`
+- `src/ExcelVBA/Table`
 
 ## 詳細ドキュメントの位置づけ
 

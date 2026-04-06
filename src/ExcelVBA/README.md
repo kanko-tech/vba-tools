@@ -6,10 +6,10 @@
 ## まず見るページ
 
 - ルート README: `README.md`
-- GitHub Pages トップ: `docs/index.html`
-- `Vector` 詳細: `docs/vector.html`
-- `Matrix` 詳細: `docs/matrix.html`
-- `Table` 詳細: `docs/table.html`
+- GitHub Pages トップ: [Overview](https://kanko-tech.github.io/VBA_tools/)
+- `Vector` 詳細: [Vector Guide](https://kanko-tech.github.io/VBA_tools/vector.html)
+- `Matrix` 詳細: [Matrix Guide](https://kanko-tech.github.io/VBA_tools/matrix.html)
+- `Table` 詳細: [Table Guide](https://kanko-tech.github.io/VBA_tools/table.html)
 
 ## モジュールの使い分け
 
@@ -43,7 +43,7 @@
 ## 推奨する読み進め方
 
 1. まずこの README で全体像をつかむ
-2. `docs/index.html` でディレクトリ構成と使い分けを確認する
+2. [Overview](https://kanko-tech.github.io/VBA_tools/) でディレクトリ構成と使い分けを確認する
 3. 必要なモジュールの詳細ページを見る
 4. 実装ファイルと同梱 README で個別メソッドを確認する
 

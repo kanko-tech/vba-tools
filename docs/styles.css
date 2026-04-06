@@ -322,6 +322,91 @@ main {
   color: var(--muted);
 }
 
+.markdown-body {
+  line-height: 1.9;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  margin-top: 1.6em;
+  margin-bottom: 0.55em;
+}
+
+.markdown-body h1 {
+  font-size: 2rem;
+}
+
+.markdown-body h2 {
+  font-size: 1.55rem;
+}
+
+.markdown-body h3 {
+  font-size: 1.15rem;
+}
+
+.markdown-body p,
+.markdown-body li {
+  color: var(--muted);
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 22px;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0 24px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.markdown-body th,
+.markdown-body td {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  vertical-align: top;
+  text-align: left;
+}
+
+.markdown-body th {
+  background: rgba(217, 234, 223, 0.72);
+  color: var(--accent-strong);
+}
+
+.markdown-body details {
+  margin: 16px 0;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.markdown-body summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.markdown-body pre {
+  overflow-x: auto;
+  margin: 16px 0;
+  padding: 18px;
+  border-radius: 18px;
+  background: #1d2b24;
+  color: #f5f8f4;
+}
+
+.markdown-body pre code {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
 code {
   padding: 0.18em 0.42em;
   border-radius: 8px;

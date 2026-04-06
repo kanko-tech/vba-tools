@@ -12,10 +12,10 @@ Option Explicit
 '----------------------------
 ' プロパティ
 '----------------------------
-Private MATRIX As Variant
-Private MATRIX_IS_LOADED As Boolean
-Private MATRIX_ROW_COUNT As Long
-Private MATRIX_COL_COUNT As Long
+Private mData As Variant
+Private mIsLoaded As Boolean
+Private mRowCount As Long
+Private mColCount As Long
 
 '----------------------------
 ' 読込系
@@ -55,7 +55,7 @@ End Sub
 ' ガード系
 '----------------------------
 Private Sub ensure_loaded(Optional ByVal caller As String = "")
-    If Not MATRIX_IS_LOADED Then
+    If Not mIsLoaded Then
         Dim msg As String
         msg = "データが読み込まれていません。read_range / read_array / read_empty を先に呼び出してください。"
 
@@ -98,10 +98,10 @@ End Sub
 ' 内部補助
 '----------------------------
 Private Sub load_matrix_internal(ByVal src As Variant, ByVal rowCount As Long, ByVal colCount As Long)
-    MATRIX = src
-    MATRIX_ROW_COUNT = rowCount
-    MATRIX_COL_COUNT = colCount
-    MATRIX_IS_LOADED = True
+    mData = src
+    mRowCount = rowCount
+    mColCount = colCount
+    mIsLoaded = True
 End Sub
 
 Private Function normalize_matrix_data(ByVal src As Variant) As Variant
@@ -157,13 +157,13 @@ Private Function build_empty_matrix_placeholder(ByVal colCount As Long) As Varia
 End Function
 
 Private Sub ensure_valid_row_index(ByVal rowIndex As Long, ByVal caller As String)
-    If rowIndex < 1 Or rowIndex > MATRIX_ROW_COUNT Then
+    If rowIndex < 1 Or rowIndex > mRowCount Then
         Err.Raise vbObjectError + 2010, caller, "rowIndex が範囲外です。"
     End If
 End Sub
 
 Private Sub ensure_valid_col_index(ByVal colIndex As Long, ByVal caller As String)
-    If colIndex < 1 Or colIndex > MATRIX_COL_COUNT Then
+    If colIndex < 1 Or colIndex > mColCount Then
         Err.Raise vbObjectError + 2011, caller, "colIndex が範囲外です。"
     End If
 End Sub
@@ -172,29 +172,29 @@ End Sub
 ' 参照系
 '----------------------------
 Public Property Get is_loaded() As Boolean
-    is_loaded = MATRIX_IS_LOADED
+    is_loaded = mIsLoaded
 End Property
 
 Public Property Get row_count() As Long
     ensure_loaded
-    row_count = MATRIX_ROW_COUNT
+    row_count = mRowCount
 End Property
 
 Public Property Get col_count() As Long
     ensure_loaded
-    col_count = MATRIX_COL_COUNT
+    col_count = mColCount
 End Property
 
 Public Property Get data() As Variant
     ensure_loaded
-    data = clone_matrix_data(MATRIX, MATRIX_ROW_COUNT, MATRIX_COL_COUNT)
+    data = clone_matrix_data(mData, mRowCount, mColCount)
 End Property
 
 Public Property Get item(ByVal rowIndex As Long, ByVal colIndex As Long) As Variant
     ensure_loaded
     ensure_valid_row_index rowIndex, "Matrix.item"
     ensure_valid_col_index colIndex, "Matrix.item"
-    item = MATRIX(rowIndex, colIndex)
+    item = mData(rowIndex, colIndex)
 End Property
 
 Public Function row_values(ByVal rowIndex As Long) As Variant
@@ -204,9 +204,9 @@ Public Function row_values(ByVal rowIndex As Long) As Variant
     Dim c As Long
     Dim res As Variant
 
-    ReDim res(1 To MATRIX_COL_COUNT)
-    For c = 1 To MATRIX_COL_COUNT
-        res(c) = MATRIX(rowIndex, c)
+    ReDim res(1 To mColCount)
+    For c = 1 To mColCount
+        res(c) = mData(rowIndex, c)
     Next c
 
     row_values = res
@@ -216,16 +216,16 @@ Public Function col_values(ByVal colIndex As Long) As Variant
     ensure_loaded
     ensure_valid_col_index colIndex, "Matrix.col_values"
 
-    If MATRIX_ROW_COUNT = 0 Then
+    If mRowCount = 0 Then
         Err.Raise vbObjectError + 2014, "Matrix.col_values", "行が0件のため列データを返せません。"
     End If
 
     Dim r As Long
     Dim res As Variant
 
-    ReDim res(1 To MATRIX_ROW_COUNT)
-    For r = 1 To MATRIX_ROW_COUNT
-        res(r) = MATRIX(r, colIndex)
+    ReDim res(1 To mRowCount)
+    For r = 1 To mRowCount
+        res(r) = mData(r, colIndex)
     Next r
 
     col_values = res
@@ -248,28 +248,28 @@ Public Function filter_rows(ByVal mask As Variant) As Matrix
 
     maskLb = LBound(mask)
     maskUb = UBound(mask)
-    If (maskUb - maskLb + 1) <> MATRIX_ROW_COUNT Then
+    If (maskUb - maskLb + 1) <> mRowCount Then
         Err.Raise vbObjectError + 2021, "Matrix.filter_rows", "mask の長さが行数と一致しません。"
     End If
 
     keepCount = 0
-    For r = 1 To MATRIX_ROW_COUNT
+    For r = 1 To mRowCount
         If CBool(mask(maskLb + r - 1)) Then keepCount = keepCount + 1
     Next r
 
     Set result = New Matrix
     If keepCount = 0 Then
-        result.read_empty MATRIX_COL_COUNT
+        result.read_empty mColCount
         Set filter_rows = result
         Exit Function
     End If
 
-    ReDim dst(1 To keepCount, 1 To MATRIX_COL_COUNT)
+    ReDim dst(1 To keepCount, 1 To mColCount)
     outRow = 1
-    For r = 1 To MATRIX_ROW_COUNT
+    For r = 1 To mRowCount
         If CBool(mask(maskLb + r - 1)) Then
-            For c = 1 To MATRIX_COL_COUNT
-                dst(outRow, c) = MATRIX(r, c)
+            For c = 1 To mColCount
+                dst(outRow, c) = mData(r, c)
             Next c
             outRow = outRow + 1
         End If
@@ -296,17 +296,17 @@ Public Function slice_rows(ByVal rowIndexes As Variant) As Matrix
     Set result = New Matrix
 
     If ub < lb Then
-        result.read_empty MATRIX_COL_COUNT
+        result.read_empty mColCount
         Set slice_rows = result
         Exit Function
     End If
 
-    ReDim dst(1 To ub - lb + 1, 1 To MATRIX_COL_COUNT)
+    ReDim dst(1 To ub - lb + 1, 1 To mColCount)
     For i = lb To ub
         rowIndex = CLng(rowIndexes(i))
         ensure_valid_row_index rowIndex, "Matrix.slice_rows"
-        For c = 1 To MATRIX_COL_COUNT
-            dst(1 + (i - lb), c) = MATRIX(rowIndex, c)
+        For c = 1 To mColCount
+            dst(1 + (i - lb), c) = mData(rowIndex, c)
         Next c
     Next i
 
@@ -332,18 +332,18 @@ Public Function select_columns(ByVal columnIndexes As Variant) As Matrix
     End If
 
     Set result = New Matrix
-    If MATRIX_ROW_COUNT = 0 Then
+    If mRowCount = 0 Then
         result.read_empty ub - lb + 1
         Set select_columns = result
         Exit Function
     End If
 
-    ReDim dst(1 To MATRIX_ROW_COUNT, 1 To ub - lb + 1)
+    ReDim dst(1 To mRowCount, 1 To ub - lb + 1)
     For i = lb To ub
         srcCol = CLng(columnIndexes(i))
         ensure_valid_col_index srcCol, "Matrix.select_columns"
-        For r = 1 To MATRIX_ROW_COUNT
-            dst(r, 1 + (i - lb)) = MATRIX(r, srcCol)
+        For r = 1 To mRowCount
+            dst(r, 1 + (i - lb)) = mData(r, srcCol)
         Next r
     Next i
 
@@ -362,17 +362,17 @@ Public Sub set_column_values(ByVal colIndex As Long, ByVal values As Variant)
         Err.Raise vbObjectError + 2025, "Matrix.set_column_values", "values は一次元配列で指定してください。"
     End If
 
-    If MATRIX_ROW_COUNT = 0 Then Exit Sub
+    If mRowCount = 0 Then Exit Sub
 
     Dim lb As Long, ub As Long, r As Long
     lb = LBound(values)
     ub = UBound(values)
-    If (ub - lb + 1) <> MATRIX_ROW_COUNT Then
+    If (ub - lb + 1) <> mRowCount Then
         Err.Raise vbObjectError + 2026, "Matrix.set_column_values", "values の長さが行数と一致しません。"
     End If
 
-    For r = 1 To MATRIX_ROW_COUNT
-        MATRIX(r, colIndex) = values(lb + r - 1)
+    For r = 1 To mRowCount
+        mData(r, colIndex) = values(lb + r - 1)
     Next r
 End Sub
 
@@ -388,21 +388,21 @@ Public Sub append_row(ByVal values As Variant)
 
     lb = LBound(values)
     ub = UBound(values)
-    If (ub - lb + 1) <> MATRIX_COL_COUNT Then
+    If (ub - lb + 1) <> mColCount Then
         Err.Raise vbObjectError + 2031, "Matrix.append_row", "values の長さが列数と一致しません。"
     End If
 
-    ReDim dst(1 To MATRIX_ROW_COUNT + 1, 1 To MATRIX_COL_COUNT)
-    For r = 1 To MATRIX_ROW_COUNT
-        For c = 1 To MATRIX_COL_COUNT
-            dst(r, c) = MATRIX(r, c)
+    ReDim dst(1 To mRowCount + 1, 1 To mColCount)
+    For r = 1 To mRowCount
+        For c = 1 To mColCount
+            dst(r, c) = mData(r, c)
         Next c
     Next r
-    For c = 1 To MATRIX_COL_COUNT
-        dst(MATRIX_ROW_COUNT + 1, c) = values(lb + c - 1)
+    For c = 1 To mColCount
+        dst(mRowCount + 1, c) = values(lb + c - 1)
     Next c
 
-    load_matrix_internal dst, MATRIX_ROW_COUNT + 1, MATRIX_COL_COUNT
+    load_matrix_internal dst, mRowCount + 1, mColCount
 End Sub
 
 Public Sub append_column(ByVal values As Variant)
@@ -411,7 +411,7 @@ Public Sub append_column(ByVal values As Variant)
     Dim r As Long, c As Long
     Dim dst As Variant
 
-    If MATRIX_ROW_COUNT > 0 Then
+    If mRowCount > 0 Then
         If Not IsArray(values) Then
             Err.Raise vbObjectError + 2032, "Matrix.append_column", "values は一次元配列で指定してください。"
         End If
@@ -419,20 +419,20 @@ Public Sub append_column(ByVal values As Variant)
         Dim lb As Long, ub As Long
         lb = LBound(values)
         ub = UBound(values)
-        If (ub - lb + 1) <> MATRIX_ROW_COUNT Then
+        If (ub - lb + 1) <> mRowCount Then
             Err.Raise vbObjectError + 2033, "Matrix.append_column", "values の長さが行数と一致しません。"
         End If
 
-        ReDim dst(1 To MATRIX_ROW_COUNT, 1 To MATRIX_COL_COUNT + 1)
-        For r = 1 To MATRIX_ROW_COUNT
-            For c = 1 To MATRIX_COL_COUNT
-                dst(r, c) = MATRIX(r, c)
+        ReDim dst(1 To mRowCount, 1 To mColCount + 1)
+        For r = 1 To mRowCount
+            For c = 1 To mColCount
+                dst(r, c) = mData(r, c)
             Next c
-            dst(r, MATRIX_COL_COUNT + 1) = values(lb + r - 1)
+            dst(r, mColCount + 1) = values(lb + r - 1)
         Next r
-        load_matrix_internal dst, MATRIX_ROW_COUNT, MATRIX_COL_COUNT + 1
+        load_matrix_internal dst, mRowCount, mColCount + 1
     Else
-        load_matrix_internal build_empty_matrix_placeholder(MATRIX_COL_COUNT + 1), 0, MATRIX_COL_COUNT + 1
+        load_matrix_internal build_empty_matrix_placeholder(mColCount + 1), 0, mColCount + 1
     End If
 End Sub
 
@@ -448,16 +448,16 @@ Public Function transpose() As Matrix
 
     Set result = New Matrix
 
-    If MATRIX_ROW_COUNT = 0 Then
+    If mRowCount = 0 Then
         Err.Raise vbObjectError + 2035, "Matrix.transpose", "行が0件のMatrixの転置はサポートしていません。"
         Set transpose = result
         Exit Function
     End If
 
-    ReDim dst(1 To MATRIX_COL_COUNT, 1 To MATRIX_ROW_COUNT)
-    For r = 1 To MATRIX_ROW_COUNT
-        For c = 1 To MATRIX_COL_COUNT
-            dst(c, r) = MATRIX(r, c)
+    ReDim dst(1 To mColCount, 1 To mRowCount)
+    For r = 1 To mRowCount
+        For c = 1 To mColCount
+            dst(c, r) = mData(r, c)
         Next c
     Next r
 
@@ -471,17 +471,17 @@ End Function
 Public Sub to_range(ByVal topLeft As Range)
     ensure_loaded
     If topLeft Is Nothing Then Err.Raise vbObjectError + 2030, "Matrix.to_range", "topLeft が Nothing です。"
-    If MATRIX_ROW_COUNT = 0 Then Err.Raise vbObjectError + 2034, "Matrix.to_range", "行が0件のためシートへ出力できません。"
+    If mRowCount = 0 Then Err.Raise vbObjectError + 2034, "Matrix.to_range", "行が0件のためシートへ出力できません。"
 
-    topLeft.Resize(MATRIX_ROW_COUNT, MATRIX_COL_COUNT).Value = MATRIX
+    topLeft.Resize(mRowCount, mColCount).Value = mData
 End Sub
 
 '----------------------------
 ' 状態管理系
 '----------------------------
 Public Sub clear()
-    MATRIX = Empty
-    MATRIX_IS_LOADED = False
-    MATRIX_ROW_COUNT = 0
-    MATRIX_COL_COUNT = 0
+    mData = Empty
+    mIsLoaded = False
+    mRowCount = 0
+    mColCount = 0
 End Sub

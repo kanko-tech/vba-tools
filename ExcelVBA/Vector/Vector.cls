@@ -12,8 +12,8 @@ Option Explicit
 '----------------------------
 ' プロパティ
 '----------------------------
-Private VECTOR As Variant
-Private VECTOR_IS_LOADED As Boolean
+Private mData As Variant
+Private mIsLoaded As Boolean
 
 '----------------------------
 ' 読込系
@@ -28,12 +28,12 @@ Public Sub read_col_range(ByVal rng As Range)
     If rng.Cells.Count = 1 Then
         Dim tmp1(1 To 1) As Variant
         tmp1(1) = rng.Value
-        VECTOR = tmp1
+        mData = tmp1
     Else
-        VECTOR = Application.Index(rng.Value, 0, 1)
+        mData = Application.Index(rng.Value, 0, 1)
     End If
 
-    VECTOR_IS_LOADED = True
+    mIsLoaded = True
 End Sub
 
 Public Sub read_row_range(ByVal rng As Range)
@@ -46,12 +46,12 @@ Public Sub read_row_range(ByVal rng As Range)
     If rng.Cells.Count = 1 Then
         Dim tmp2(1 To 1) As Variant
         tmp2(1) = rng.Value
-        VECTOR = tmp2
+        mData = tmp2
     Else
-        VECTOR = Application.Index(rng.Value, 1, 0)
+        mData = Application.Index(rng.Value, 1, 0)
     End If
 
-    VECTOR_IS_LOADED = True
+    mIsLoaded = True
 End Sub
 
 Public Sub read_array(ByVal arr As Variant)
@@ -61,15 +61,15 @@ Public Sub read_array(ByVal arr As Variant)
 
     ensure_is_one_dimensional arr
 
-    VECTOR = arr
-    VECTOR_IS_LOADED = True
+    mData = arr
+    mIsLoaded = True
 End Sub
 
 '----------------------------
 ' ガード（内部前提）系
 '----------------------------
 Private Sub ensure_loaded(Optional ByVal caller As String = "")
-    If Not VECTOR_IS_LOADED Then
+    If Not mIsLoaded Then
         Dim msg As String
         msg = "データが読み込まれていません。read_col_range / read_row_range / read_array を先に呼び出してください。"
 
@@ -110,18 +110,18 @@ Private Sub ensure_strict_numeric_vector()
     Dim vt As VbVarType
     Dim msg As String
 
-    For i = LBound(VECTOR) To UBound(VECTOR)
-        If IsEmpty(VECTOR(i)) Then
+    For i = LBound(mData) To UBound(mData)
+        If IsEmpty(mData(i)) Then
             Err.Raise vbObjectError + 1111, "Vector.ensure_strict_numeric_vector", "VECTOR に Empty が含まれています。添字: " & CStr(i)
         End If
-        If IsError(VECTOR(i)) Then
+        If IsError(mData(i)) Then
             Err.Raise vbObjectError + 1112, "Vector.ensure_strict_numeric_vector", "VECTOR に Excel のエラー値が含まれています。添字: " & CStr(i)
         End If
-        If IsNull(VECTOR(i)) Then
+        If IsNull(mData(i)) Then
             Err.Raise vbObjectError + 1113, "Vector.ensure_strict_numeric_vector", "VECTOR に Null が含まれています。添字: " & CStr(i)
         End If
 
-        vt = VarType(VECTOR(i))
+        vt = VarType(mData(i))
 
         Select Case vt
             Case vbByte, vbInteger, vbLong, vbSingle, vbDouble, vbCurrency, vbDecimal
@@ -129,7 +129,7 @@ Private Sub ensure_strict_numeric_vector()
             Case Else
                 msg = "VECTOR に数値型でない要素が含まれています。" & _
                       " 添字: " & CStr(i) & _
-                      " / 値: " & CStr(VECTOR(i)) & _
+                      " / 値: " & CStr(mData(i)) & _
                       " / VarType: " & CStr(vt)
                 Err.Raise vbObjectError + 1114, "Vector.ensure_strict_numeric_vector", msg
         End Select
@@ -184,16 +184,16 @@ Private Function build_boolean_mask_equals(ByVal matchValue As Variant, ByVal ne
 
     ensure_loaded
 
-    lb = LBound(VECTOR)
-    ub = UBound(VECTOR)
+    lb = LBound(mData)
+    ub = UBound(mData)
     ReDim mask(lb To ub)
 
     For i = lb To ub
-        If IsError(VECTOR(i)) Or IsError(matchValue) Or IsNull(VECTOR(i)) Or IsNull(matchValue) Then
+        If IsError(mData(i)) Or IsError(matchValue) Or IsNull(mData(i)) Or IsNull(matchValue) Then
             mask(i) = False
         Else
             On Error Resume Next
-            mask(i) = (VECTOR(i) = matchValue)
+            mask(i) = (mData(i) = matchValue)
             If Err.Number <> 0 Then
                 Err.Clear
                 mask(i) = False
@@ -212,15 +212,15 @@ Private Function build_boolean_mask_relational(ByVal threshold As Variant, ByVal
 
     ensure_loaded
 
-    lb = LBound(VECTOR)
-    ub = UBound(VECTOR)
+    lb = LBound(mData)
+    ub = UBound(mData)
     ReDim mask(lb To ub)
 
     For i = lb To ub
-        If IsError(VECTOR(i)) Or IsEmpty(VECTOR(i)) Or IsNull(VECTOR(i)) Then
+        If IsError(mData(i)) Or IsEmpty(mData(i)) Or IsNull(mData(i)) Then
             mask(i) = False
         Else
-            mask(i) = compare_relational(VECTOR(i), threshold, operatorName)
+            mask(i) = compare_relational(mData(i), threshold, operatorName)
         End If
     Next i
 
@@ -243,25 +243,25 @@ End Function
 ' 参照系
 '----------------------------
 Public Property Get is_loaded() As Boolean
-    is_loaded = VECTOR_IS_LOADED
+    is_loaded = mIsLoaded
 End Property
 
 Public Property Get data() As Variant
     ensure_loaded
-    data = clone_vector_data(VECTOR)
+    data = clone_vector_data(mData)
 End Property
 
 Public Property Get count() As Long
     ensure_loaded
-    count = UBound(VECTOR) - LBound(VECTOR) + 1
+    count = UBound(mData) - LBound(mData) + 1
 End Property
 
 Public Property Get item(ByVal index As Long) As Variant
     ensure_loaded
-    If index < LBound(VECTOR) Or index > UBound(VECTOR) Then
+    If index < LBound(mData) Or index > UBound(mData) Then
         Err.Raise vbObjectError + 1005, "Vector.item", "index が範囲外です。"
     End If
-    item = VECTOR(index)
+    item = mData(index)
 End Property
 
 Public Function type_names() As Variant
@@ -270,17 +270,17 @@ Public Function type_names() As Variant
     Dim lb As Long, ub As Long, i As Long
     Dim res As Variant
 
-    lb = LBound(VECTOR)
-    ub = UBound(VECTOR)
+    lb = LBound(mData)
+    ub = UBound(mData)
     ReDim res(lb To ub)
 
     For i = lb To ub
-        If IsError(VECTOR(i)) Then
+        If IsError(mData(i)) Then
             res(i) = "Error"
-        ElseIf IsEmpty(VECTOR(i)) Then
+        ElseIf IsEmpty(mData(i)) Then
             res(i) = "Empty"
         Else
-            res(i) = TypeName(VECTOR(i))
+            res(i) = TypeName(mData(i))
         End If
     Next i
 
@@ -320,14 +320,14 @@ Public Function is_empty(Optional ByVal treatBlankStringAsEmpty As Boolean = Tru
     Dim lb As Long, ub As Long, i As Long
     Dim mask As Variant
 
-    lb = LBound(VECTOR)
-    ub = UBound(VECTOR)
+    lb = LBound(mData)
+    ub = UBound(mData)
     ReDim mask(lb To ub)
 
     For i = lb To ub
-        mask(i) = IsEmpty(VECTOR(i))
-        If treatBlankStringAsEmpty And VarType(VECTOR(i)) = vbString Then
-            mask(i) = CBool(mask(i)) Or (Trim$(CStr(VECTOR(i))) = "")
+        mask(i) = IsEmpty(mData(i))
+        If treatBlankStringAsEmpty And VarType(mData(i)) = vbString Then
+            mask(i) = CBool(mask(i)) Or (Trim$(CStr(mData(i))) = "")
         End If
     Next i
 
@@ -343,17 +343,17 @@ Public Sub cast_to_double_safe(Optional ByVal emptyAsZero As Boolean = False, _
     ensure_loaded
 
     Dim i As Long
-    For i = LBound(VECTOR) To UBound(VECTOR)
-        If IsError(VECTOR(i)) Or IsEmpty(VECTOR(i)) Then
-            VECTOR(i) = IIf(emptyAsZero, 0#, Empty)
-        ElseIf VarType(VECTOR(i)) = vbString And Trim$(CStr(VECTOR(i))) = "" Then
-            VECTOR(i) = IIf(emptyAsZero, 0#, Empty)
-        ElseIf IsDate(VECTOR(i)) And treatDateAsInvalid Then
-            VECTOR(i) = IIf(invalidAsZero, 0#, Empty)
-        ElseIf IsNumeric(VECTOR(i)) Then
-            VECTOR(i) = CDbl(VECTOR(i))
+    For i = LBound(mData) To UBound(mData)
+        If IsError(mData(i)) Or IsEmpty(mData(i)) Then
+            mData(i) = IIf(emptyAsZero, 0#, Empty)
+        ElseIf VarType(mData(i)) = vbString And Trim$(CStr(mData(i))) = "" Then
+            mData(i) = IIf(emptyAsZero, 0#, Empty)
+        ElseIf IsDate(mData(i)) And treatDateAsInvalid Then
+            mData(i) = IIf(invalidAsZero, 0#, Empty)
+        ElseIf IsNumeric(mData(i)) Then
+            mData(i) = CDbl(mData(i))
         Else
-            VECTOR(i) = IIf(invalidAsZero, 0#, Empty)
+            mData(i) = IIf(invalidAsZero, 0#, Empty)
         End If
     Next i
 End Sub
@@ -363,17 +363,17 @@ Public Sub cast_to_string_safe(Optional ByVal emptyAsBlank As Boolean = True, _
     ensure_loaded
 
     Dim i As Long
-    For i = LBound(VECTOR) To UBound(VECTOR)
-        If IsError(VECTOR(i)) Then
+    For i = LBound(mData) To UBound(mData)
+        If IsError(mData(i)) Then
             If errorAsBlank Then
-                VECTOR(i) = ""
+                mData(i) = ""
             Else
                 Err.Raise vbObjectError + 1201, "Vector.cast_to_string_safe", "Error値が含まれています。"
             End If
-        ElseIf IsEmpty(VECTOR(i)) Then
-            VECTOR(i) = IIf(emptyAsBlank, "", Empty)
+        ElseIf IsEmpty(mData(i)) Then
+            mData(i) = IIf(emptyAsBlank, "", Empty)
         Else
-            VECTOR(i) = CStr(VECTOR(i))
+            mData(i) = CStr(mData(i))
         End If
     Next i
 End Sub
@@ -382,16 +382,16 @@ Public Sub cast_to_date_safe(Optional ByVal invalidAsEmpty As Boolean = True)
     ensure_loaded
 
     Dim i As Long
-    For i = LBound(VECTOR) To UBound(VECTOR)
-        If IsError(VECTOR(i)) Or IsEmpty(VECTOR(i)) Then
-            VECTOR(i) = Empty
-        ElseIf VarType(VECTOR(i)) = vbString And Trim$(CStr(VECTOR(i))) = "" Then
-            VECTOR(i) = Empty
-        ElseIf IsDate(VECTOR(i)) Then
-            VECTOR(i) = CDate(VECTOR(i))
+    For i = LBound(mData) To UBound(mData)
+        If IsError(mData(i)) Or IsEmpty(mData(i)) Then
+            mData(i) = Empty
+        ElseIf VarType(mData(i)) = vbString And Trim$(CStr(mData(i))) = "" Then
+            mData(i) = Empty
+        ElseIf IsDate(mData(i)) Then
+            mData(i) = CDate(mData(i))
         Else
             If invalidAsEmpty Then
-                VECTOR(i) = Empty
+                mData(i) = Empty
             Else
                 Err.Raise vbObjectError + 1202, "Vector.cast_to_date_safe", "日付に変換できない値が含まれています。"
             End If
@@ -403,11 +403,11 @@ Public Sub fill_empty(ByVal fillValue As Variant, Optional ByVal treatBlankStrin
     ensure_loaded
 
     Dim i As Long
-    For i = LBound(VECTOR) To UBound(VECTOR)
-        If IsEmpty(VECTOR(i)) Then
-            VECTOR(i) = fillValue
-        ElseIf treatBlankStringAsEmpty And VarType(VECTOR(i)) = vbString And Trim$(CStr(VECTOR(i))) = "" Then
-            VECTOR(i) = fillValue
+    For i = LBound(mData) To UBound(mData)
+        If IsEmpty(mData(i)) Then
+            mData(i) = fillValue
+        ElseIf treatBlankStringAsEmpty And VarType(mData(i)) = vbString And Trim$(CStr(mData(i))) = "" Then
+            mData(i) = fillValue
         End If
     Next i
 End Sub
@@ -421,8 +421,8 @@ Public Sub map(ByVal functionName As String)
 
     Dim i As Long
     On Error GoTo MapFailed
-    For i = LBound(VECTOR) To UBound(VECTOR)
-        VECTOR(i) = Application.Run(functionName, VECTOR(i), i)
+    For i = LBound(mData) To UBound(mData)
+        mData(i) = Application.Run(functionName, mData(i), i)
     Next i
     On Error GoTo 0
     Exit Sub
@@ -446,11 +446,11 @@ Public Function unique() As Variant
     Set dict = CreateObject("Scripting.Dictionary")
     Set ordered = New Collection
 
-    For i = LBound(VECTOR) To UBound(VECTOR)
-        key = build_variant_key(VECTOR(i))
+    For i = LBound(mData) To UBound(mData)
+        key = build_variant_key(mData(i))
         If Not dict.Exists(key) Then
             dict.Add key, True
-            ordered.Add VECTOR(i)
+            ordered.Add mData(i)
         End If
     Next i
 
@@ -470,8 +470,8 @@ Public Function sum() As Double
     Dim total As Double
 
     total = 0#
-    For i = LBound(VECTOR) To UBound(VECTOR)
-        total = total + CDbl(VECTOR(i))
+    For i = LBound(mData) To UBound(mData)
+        total = total + CDbl(mData(i))
     Next i
 
     sum = total
@@ -492,7 +492,7 @@ Public Sub to_range_vertical(ByVal topLeft As Range)
 
     Dim n As Long
     n = Me.count
-    topLeft.Resize(n, 1).Value = Application.WorksheetFunction.Transpose(VECTOR)
+    topLeft.Resize(n, 1).Value = Application.WorksheetFunction.Transpose(mData)
 End Sub
 
 Public Sub to_range_horizontal(ByVal topLeft As Range)
@@ -501,13 +501,13 @@ Public Sub to_range_horizontal(ByVal topLeft As Range)
 
     Dim n As Long
     n = Me.count
-    topLeft.Resize(1, n).Value = VECTOR
+    topLeft.Resize(1, n).Value = mData
 End Sub
 
 '----------------------------
 ' 状態管理系
 '----------------------------
 Public Sub clear()
-    VECTOR = Empty
-    VECTOR_IS_LOADED = False
+    mData = Empty
+    mIsLoaded = False
 End Sub

@@ -1,16 +1,13 @@
-'----------------------------
-'クラスモジュールのメタ属性
-'----------------------------
 VERSION 1.0 CLASS
 BEGIN
-  MultiUse = -1                         'クラスのインスタンスを複数生成できるか（-1：True（可能）、0:False（不可））
+  MultiUse = -1
 END
-Attribute VB_Name = "Vector"            'クラス名定義
-Attribute VB_GlobalNameSpace = False    'グローバル名前空間に公開するか（通常はFalse）
-Attribute VB_Creatable = False          '外部（他アプリ）から CreateObject で生成できるか（False：外部から生成不可（通常）、True：COMとして公開する場合のみ使用）
-Attribute VB_PredeclaredId = False      'Newせずとも使用可とするか（Trueにするとシングルトン的挙動に。通常はFalse）
-Attribute VB_Exposed = False            'クラスを外部に公開するか（通常はFalse）
-Option Explicit                         '型宣言を強制
+Attribute VB_Name = "Vector"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+Option Explicit
 
 '----------------------------
 ' プロパティ

@@ -25,8 +25,8 @@
         <p class="hero-subline">二次元表データモジュールの API 詳細</p>
       </div>
       <p class="lead">
-        <code>Matrix</code> の公開 API を、表データの読込・抽出・追加・変形・出力という流れでまとめています。
-        各項目は折りたたみ式で、入力・出力・前提・注意・ユースケースをすぐ確認できます。
+        <code>Matrix</code> は、列名を持たない表データを二次元配列として扱う基盤クラスです。
+        このページでは、クラスの位置づけ、プロパティ、各メソッドの入力例・コード例・実行結果を確認できます。
       </p>
       <div class="detail-nav-stack">
         <div class="context-bar" aria-label="Context links">
@@ -48,32 +48,22 @@
 
     <div class="docs-columns">
       <main class="doc-main" id="doc-content">
-        <section class="panel" id="diagram">
+        <section class="panel" id="class-design">
           <div class="section-heading">
-            <p class="eyebrow">Class Diagram</p>
-            <h2>UML 風クラス図</h2>
+            <p class="eyebrow">CLASS DESIGN</p>
+            <h2>クラスデザイン</h2>
           </div>
           <div class="reference-intro">
-            <div class="class-diagram">
-              <article class="class-box">
-                <span class="class-stereo">Class</span>
-                <p class="note-text"><strong>Matrix</strong></p>
-                <ul class="member-list">
-                  <li>- mData As Variant</li>
-                  <li>- mRowCount As Long</li>
-                  <li>- mColCount As Long</li>
-                  <li>+ read_range(rng As Range)</li>
-                  <li>+ filter_rows(mask As Variant) As Matrix</li>
-                  <li>+ append_column(values As Variant)</li>
-                  <li>+ transpose() As Matrix</li>
-                </ul>
-              </article>
-              <div class="class-rel">列名を持たない表データの基盤クラスとして、行列操作とシート入出力を受け持ちます。</div>
-            </div>
+            <article class="class-rel class-overview">
+              <strong>Matrix の位置づけ</strong><br>
+              Matrix は、列名を持たない表データを二次元配列として保持し、
+              行抽出、列選択、追加、転置、出力といった低レベルの表操作を受け持つクラスです。
+              <code>DataTable</code> が列名ベースの処理を行う一方で、Matrix は配列構造そのものを扱う土台として使います。
+            </article>
             <div class="info-pills">
-              <div class="info-pill"><strong>主な責務</strong> 二次元表データの保持と再構成</div>
-              <div class="info-pill"><strong>主な入力</strong> Range / 二次元配列 / 行列インデックス</div>
-              <div class="info-pill"><strong>主な出力</strong> Matrix / Variant 配列 / シート出力</div>
+              <div class="info-pill"><strong>責務</strong> 表データの保持、行列操作、配列ベースの出力</div>
+              <div class="info-pill"><strong>主な入力</strong> Range / 二次元配列 / 行番号配列 / 列番号配列</div>
+              <div class="info-pill"><strong>主な出力</strong> Matrix / 配列 / シート出力</div>
             </div>
           </div>
         </section>
@@ -81,82 +71,87 @@
         <section class="panel" id="properties">
           <div class="section-heading">
             <p class="eyebrow">Properties</p>
-            <h2>プロパティと参照系</h2>
+            <h2>プロパティ</h2>
           </div>
           <div class="api-directory">
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>is_loaded</strong> <code>Property Get is_loaded() As Boolean</code></span></span><span class="api-summary-copy">読込済みかを返す</span></summary><div class="api-body"><p>内部状態が初期化済みかを返します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td>なし</td></tr><tr><th>出力</th><td><code>Boolean</code></td></tr><tr><th>前提</th><td>なし</td></tr><tr><th>注意</th><td>データ内容の正しさまでは保証しません。</td></tr><tr><th>ユースケース</th><td>処理前に未読込のまま呼んでいないか確認する。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>row_count</strong> <code>Property Get row_count() As Long</code></span></span><span class="api-summary-copy">行数を返す</span></summary><div class="api-body"><p>現在の行数を返します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td>なし</td></tr><tr><th>出力</th><td><code>Long</code></td></tr><tr><th>前提</th><td>読込済みであること。</td></tr><tr><th>注意</th><td>空 Matrix は 0 を返します。</td></tr><tr><th>ユースケース</th><td>抽出後の件数確認や出力範囲計算。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>col_count</strong> <code>Property Get col_count() As Long</code></span></span><span class="api-summary-copy">列数を返す</span></summary><div class="api-body"><p>現在の列数を返します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td>なし</td></tr><tr><th>出力</th><td><code>Long</code></td></tr><tr><th>前提</th><td>読込済みであること。</td></tr><tr><th>注意</th><td>列選択後の構造確認に向いています。</td></tr><tr><th>ユースケース</th><td>追加列の前後で構造が変わったか確認する。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>data</strong> <code>Property Get data() As Variant</code></span></span><span class="api-summary-copy">内部の二次元配列を返す</span></summary><div class="api-body"><p>内部データを複製して返します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td>なし</td></tr><tr><th>出力</th><td><code>Variant</code> の二次元配列</td></tr><tr><th>前提</th><td>読込済みであること。</td></tr><tr><th>注意</th><td>返り値の編集は元データへ反映されません。</td></tr><tr><th>ユースケース</th><td>VBA の通常ループや他 API に配列を渡す。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>item</strong> <code>Property Get item(ByVal rowIndex As Long, ByVal colIndex As Long) As Variant</code></span></span><span class="api-summary-copy">指定セルの値を返す</span></summary><div class="api-body"><p>行番号と列番号で個別要素を参照します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>rowIndex</code>, <code>colIndex</code></td></tr><tr><th>出力</th><td>指定位置の値</td></tr><tr><th>前提</th><td>読込済みで、両インデックスが範囲内であること。</td></tr><tr><th>注意</th><td>範囲外は例外になります。</td></tr><tr><th>ユースケース</th><td>先頭セルや特定行列の値だけを確認する。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>row_values</strong> <code>Function row_values(ByVal rowIndex As Long) As Variant</code></span></span><span class="api-summary-copy">行を一次元配列で返す</span></summary><div class="api-body"><p>指定行だけを一次元配列として返します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>rowIndex As Long</code></td></tr><tr><th>出力</th><td>行データの一次元配列</td></tr><tr><th>前提</th><td>読込済みで行番号が有効であること。</td></tr><tr><th>注意</th><td>列数ぶんの配列が返ります。</td></tr><tr><th>ユースケース</th><td>特定レコードだけ別処理へ渡す。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>col_values</strong> <code>Function col_values(ByVal colIndex As Long) As Variant</code></span></span><span class="api-summary-copy">列を一次元配列で返す</span></summary><div class="api-body"><p>指定列を一次元配列として返します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>colIndex As Long</code></td></tr><tr><th>出力</th><td>列データの一次元配列</td></tr><tr><th>前提</th><td>読込済みで、行数が 1 件以上あること。</td></tr><tr><th>注意</th><td>行数 0 の Matrix では返せず例外になります。</td></tr><tr><th>ユースケース</th><td>列単位の判定を <code>Vector</code> に渡す。</td></tr></tbody></table></div></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>is_loaded</strong> <code>Property Get is_loaded() As Boolean</code></span></span><span class="api-summary-copy">読込済みかを返す</span></summary><div class="api-body"><p>データが読み込まれているかを返します。</p></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>row_count</strong> <code>Property Get row_count() As Long</code></span></span><span class="api-summary-copy">行数を返す</span></summary><div class="api-body"><p>現在の行数を返します。</p></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>col_count</strong> <code>Property Get col_count() As Long</code></span></span><span class="api-summary-copy">列数を返す</span></summary><div class="api-body"><p>現在の列数を返します。</p></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>data</strong> <code>Property Get data() As Variant</code></span></span><span class="api-summary-copy">内部の二次元配列を返す</span></summary><div class="api-body"><p>内部配列を複製して返します。</p></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>item</strong> <code>Property Get item(ByVal rowIndex As Long, ByVal colIndex As Long) As Variant</code></span></span><span class="api-summary-copy">指定位置の値を返す</span></summary><div class="api-body"><p>行番号・列番号を指定して個別セルの値を返します。</p></div></details>
           </div>
         </section>
 
-        <section class="panel" id="loading">
+        <section class="panel" id="methods">
           <div class="section-heading">
-            <p class="eyebrow">Loading</p>
-            <h2>読込系</h2>
+            <p class="eyebrow">Methods</p>
+            <h2>メソッド</h2>
           </div>
-          <div class="api-directory">
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>read_range</strong> <code>Sub read_range(ByVal rng As Range)</code></span></span><span class="api-summary-copy">矩形 Range を読む</span></summary><div class="api-body"><p>シート上の矩形範囲を二次元配列として読み込みます。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>rng As Range</code></td></tr><tr><th>出力</th><td>なし。内部状態を更新。</td></tr><tr><th>前提</th><td><code>rng</code> が <code>Nothing</code> ではないこと。</td></tr><tr><th>注意</th><td>単一セルでも 1x1 の Matrix として扱われます。</td></tr><tr><th>ユースケース</th><td>シート上の中間表を丸ごと読み込む。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>read_array</strong> <code>Sub read_array(ByVal arr As Variant)</code></span></span><span class="api-summary-copy">二次元配列を読む</span></summary><div class="api-body"><p>既存の二次元配列をそのまま Matrix に載せます。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>arr As Variant</code> の二次元配列</td></tr><tr><th>出力</th><td>なし。内部状態を更新。</td></tr><tr><th>前提</th><td><code>arr</code> が二次元配列であること。</td></tr><tr><th>注意</th><td>三次元以上は例外になります。</td></tr><tr><th>ユースケース</th><td>API や他クラスが返した配列を Matrix 化する。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>read_empty</strong> <code>Sub read_empty(ByVal colCount As Long)</code></span></span><span class="api-summary-copy">空の Matrix を作る</span></summary><div class="api-body"><p>列数だけを持つ、行数 0 の空 Matrix を初期化します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>colCount As Long</code></td></tr><tr><th>出力</th><td>なし。内部状態を更新。</td></tr><tr><th>前提</th><td><code>colCount &gt;= 1</code></td></tr><tr><th>注意</th><td>空 Matrix は一部の参照系メソッドで制約があります。</td></tr><tr><th>ユースケース</th><td>抽出結果が 0 件でも列構造を保ちたいとき。</td></tr></tbody></table></div></div></details>
-          </div>
-        </section>
 
-        <section class="panel" id="selection">
-          <div class="section-heading">
-            <p class="eyebrow">Selection</p>
-            <h2>抽出・選択系</h2>
-          </div>
-          <div class="api-directory">
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>filter_rows</strong> <code>Function filter_rows(ByVal mask As Variant) As Matrix</code></span></span><span class="api-summary-copy">マスクで行抽出</span></summary><div class="api-body"><p>ブール配列に応じて行だけを抽出した新しい Matrix を返します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>mask</code> の一次元配列</td></tr><tr><th>出力</th><td><code>Matrix</code></td></tr><tr><th>前提</th><td><code>mask</code> の長さが行数と一致すること。</td></tr><tr><th>注意</th><td>1 件も残らない場合は空 Matrix が返ります。</td></tr><tr><th>ユースケース</th><td>Vector で作った条件マスクを使って表全体を絞る。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>slice_rows</strong> <code>Function slice_rows(ByVal rowIndexes As Variant) As Matrix</code></span></span><span class="api-summary-copy">指定順で行を切り出す</span></summary><div class="api-body"><p>行番号配列に従って、必要な行だけを順番どおりに取り出します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>rowIndexes</code> の一次元配列</td></tr><tr><th>出力</th><td><code>Matrix</code></td></tr><tr><th>前提</th><td>各行番号が有効範囲であること。</td></tr><tr><th>注意</th><td>重複番号を指定すると同じ行が重複して入ります。</td></tr><tr><th>ユースケース</th><td>ソート済みインデックスに従って行を並び替える前処理。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>select_columns</strong> <code>Function select_columns(ByVal columnIndexes As Variant) As Matrix</code></span></span><span class="api-summary-copy">指定列だけ残す</span></summary><div class="api-body"><p>必要な列番号だけを残して新しい Matrix を返します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>columnIndexes</code> の一次元配列</td></tr><tr><th>出力</th><td><code>Matrix</code></td></tr><tr><th>前提</th><td>1 件以上の列番号があり、各番号が有効であること。</td></tr><tr><th>注意</th><td>空配列は例外になります。</td></tr><tr><th>ユースケース</th><td>中間表から必要列だけを抜き出して別処理に渡す。</td></tr></tbody></table></div></div></details>
-          </div>
-        </section>
+          <div class="method-group" id="loading-methods">
+            <h3>読込メソッド</h3>
+            <p class="method-group-note">シートや二次元配列から Matrix を作る入口です。</p>
 
-        <section class="panel" id="mutation">
-          <div class="section-heading">
-            <p class="eyebrow">Mutation</p>
-            <h2>更新・追加系</h2>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>read_range</strong> <code>Sub read_range(ByVal rng As Range)</code></span></span><span class="api-summary-copy">矩形 Range を読む</span></summary><div class="api-body"><p>シート上の矩形範囲を二次元配列として読み込みます。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table></div></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Dim mat As New Matrix
+mat.read_range Sheet1.Range("A1:B2")</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mat.row_count = 2
+mat.col_count = 2</code></pre></div></div></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>read_array</strong> <code>Sub read_array(ByVal arr As Variant)</code></span></span><span class="api-summary-copy">二次元配列を読む</span></summary><div class="api-body"><p>既存の二次元配列をそのまま Matrix に読み込みます。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>arr(1,1)=1  arr(1,2)=2
+arr(2,1)=3  arr(2,2)=4</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Dim mat As New Matrix
+mat.read_array arr</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mat.data(2, 2) = 4</code></pre></div></div></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>read_empty</strong> <code>Sub read_empty(ByVal colCount As Long)</code></span></span><span class="api-summary-copy">空の Matrix を作る</span></summary><div class="api-body"><p>列数だけを持つ、行数 0 の Matrix を初期化します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>colCount = 3</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Dim mat As New Matrix
+mat.read_empty 3</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mat.row_count = 0
+mat.col_count = 3</code></pre></div></div></div></details>
           </div>
-          <div class="api-directory">
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>set_column_values</strong> <code>Sub set_column_values(ByVal colIndex As Long, ByVal values As Variant)</code></span></span><span class="api-summary-copy">列全体を置換する</span></summary><div class="api-body"><p>指定列を新しい値配列で一括置換します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>colIndex</code>, <code>values</code> の一次元配列</td></tr><tr><th>出力</th><td>なし。内部状態を更新。</td></tr><tr><th>前提</th><td><code>values</code> の長さが行数と一致すること。</td></tr><tr><th>注意</th><td>行数 0 の Matrix では何も起きません。</td></tr><tr><th>ユースケース</th><td>計算済みの新列値を既存列へ差し戻す。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>append_row</strong> <code>Sub append_row(ByVal values As Variant)</code></span></span><span class="api-summary-copy">1 行追加する</span></summary><div class="api-body"><p>末尾に 1 行ぶんの配列を追加します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>values</code> の一次元配列</td></tr><tr><th>出力</th><td>なし。内部状態を更新。</td></tr><tr><th>前提</th><td>配列長が列数と一致すること。</td></tr><tr><th>注意</th><td>列数不一致は例外になります。</td></tr><tr><th>ユースケース</th><td>集計行や追加入力行を後ろに付ける。</td></tr></tbody></table></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>append_column</strong> <code>Sub append_column(ByVal values As Variant)</code></span></span><span class="api-summary-copy">1 列追加する</span></summary><div class="api-body"><p>末尾に 1 列追加します。空 Matrix に対しては列数だけを増やします。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>values</code> の一次元配列</td></tr><tr><th>出力</th><td>なし。内部状態を更新。</td></tr><tr><th>前提</th><td>行数がある場合は配列長が行数と一致すること。</td></tr><tr><th>注意</th><td>空 Matrix の場合、値配列は不要です。</td></tr><tr><th>ユースケース</th><td>フラグ列や計算結果列を追加する。</td></tr></tbody></table></div></div></details>
-          </div>
-        </section>
 
-        <section class="panel" id="transform">
-          <div class="section-heading">
-            <p class="eyebrow">Transform</p>
-            <h2>変形系</h2>
-          </div>
-          <div class="api-directory">
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>transpose</strong> <code>Function transpose() As Matrix</code></span></span><span class="api-summary-copy">行列を転置する</span></summary><div class="api-body"><p>行と列を入れ替えた新しい Matrix を返します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td>なし</td></tr><tr><th>出力</th><td><code>Matrix</code></td></tr><tr><th>前提</th><td>読込済みで行数 1 以上であること。</td></tr><tr><th>注意</th><td>行数 0 の Matrix はサポートしていません。</td></tr><tr><th>ユースケース</th><td>縦持ちの一覧を横持ちの表へ変換する。</td></tr></tbody></table></div></div></details>
-          </div>
-        </section>
+          <div class="method-group" id="inspection-methods">
+            <h3>確認メソッド</h3>
+            <p class="method-group-note">行や列単位で内容を取り出すためのメソッドです。</p>
 
-        <section class="panel" id="output">
-          <div class="section-heading">
-            <p class="eyebrow">Output</p>
-            <h2>出力系</h2>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>row_values</strong> <code>Function row_values(ByVal rowIndex As Long) As Variant</code></span></span><span class="api-summary-copy">行を配列で返す</span></summary><div class="api-body"><p>指定行を一次元配列として返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>10</td><td>20</td></tr><tr><td>30</td><td>40</td></tr></tbody></table></div></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>res = mat.row_values(2)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>res = Array(30, 40)</code></pre></div></div></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>col_values</strong> <code>Function col_values(ByVal colIndex As Long) As Variant</code></span></span><span class="api-summary-copy">列を配列で返す</span></summary><div class="api-body"><p>指定列を一次元配列として返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>10</td><td>20</td></tr><tr><td>30</td><td>40</td></tr></tbody></table></div></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>res = mat.col_values(2)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>res = Array(20, 40)</code></pre></div></div></div></details>
           </div>
-          <div class="api-directory">
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>to_range</strong> <code>Sub to_range(ByVal topLeft As Range)</code></span></span><span class="api-summary-copy">シートへ出力する</span></summary><div class="api-body"><p>現在の Matrix をそのままシートへ書き戻します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td><code>topLeft As Range</code></td></tr><tr><th>出力</th><td>なし。シートへ書込。</td></tr><tr><th>前提</th><td>読込済みで、行数 1 以上、<code>topLeft</code> が有効であること。</td></tr><tr><th>注意</th><td>空 Matrix は出力できず例外になります。</td></tr><tr><th>ユースケース</th><td>加工後の中間表を確認用シートへ貼り出す。</td></tr></tbody></table></div></div></details>
-          </div>
-        </section>
 
-        <section class="panel" id="state">
-          <div class="section-heading">
-            <p class="eyebrow">State</p>
-            <h2>状態管理系</h2>
+          <div class="method-group" id="selection-methods">
+            <h3>抽出・選択メソッド</h3>
+            <p class="method-group-note">必要な行や列だけを切り出した新しい Matrix を返します。</p>
+
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>filter_rows</strong> <code>Function filter_rows(ByVal mask As Variant) As Matrix</code></span></span><span class="api-summary-copy">マスクで行抽出</span></summary><div class="api-body"><p>ブール配列に対応する行だけを残します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>10</td><td>20</td></tr><tr><td>30</td><td>40</td></tr><tr><td>50</td><td>60</td></tr></tbody></table></div><pre class="result-box"><code>mask = Array(True, False, True)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set filtered = mat.filter_rows(mask)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>10</td><td>20</td></tr><tr><td>50</td><td>60</td></tr></tbody></table></div></div></div></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>slice_rows</strong> <code>Function slice_rows(ByVal rowIndexes As Variant) As Matrix</code></span></span><span class="api-summary-copy">指定順で行切り出し</span></summary><div class="api-body"><p>行番号配列の順番どおりに行を取り出します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>rowIndexes = Array(3, 1)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set sliced = mat.slice_rows(rowIndexes)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>1行目 = 元の3行目
+2行目 = 元の1行目</code></pre></div></div></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>select_columns</strong> <code>Function select_columns(ByVal columnIndexes As Variant) As Matrix</code></span></span><span class="api-summary-copy">列選択</span></summary><div class="api-body"><p>必要な列番号だけを残します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>columnIndexes = Array(2, 1)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set selected = mat.select_columns(columnIndexes)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>列順が B, A に入れ替わった Matrix が返る</code></pre></div></div></div></details>
           </div>
-          <div class="api-directory">
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>clear</strong> <code>Sub clear()</code></span></span><span class="api-summary-copy">内部状態を初期化する</span></summary><div class="api-body"><p>保持している行列データと件数情報を初期状態へ戻します。</p><div class="table-wrap"><table class="api-spec-table"><tbody><tr><th>入力</th><td>なし</td></tr><tr><th>出力</th><td>なし。内部状態を初期化。</td></tr><tr><th>前提</th><td>なし</td></tr><tr><th>注意</th><td>読込済みフラグも <code>False</code> に戻ります。</td></tr><tr><th>ユースケース</th><td>同じ変数で別の表を読み込む前にリセットする。</td></tr></tbody></table></div></div></details>
+
+          <div class="method-group" id="mutation-methods">
+            <h3>更新・追加メソッド</h3>
+            <p class="method-group-note">既存の Matrix を更新したり、行や列を追加したりします。</p>
+
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>set_column_values</strong> <code>Sub set_column_values(ByVal colIndex As Long, ByVal values As Variant)</code></span></span><span class="api-summary-copy">列全体を置換</span></summary><div class="api-body"><p>指定列を新しい値配列で置き換えます。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>values = Array("A", "B", "C")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mat.set_column_values 2, values</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>2列目が "A", "B", "C" に更新される</code></pre></div></div></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>append_row</strong> <code>Sub append_row(ByVal values As Variant)</code></span></span><span class="api-summary-copy">行追加</span></summary><div class="api-body"><p>末尾に 1 行を追加します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>values = Array(70, 80)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mat.append_row values</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>最終行に 70, 80 が追加される</code></pre></div></div></div></details>
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>append_column</strong> <code>Sub append_column(ByVal values As Variant)</code></span></span><span class="api-summary-copy">列追加</span></summary><div class="api-body"><p>末尾に 1 列を追加します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>values = Array("X", "Y", "Z")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mat.append_column values</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>右端に X, Y, Z の列が追加される</code></pre></div></div></div></details>
+          </div>
+
+          <div class="method-group" id="transform-methods">
+            <h3>変形メソッド</h3>
+            <p class="method-group-note">表構造そのものを組み替えるメソッドです。</p>
+
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>transpose</strong> <code>Function transpose() As Matrix</code></span></span><span class="api-summary-copy">転置する</span></summary><div class="api-body"><p>行と列を入れ替えた新しい Matrix を返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table></div></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set t = mat.transpose()</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>1</td><td>3</td></tr><tr><td>2</td><td>4</td></tr></tbody></table></div></div></div></div></details>
+          </div>
+
+          <div class="method-group" id="output-methods">
+            <h3>出力メソッド</h3>
+            <p class="method-group-note">Matrix をシートへ書き戻します。</p>
+
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>to_range</strong> <code>Sub to_range(ByVal topLeft As Range)</code></span></span><span class="api-summary-copy">シート出力</span></summary><div class="api-body"><p>現在の Matrix をそのままシートへ出力します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>mat.data = [[1,2],[3,4]]</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mat.to_range Sheet1.Range("E2")</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>E</th><th>F</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr><tr><td>3</td><td>4</td></tr></tbody></table></div></div></div></div></details>
+          </div>
+
+          <div class="method-group" id="state-methods">
+            <h3>状態管理メソッド</h3>
+            <p class="method-group-note">内部状態を初期化します。</p>
+
+            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>clear</strong> <code>Sub clear()</code></span></span><span class="api-summary-copy">初期化</span></summary><div class="api-body"><p>データと件数情報を初期状態へ戻します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>mat.row_count = 3
+mat.col_count = 2</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mat.clear</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mat.is_loaded = False
+mat.row_count = 0
+mat.col_count = 0</code></pre></div></div></div></details>
           </div>
         </section>
       </main>

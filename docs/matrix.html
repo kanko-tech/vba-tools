@@ -19,19 +19,20 @@
         <code>Matrix</code> は 2 次元配列を扱うための基本クラスです。
         列名を持たない表データを読み込み、行抽出、列選択、追加、転置、シート出力を組み合わせて扱えます。
       </p>
-      <div class="hero-actions">
-        <a href="matrix-reference.html">API Reference</a>
-        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Matrix/README.md" target="_blank" rel="noreferrer">Source README</a>
-      </div>
-      <nav class="page-nav" aria-label="Page navigation">
-        <a href="index.html">Overview</a>
-        <a href="vector.html">Vector Guide</a>
-        <a href="matrix.html" class="current">Matrix Guide</a>
-        <a href="datatable.html">DataTable Guide</a>
-      </nav>
-      <div class="tab-switch" aria-label="Matrix pages">
-        <a href="matrix.html" class="current">Guide</a>
-        <a href="matrix-reference.html">Reference</a>
+      <div class="detail-nav-stack">
+        <div class="context-bar" aria-label="Context links">
+          <a class="context-link" href="index.html"><strong>Docs Home</strong></a>
+          <a class="context-link" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Matrix/README.md" target="_blank" rel="noreferrer"><strong>Source README</strong></a>
+        </div>
+        <nav class="page-nav" aria-label="Module navigation">
+          <a href="vector.html">Vector</a>
+          <a href="matrix.html" class="current">Matrix</a>
+          <a href="datatable.html">DataTable</a>
+        </nav>
+        <div class="tab-switch" aria-label="Matrix page type">
+          <a href="matrix.html" class="current">Guide</a>
+          <a href="matrix-reference.html">Reference</a>
+        </div>
       </div>
       <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
     </header>
@@ -187,9 +188,19 @@ End Sub</code></pre>
                   <td>表の内容とサイズを変更する</td>
                 </tr>
                 <tr>
+                  <td>整形</td>
+                  <td><code>transpose</code></td>
+                  <td>行列を入れ替えて別の向きへ整える</td>
+                </tr>
+                <tr>
                   <td>出力</td>
-                  <td><code>transpose</code> <code>to_range</code></td>
-                  <td>整形してシートへ戻す</td>
+                  <td><code>to_range</code></td>
+                  <td>整えた結果をシートへ戻す</td>
+                </tr>
+                <tr>
+                  <td>状態管理</td>
+                  <td><code>clear</code></td>
+                  <td>インスタンスを初期化して再利用しやすくする</td>
                 </tr>
               </tbody>
             </table>

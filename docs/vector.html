@@ -19,19 +19,20 @@
         <code>Vector</code> は 1 列または 1 行の値を、まとめて読み込み、条件マスク作成や型変換、集計に使うためのクラスです。
         Excel の列データを VBA で扱う処理を、セル単位の繰り返しより短く明確に書けます。
       </p>
-      <div class="hero-actions">
-        <a href="vector-reference.html">API Reference</a>
-        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Vector/README.md" target="_blank" rel="noreferrer">Source README</a>
-      </div>
-      <nav class="page-nav" aria-label="Page navigation">
-        <a href="index.html">Overview</a>
-        <a href="vector.html" class="current">Vector Guide</a>
-        <a href="matrix.html">Matrix Guide</a>
-        <a href="datatable.html">DataTable Guide</a>
-      </nav>
-      <div class="tab-switch" aria-label="Vector pages">
-        <a href="vector.html" class="current">Guide</a>
-        <a href="vector-reference.html">Reference</a>
+      <div class="detail-nav-stack">
+        <div class="context-bar" aria-label="Context links">
+          <a class="context-link" href="index.html"><strong>Docs Home</strong></a>
+          <a class="context-link" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Vector/README.md" target="_blank" rel="noreferrer"><strong>Source README</strong></a>
+        </div>
+        <nav class="page-nav" aria-label="Module navigation">
+          <a href="vector.html" class="current">Vector</a>
+          <a href="matrix.html">Matrix</a>
+          <a href="datatable.html">DataTable</a>
+        </nav>
+        <div class="tab-switch" aria-label="Vector page type">
+          <a href="vector.html" class="current">Guide</a>
+          <a href="vector-reference.html">Reference</a>
+        </div>
       </div>
       <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
     </header>
@@ -185,6 +186,11 @@ End Sub</code></pre>
                   <td>出力</td>
                   <td><code>to_range_vertical</code> <code>to_range_horizontal</code></td>
                   <td>加工後の値をシートへ戻す</td>
+                </tr>
+                <tr>
+                  <td>状態管理</td>
+                  <td><code>clear</code></td>
+                  <td>インスタンスを初期化して再利用しやすくする</td>
                 </tr>
               </tbody>
             </table>

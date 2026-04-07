@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="styles.css">
   <script src="page.js" defer></script>
 </head>
-<body>
+<body class="reference-page">
   <div class="page-shell docs-layout">
     <header class="hero detail-hero">
       <p class="eyebrow">API Reference</p>
@@ -19,19 +19,20 @@
         <code>Vector</code> のプロパティとメソッドを、役割ごとに整理した技術詳細ページです。
         返り値、用途、注意点を確認しながら実装へ接続できます。
       </p>
-      <div class="hero-actions">
-        <a href="vector.html">Back to Guide</a>
-        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Vector/Vector.cls" target="_blank" rel="noreferrer">Source Class</a>
-      </div>
-      <nav class="page-nav" aria-label="Page navigation">
-        <a href="index.html">Overview</a>
-        <a href="vector.html" class="current">Vector</a>
-        <a href="matrix.html">Matrix</a>
-        <a href="datatable.html">DataTable</a>
-      </nav>
-      <div class="tab-switch">
-        <a href="vector.html">Guide</a>
-        <a href="vector-reference.html" class="current">Reference</a>
+      <div class="detail-nav-stack">
+        <div class="context-bar" aria-label="Context links">
+          <a class="context-link" href="vector.html"><strong>Back to Guide</strong></a>
+          <a class="context-link" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Vector/Vector.cls" target="_blank" rel="noreferrer"><strong>Source Class</strong></a>
+        </div>
+        <nav class="page-nav" aria-label="Module navigation">
+          <a href="vector.html" class="current">Vector</a>
+          <a href="matrix.html">Matrix</a>
+          <a href="datatable.html">DataTable</a>
+        </nav>
+        <div class="tab-switch" aria-label="Vector page type">
+          <a href="vector.html">Guide</a>
+          <a href="vector-reference.html" class="current">Reference</a>
+        </div>
       </div>
       <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
     </header>
@@ -205,7 +206,7 @@
         <section class="panel" id="output">
           <div class="section-heading">
             <p class="eyebrow">Output</p>
-            <h2>出力・状態管理</h2>
+            <h2>出力系</h2>
           </div>
           <div class="api-grid">
             <article class="api-card">
@@ -218,6 +219,15 @@
               <div class="api-signature">Sub to_range_horizontal(ByVal topLeft As Range)</div>
               <p>値を横方向へ書き出します。見出し行や簡易確認用の出力に向いています。</p>
             </article>
+          </div>
+        </section>
+
+        <section class="panel" id="state">
+          <div class="section-heading">
+            <p class="eyebrow">State</p>
+            <h2>状態管理系</h2>
+          </div>
+          <div class="api-grid">
             <article class="api-card">
               <h3 id="clear">clear</h3>
               <div class="api-signature">Sub clear()</div>

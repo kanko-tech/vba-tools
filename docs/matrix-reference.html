@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="styles.css">
   <script src="page.js" defer></script>
 </head>
-<body>
+<body class="reference-page">
   <div class="page-shell docs-layout">
     <header class="hero detail-hero">
       <p class="eyebrow">API Reference</p>
@@ -18,19 +18,20 @@
       <p class="lead">
         <code>Matrix</code> のプロパティとメソッドを、行列操作の観点から整理した技術詳細ページです。
       </p>
-      <div class="hero-actions">
-        <a href="matrix.html">Back to Guide</a>
-        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Matrix/Matrix.cls" target="_blank" rel="noreferrer">Source Class</a>
-      </div>
-      <nav class="page-nav" aria-label="Page navigation">
-        <a href="index.html">Overview</a>
-        <a href="vector.html">Vector</a>
-        <a href="matrix.html" class="current">Matrix</a>
-        <a href="datatable.html">DataTable</a>
-      </nav>
-      <div class="tab-switch">
-        <a href="matrix.html">Guide</a>
-        <a href="matrix-reference.html" class="current">Reference</a>
+      <div class="detail-nav-stack">
+        <div class="context-bar" aria-label="Context links">
+          <a class="context-link" href="matrix.html"><strong>Back to Guide</strong></a>
+          <a class="context-link" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Matrix/Matrix.cls" target="_blank" rel="noreferrer"><strong>Source Class</strong></a>
+        </div>
+        <nav class="page-nav" aria-label="Module navigation">
+          <a href="vector.html">Vector</a>
+          <a href="matrix.html" class="current">Matrix</a>
+          <a href="datatable.html">DataTable</a>
+        </nav>
+        <div class="tab-switch" aria-label="Matrix page type">
+          <a href="matrix.html">Guide</a>
+          <a href="matrix-reference.html" class="current">Reference</a>
+        </div>
       </div>
       <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
     </header>
@@ -156,7 +157,7 @@
         <section class="panel" id="output">
           <div class="section-heading">
             <p class="eyebrow">Output</p>
-            <h2>整形・出力・状態管理</h2>
+            <h2>整形・出力系</h2>
           </div>
           <div class="api-grid">
             <article class="api-card">
@@ -169,6 +170,15 @@
               <div class="api-signature">Sub to_range(ByVal topLeft As Range)</div>
               <p>現在の表を指定セルからシートへ出力します。行数 0 の <code>Matrix</code> は出力できません。</p>
             </article>
+          </div>
+        </section>
+
+        <section class="panel" id="state">
+          <div class="section-heading">
+            <p class="eyebrow">State</p>
+            <h2>状態管理系</h2>
+          </div>
+          <div class="api-grid">
             <article class="api-card">
               <h3 id="matrix-clear">clear</h3>
               <div class="api-signature">Sub clear()</div>

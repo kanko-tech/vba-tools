@@ -19,19 +19,20 @@
         <code>DataTable</code> は、ヘッダー行を持つ表データを列名ベースで扱うためのクラスです。
         条件抽出、列の追加・更新、並べ替え、シートへの書き戻しを、セル座標ではなく列名中心で書けます。
       </p>
-      <div class="hero-actions">
-        <a href="datatable-reference.html">API Reference</a>
-        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/DataTable/README.md" target="_blank" rel="noreferrer">Source README</a>
-      </div>
-      <nav class="page-nav" aria-label="Page navigation">
-        <a href="index.html">Overview</a>
-        <a href="vector.html">Vector Guide</a>
-        <a href="matrix.html">Matrix Guide</a>
-        <a href="datatable.html" class="current">DataTable Guide</a>
-      </nav>
-      <div class="tab-switch" aria-label="DataTable pages">
-        <a href="datatable.html" class="current">Guide</a>
-        <a href="datatable-reference.html">Reference</a>
+      <div class="detail-nav-stack">
+        <div class="context-bar" aria-label="Context links">
+          <a class="context-link" href="index.html"><strong>Docs Home</strong></a>
+          <a class="context-link" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/DataTable/README.md" target="_blank" rel="noreferrer"><strong>Source README</strong></a>
+        </div>
+        <nav class="page-nav" aria-label="Module navigation">
+          <a href="vector.html">Vector</a>
+          <a href="matrix.html">Matrix</a>
+          <a href="datatable.html" class="current">DataTable</a>
+        </nav>
+        <div class="tab-switch" aria-label="DataTable page type">
+          <a href="datatable.html" class="current">Guide</a>
+          <a href="datatable-reference.html">Reference</a>
+        </div>
       </div>
       <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
     </header>
@@ -179,8 +180,13 @@ End Sub</code></pre>
                 </tr>
                 <tr>
                   <td>出力</td>
-                  <td><code>to_range</code> <code>clear</code></td>
-                  <td>シート出力と状態リセットを行う</td>
+                  <td><code>to_range</code></td>
+                  <td>シートへヘッダー付きの結果を戻す</td>
+                </tr>
+                <tr>
+                  <td>状態管理</td>
+                  <td><code>clear</code></td>
+                  <td>インスタンスを初期化して再利用しやすくする</td>
                 </tr>
               </tbody>
             </table>

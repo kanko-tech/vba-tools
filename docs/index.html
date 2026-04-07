@@ -16,7 +16,7 @@
       <h1>VBA_tools</h1>
       <p class="lead">
         Excel VBA で使う再利用しやすいクラスモジュールをまとめたリポジトリです。
-        現在は <code>Vector</code>、<code>Matrix</code>、<code>Table</code> を中心に、
+        現在は <code>Vector</code>、<code>Matrix</code>、<code>DataTable</code> を中心に、
         配列と表データの読み込み、加工、出力を扱える構成になっています。
       </p>
       <div class="hero-actions">
@@ -27,7 +27,7 @@
         <a href="index.html" class="current">Overview</a>
         <a href="vector.html">Vector</a>
         <a href="matrix.html">Matrix</a>
-        <a href="table.html">Table</a>
+        <a href="datatable.html">DataTable</a>
       </nav>
     </header>
 
@@ -42,7 +42,7 @@
             <h3>配列処理を部品化</h3>
             <p>
               単一列の値をまとめて扱う <code>Vector</code>、二次元配列を表として扱う
-              <code>Matrix</code>、列名つきの実務データを操作する <code>Table</code> を用意しています。
+              <code>Matrix</code>、列名つきの実務データを操作する <code>DataTable</code> を用意しています。
             </p>
           </article>
           <article class="card accent-b">
@@ -84,10 +84,10 @@
           </article>
           <article class="directory-item">
             <div>
-              <h3><code>/src/ExcelVBA/Table</code></h3>
+              <h3><code>/src/ExcelVBA/DataTable</code></h3>
               <p>列名つきテーブルを扱うクラス。業務データの検索、更新、抽出を読みやすく書けます。</p>
             </div>
-            <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/Table" target="_blank" rel="noreferrer">Open</a>
+            <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/DataTable" target="_blank" rel="noreferrer">Open</a>
           </article>
         </div>
       </section>
@@ -117,7 +117,7 @@
             </ul>
           </article>
           <article class="module-card">
-            <h3>Table</h3>
+            <h3>DataTable</h3>
             <ul>
               <li>ヘッダーつきの表を読む</li>
               <li>列名ベースでフィルタや更新を行う</li>
@@ -142,8 +142,8 @@
             <span>Matrix Guide</span>
             <small>二次元配列の抽出、追加、出力</small>
           </a>
-          <a class="link-tile feature-link" href="table.html">
-            <span>Table Guide</span>
+          <a class="link-tile feature-link" href="datatable.html">
+            <span>DataTable Guide</span>
             <small>列名ベースの抽出、更新、整形</small>
           </a>
         </div>
@@ -164,7 +164,7 @@
             <p>列名は不要で、表全体を二次元配列として扱いたいとき。</p>
           </article>
           <article>
-            <h3>Table を選ぶ場面</h3>
+            <h3>DataTable を選ぶ場面</h3>
             <p>列名つきの実務データに対して、条件抽出や列更新を読みやすく書きたいとき。</p>
           </article>
         </div>
@@ -177,7 +177,7 @@
         </div>
         <ol class="steps">
           <li>必要なクラスモジュールを GitHub から取得します。</li>
-          <li>Excel VBA プロジェクトへ <code>Vector.cls</code>、<code>Matrix.cls</code>、<code>Table.cls</code> をインポートします。</li>
+          <li>Excel VBA プロジェクトへ <code>Vector.cls</code>、<code>Matrix.cls</code>、<code>DataTable.cls</code> をインポートします。</li>
           <li><code>Range</code> から配列や表を読み込み、クラスメソッドで加工します。</li>
           <li>加工結果をシートへ戻し、業務マクロの中で再利用します。</li>
         </ol>
@@ -205,8 +205,8 @@
             <span>Matrix README</span>
             <small>二次元配列モジュール</small>
           </a>
-          <a class="link-tile" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Table/README.md" target="_blank" rel="noreferrer">
-            <span>Table README</span>
+          <a class="link-tile" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/DataTable/README.md" target="_blank" rel="noreferrer">
+            <span>DataTable README</span>
             <small>表データモジュール</small>
           </a>
         </div>

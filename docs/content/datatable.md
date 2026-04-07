@@ -1,6 +1,6 @@
-# クラスモジュール `Table`
+# クラスモジュール `DataTable`
 
-`Table` は、列名を持つ表データを扱うための VBA クラスモジュールです。  
+`DataTable` は、列名を持つ表データを扱うための VBA クラスモジュールです。  
 内部では `Matrix` を使いながら、列名ベースの抽出、更新、並べ替え、出力を行います。
 
 ## まず何ができるか
@@ -8,16 +8,16 @@
 - ヘッダー付きの表を、そのまま列名つきデータとして読み込む
 - 列名を使って条件抽出する
 - 条件に合う行だけ別列を更新する
-- 必要な列だけを選んで新しい `Table` を作る
+- 必要な列だけを選んで新しい `DataTable` を作る
 - 列追加、列名変更、並べ替えで表を整える
 - ヘッダー付きでシートへ書き戻す
 
 ## クイックスタート
 
 ```vb
-Sub Sample_Table_QuickStart()
-    Dim tbl As New Table
-    Dim okRows As Table
+Sub Sample_DataTable_QuickStart()
+    Dim tbl As New DataTable
+    Dim okRows As DataTable
 
     tbl.read_range Sheet1.Range("A1:D8"), hasHeader:=True
     tbl.set_by_equals "status", "NG", "score", 0
@@ -157,7 +157,7 @@ End Sub
 
 ### 抽出・選択系メソッドの補足
 
-- `filter_by_*` と `select_columns` は元の `Table` を変更せず、新しい `Table` を返します。
+- `filter_by_*` と `select_columns` は元の `DataTable` を変更せず、新しい `DataTable` を返します。
 - `filter_by_mask` に渡す配列は、`Vector.eq` や `Vector.gt` で作ったブール配列とも組み合わせられます。
 
 ### 更新・整形系メソッドの補足
@@ -179,8 +179,8 @@ End Sub
 ### `status="OK"` の行だけを抽出する
 
 ```vb
-Dim tbl As New Table
-Dim okRows As Table
+Dim tbl As New DataTable
+Dim okRows As DataTable
 
 tbl.read_range Sheet1.Range("A1:D20"), hasHeader:=True
 Set okRows = tbl.filter_by_equals("status", "OK")
@@ -189,19 +189,19 @@ Set okRows = tbl.filter_by_equals("status", "OK")
 ### `status="NG"` の行だけ `score` を 0 にする
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 tbl.read_range Sheet1.Range("A1:D20"), hasHeader:=True
 tbl.set_by_equals "status", "NG", "score", 0
 ```
 
-### `Vector` を使って列条件を作り、`Table` へ戻す
+### `Vector` を使って列条件を作り、`DataTable` へ戻す
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 Dim amountVec As Vector
 Dim mask As Variant
-Dim highRows As Table
+Dim highRows As DataTable
 
 tbl.read_range Sheet1.Range("A1:D20"), hasHeader:=True
 Set amountVec = tbl.col_vector("amount")
@@ -237,7 +237,7 @@ Set highRows = tbl.filter_by_mask(mask)
 | C | OK | 90 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 ```
 
@@ -254,7 +254,7 @@ tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 <details>
 <summary><code>read_matrix(ByVal src As Matrix, ByVal columnNames As Variant)</code></summary>
 
-`Matrix` と列名配列から `Table` を構築します。
+`Matrix` と列名配列から `DataTable` を構築します。
 
 | 項目 | 内容 |
 | --- | --- |
@@ -266,7 +266,7 @@ tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 
 ```vb
 Dim mat As New Matrix
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 mat.read_range Sheet1.Range("A2:C5")
 tbl.read_matrix mat, Array("date", "item", "amount")
@@ -288,7 +288,7 @@ tbl.read_matrix mat, Array("date", "item", "amount")
 | 代表ユースケース | 実行前確認、デバッグ確認 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 Debug.Print tbl.is_loaded
 
@@ -310,7 +310,7 @@ Debug.Print tbl.is_loaded
 | 代表ユースケース | 件数確認、条件配列長の確認 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 Debug.Print tbl.row_count
@@ -330,7 +330,7 @@ Debug.Print tbl.row_count
 | 代表ユースケース | 列構造確認、出力列数確認 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 Debug.Print tbl.col_count
@@ -351,7 +351,7 @@ Debug.Print tbl.col_count
 | 代表ユースケース | UI 表示、出力列確認 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 Dim names As Variant
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
@@ -374,7 +374,7 @@ Debug.Print names(1)
 | 代表ユースケース | 低レベルな行列処理へ渡す |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 Dim mat As Matrix
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
@@ -398,7 +398,7 @@ Debug.Print mat.row_count
 | 代表ユースケース | 条件配列や集計の元データ取得 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 Dim scores As Variant
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
@@ -420,7 +420,7 @@ scores = tbl.col("score")
 | 代表ユースケース | `Vector` の `eq` `gt` `sum` `mean` を使いたいとき |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 Dim scoreVec As Vector
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
@@ -433,7 +433,7 @@ Debug.Print scoreVec.mean
 ### 抽出・選択系
 
 <details>
-<summary><code>filter_by_mask(ByVal mask As Variant) As Table</code></summary>
+<summary><code>filter_by_mask(ByVal mask As Variant) As DataTable</code></summary>
 
 条件マスクで行を絞り込みます。
 
@@ -441,13 +441,13 @@ Debug.Print scoreVec.mean
 | --- | --- |
 | 前提条件 | 読込済みであること、`mask` が一次元配列で行数と一致すること |
 | 入力 | `mask As Variant` |
-| 戻り値 | 新しい `Table` |
+| 戻り値 | 新しい `DataTable` |
 | 注意点 | 空テーブルでは空テーブルを返す |
 | 代表ユースケース | 既に作成済みの条件配列で抽出する |
 
 ```vb
-Dim tbl As New Table
-Dim filtered As Table
+Dim tbl As New DataTable
+Dim filtered As DataTable
 Dim mask(1 To 3) As Boolean
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
@@ -461,7 +461,7 @@ Set filtered = tbl.filter_by_mask(mask)
 </details>
 
 <details>
-<summary><code>filter_by_equals(ByVal columnName As String, ByVal matchValue As Variant) As Table</code></summary>
+<summary><code>filter_by_equals(ByVal columnName As String, ByVal matchValue As Variant) As DataTable</code></summary>
 
 指定列が特定値と一致する行だけを返します。
 
@@ -469,7 +469,7 @@ Set filtered = tbl.filter_by_mask(mask)
 | --- | --- |
 | 前提条件 | 読込済みであること、列名が存在すること |
 | 入力 | `columnName As String`, `matchValue As Variant` |
-| 戻り値 | 新しい `Table` |
+| 戻り値 | 新しい `DataTable` |
 | 注意点 | `Null` `Error` 比較不能値は不一致扱い |
 | 代表ユースケース | ステータス一致、カテゴリ一致の抽出 |
 
@@ -482,8 +482,8 @@ Set filtered = tbl.filter_by_mask(mask)
 | C | OK | 90 |
 
 ```vb
-Dim tbl As New Table
-Dim okRows As Table
+Dim tbl As New DataTable
+Dim okRows As DataTable
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 Set okRows = tbl.filter_by_equals("status", "OK")
@@ -499,7 +499,7 @@ Set okRows = tbl.filter_by_equals("status", "OK")
 </details>
 
 <details>
-<summary><code>filter_by_in(ByVal columnName As String, ByVal matchValues As Variant) As Table</code></summary>
+<summary><code>filter_by_in(ByVal columnName As String, ByVal matchValues As Variant) As DataTable</code></summary>
 
 指定列が候補配列のいずれかに一致する行を返します。
 
@@ -507,12 +507,12 @@ Set okRows = tbl.filter_by_equals("status", "OK")
 | --- | --- |
 | 前提条件 | 読込済みであること、列名が存在すること、`matchValues` が一次元配列であること |
 | 入力 | `columnName As String`, `matchValues As Variant` |
-| 戻り値 | 新しい `Table` |
+| 戻り値 | 新しい `DataTable` |
 | 代表ユースケース | 複数カテゴリ一括抽出 |
 
 ```vb
-Dim tbl As New Table
-Dim selectedRows As Table
+Dim tbl As New DataTable
+Dim selectedRows As DataTable
 
 tbl.read_range Sheet1.Range("A1:C6"), hasHeader:=True
 Set selectedRows = tbl.filter_by_in("status", Array("OK", "PENDING"))
@@ -521,7 +521,7 @@ Set selectedRows = tbl.filter_by_in("status", Array("OK", "PENDING"))
 </details>
 
 <details>
-<summary><code>filter_by_contains(ByVal columnName As String, ByVal searchText As String, Optional ByVal caseSensitive As Boolean = False) As Table</code></summary>
+<summary><code>filter_by_contains(ByVal columnName As String, ByVal searchText As String, Optional ByVal caseSensitive As Boolean = False) As DataTable</code></summary>
 
 指定列の文字列に検索文字列を含む行を返します。
 
@@ -529,13 +529,13 @@ Set selectedRows = tbl.filter_by_in("status", Array("OK", "PENDING"))
 | --- | --- |
 | 前提条件 | 読込済みであること、列名が存在すること |
 | 入力 | `columnName As String`, `searchText As String`, `caseSensitive As Boolean` |
-| 戻り値 | 新しい `Table` |
+| 戻り値 | 新しい `DataTable` |
 | 注意点 | `Null` `Empty` `Error` は不一致扱い |
 | 代表ユースケース | 部分一致検索、キーワード抽出 |
 
 ```vb
-Dim tbl As New Table
-Dim hitRows As Table
+Dim tbl As New DataTable
+Dim hitRows As DataTable
 
 tbl.read_range Sheet1.Range("A1:C5"), hasHeader:=True
 Set hitRows = tbl.filter_by_contains("product_name", "コーヒー")
@@ -544,7 +544,7 @@ Set hitRows = tbl.filter_by_contains("product_name", "コーヒー")
 </details>
 
 <details>
-<summary><code>filter_by_all_equals(ByVal columnNames As Variant, ByVal matchValues As Variant) As Table</code></summary>
+<summary><code>filter_by_all_equals(ByVal columnNames As Variant, ByVal matchValues As Variant) As DataTable</code></summary>
 
 複数条件を AND で結合して抽出します。
 
@@ -552,12 +552,12 @@ Set hitRows = tbl.filter_by_contains("product_name", "コーヒー")
 | --- | --- |
 | 前提条件 | 読込済みであること、`columnNames` と `matchValues` が一次元配列で長さ一致すること、各列名が存在すること |
 | 入力 | `columnNames As Variant`, `matchValues As Variant` |
-| 戻り値 | 新しい `Table` |
+| 戻り値 | 新しい `DataTable` |
 | 代表ユースケース | 複合条件の厳密抽出 |
 
 ```vb
-Dim tbl As New Table
-Dim narrowed As Table
+Dim tbl As New DataTable
+Dim narrowed As DataTable
 
 tbl.read_range Sheet1.Range("A1:D8"), hasHeader:=True
 Set narrowed = tbl.filter_by_all_equals(Array("status", "category"), Array("OK", "A"))
@@ -566,7 +566,7 @@ Set narrowed = tbl.filter_by_all_equals(Array("status", "category"), Array("OK",
 </details>
 
 <details>
-<summary><code>filter_by_any_equals(ByVal columnNames As Variant, ByVal matchValues As Variant) As Table</code></summary>
+<summary><code>filter_by_any_equals(ByVal columnNames As Variant, ByVal matchValues As Variant) As DataTable</code></summary>
 
 複数条件を OR で結合して抽出します。
 
@@ -574,12 +574,12 @@ Set narrowed = tbl.filter_by_all_equals(Array("status", "category"), Array("OK",
 | --- | --- |
 | 前提条件 | `filter_by_all_equals` と同じ |
 | 入力 | `columnNames As Variant`, `matchValues As Variant` |
-| 戻り値 | 新しい `Table` |
+| 戻り値 | 新しい `DataTable` |
 | 代表ユースケース | いずれか条件に合う行の抽出 |
 
 ```vb
-Dim tbl As New Table
-Dim matched As Table
+Dim tbl As New DataTable
+Dim matched As DataTable
 
 tbl.read_range Sheet1.Range("A1:D8"), hasHeader:=True
 Set matched = tbl.filter_by_any_equals(Array("status", "category"), Array("NG", "B"))
@@ -588,15 +588,15 @@ Set matched = tbl.filter_by_any_equals(Array("status", "category"), Array("NG", 
 </details>
 
 <details>
-<summary><code>select_columns(ByVal columnNames As Variant) As Table</code></summary>
+<summary><code>select_columns(ByVal columnNames As Variant) As DataTable</code></summary>
 
-必要な列だけを残した新しい `Table` を返します。
+必要な列だけを残した新しい `DataTable` を返します。
 
 | 項目 | 内容 |
 | --- | --- |
 | 前提条件 | 読込済みであること、`columnNames` が一次元配列であること、各列名が存在すること |
 | 入力 | `columnNames As Variant` |
-| 戻り値 | 新しい `Table` |
+| 戻り値 | 新しい `DataTable` |
 | 代表ユースケース | レポート用の列絞り込み |
 
 入力イメージ:
@@ -607,8 +607,8 @@ Set matched = tbl.filter_by_any_equals(Array("status", "category"), Array("NG", 
 | 4/2 | B | NG | 70 |
 
 ```vb
-Dim tbl As New Table
-Dim reportTbl As Table
+Dim tbl As New DataTable
+Dim reportTbl As DataTable
 
 tbl.read_range Sheet1.Range("A1:D3"), hasHeader:=True
 Set reportTbl = tbl.select_columns(Array("date", "score"))
@@ -640,7 +640,7 @@ Set reportTbl = tbl.select_columns(Array("date", "score"))
 | 代表ユースケース | 計算列、フラグ列の追加 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 tbl.add_column "flag"
@@ -662,7 +662,7 @@ tbl.add_column "flag"
 | 代表ユースケース | 業務用ラベルへの変更、列名正規化 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 tbl.rename_column "score", "point"
@@ -685,7 +685,7 @@ tbl.rename_column "score", "point"
 | 代表ユースケース | 日付順、金額順、スコア順の並べ替え |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 tbl.read_range Sheet1.Range("A1:C5"), hasHeader:=True
 tbl.sort_by "score", ascending:=False
@@ -707,7 +707,7 @@ tbl.sort_by "score", ascending:=False
 | 代表ユースケース | 条件一致行だけの補正、フラグ更新 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 Dim mask(1 To 3) As Boolean
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
@@ -742,7 +742,7 @@ tbl.set_by_mask mask, "score", 0
 | C | OK | 90 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 tbl.set_by_equals "status", "NG", "score", 0
@@ -772,7 +772,7 @@ tbl.set_by_equals "status", "NG", "score", 0
 | 代表ユースケース | 計算済み列の一括反映 |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 tbl.set_column "score", Array(100, 90, 80)
@@ -797,7 +797,7 @@ tbl.set_column "score", Array(100, 90, 80)
 | 代表ユースケース | 抽出結果や更新結果をシートへ戻す |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 tbl.to_range Sheet1.Range("G1"), includeHeader:=True
@@ -822,7 +822,7 @@ tbl.to_range Sheet1.Range("G1"), includeHeader:=True
 | 代表ユースケース | 同じインスタンスを再利用する前のリセット |
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True
 tbl.clear

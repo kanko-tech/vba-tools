@@ -162,7 +162,7 @@ End Sub
 ### 出力系メソッドの補足
 
 - `to_range` は行数 0 の `Matrix` を出力できません。
-- 空表を出したい場合は、`Table` でヘッダー付き出力を行う方が向いています。
+- 空表を出したい場合は、`DataTable` でヘッダー付き出力を行う方が向いています。
 
 ### 状態管理系メソッドの補足
 
@@ -198,11 +198,11 @@ mat.read_range Sheet1.Range("A2:C4")
 mat.append_column Array("OK", "NG", "OK")
 ```
 
-### `Table` の内部表現として使える形に整える
+### `DataTable` の内部表現として使える形に整える
 
 ```vb
 Dim mat As New Matrix
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 mat.read_range Sheet1.Range("A2:C6")
 tbl.read_matrix mat, Array("date", "item", "amount")

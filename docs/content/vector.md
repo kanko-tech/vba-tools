@@ -161,7 +161,7 @@ End Sub
 ### 条件マスク系メソッドの補足
 
 - `eq` `ne` `gt` `ge` `lt` `le` `is_empty` は、後続処理に渡しやすい `Variant` のブール配列を返します。
-- `Table.set_by_mask` や `Matrix.filter_rows` と組み合わせる前提で使うと効果的です。
+- `DataTable.set_by_mask` や `Matrix.filter_rows` と組み合わせる前提で使うと効果的です。
 
 ### 変換・更新系メソッドの補足
 
@@ -200,10 +200,10 @@ vec.read_col_range Sheet1.Range("C2:C8")
 mask = vec.eq("対象")
 ```
 
-### `Table` から列を取り出して平均を計算する
+### `DataTable` から列を取り出して平均を計算する
 
 ```vb
-Dim tbl As New Table
+Dim tbl As New DataTable
 Dim scoreVec As Vector
 
 tbl.read_range Sheet1.Range("A1:D10"), hasHeader:=True

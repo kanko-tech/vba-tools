@@ -28,7 +28,7 @@
         <a href="index.html">Overview</a>
         <a href="vector.html" class="current">Vector</a>
         <a href="matrix.html">Matrix</a>
-        <a href="table.html">Table</a>
+        <a href="datatable.html">DataTable</a>
       </nav>
     </header>
 
@@ -45,7 +45,7 @@
           </article>
           <article class="module-card">
             <h3>条件マスク作成</h3>
-            <p><code>eq</code> や <code>gt</code> で作ったマスクを、`Matrix` や `Table` の抽出に渡せます。</p>
+            <p><code>eq</code> や <code>gt</code> で作ったマスクを、`Matrix` や `DataTable` の抽出に渡せます。</p>
           </article>
           <article class="module-card">
             <h3>集計の前処理</h3>
@@ -135,8 +135,8 @@ vec.cast_to_double_safe emptyAsZero:=True, invalidAsZero:=True
 Debug.Print vec.sum</code></pre>
           </article>
           <article class="card">
-            <h3>`Table` と組み合わせる</h3>
-            <pre class="code-block compact"><code>Dim tbl As New Table
+            <h3>`DataTable` と組み合わせる</h3>
+            <pre class="code-block compact"><code>Dim tbl As New DataTable
 Dim scoreVec As Vector
 
 tbl.read_range Sheet1.Range("A1:D10"), hasHeader:=True

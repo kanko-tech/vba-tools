@@ -18,7 +18,7 @@
       <h1>Matrix</h1>
       <p class="lead">
         列名を持たない表データを 2 次元配列として保持し、抽出・選択・追加・出力まで扱う基本クラスです。
-        `Table` より一段低いレベルで表操作を組み立てたいときに向いています。
+        `DataTable` より一段低いレベルで表操作を組み立てたいときに向いています。
       </p>
       <div class="hero-actions">
         <a href="index.html">Back to Docs</a>
@@ -28,7 +28,7 @@
         <a href="index.html">Overview</a>
         <a href="vector.html">Vector</a>
         <a href="matrix.html" class="current">Matrix</a>
-        <a href="table.html">Table</a>
+        <a href="datatable.html">DataTable</a>
       </nav>
     </header>
 
@@ -48,8 +48,8 @@
             <p>行抽出や列選択で必要な部分だけを切り出し、次段の処理へ渡せます。</p>
           </article>
           <article class="module-card">
-            <h3>`Table` の土台にする</h3>
-            <p>`Matrix` に列名を付けて `Table` に持ち上げる流れにも使えます。</p>
+            <h3>`DataTable` の土台にする</h3>
+            <p>`Matrix` に列名を付けて `DataTable` に持ち上げる流れにも使えます。</p>
           </article>
         </div>
       </section>
@@ -144,9 +144,9 @@ Set filtered = mat.filter_rows(mask)
 Set picked = filtered.select_columns(Array(1, 4))</code></pre>
           </article>
           <article class="card">
-            <h3>列を追加して `Table` へ渡す</h3>
+            <h3>列を追加して `DataTable` へ渡す</h3>
             <pre class="code-block compact"><code>Dim mat As New Matrix
-Dim tbl As New Table
+Dim tbl As New DataTable
 
 mat.read_range Sheet1.Range("A2:C6")
 mat.append_column Array("OK", "NG", "OK", "OK", "NG")

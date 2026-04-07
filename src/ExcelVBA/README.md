@@ -1,7 +1,7 @@
 # ExcelVBA
 
 `src/ExcelVBA` ディレクトリには、Excel VBA で再利用しやすいクラスモジュールを整理して配置しています。  
-現在は、一次元配列を扱う `Vector`、二次元配列を扱う `Matrix`、列名付きテーブルを扱う `Table` を中心に構成しています。
+現在は、一次元配列を扱う `Vector`、二次元配列を扱う `Matrix`、列名付きテーブルを扱う `DataTable` を中心に構成しています。
 
 ## まず見るページ
 
@@ -9,7 +9,7 @@
 - GitHub Pages トップ: [Overview](https://kanko-tech.github.io/VBA_tools/)
 - `Vector` 詳細: [Vector Guide](https://kanko-tech.github.io/VBA_tools/vector.html)
 - `Matrix` 詳細: [Matrix Guide](https://kanko-tech.github.io/VBA_tools/matrix.html)
-- `Table` 詳細: [Table Guide](https://kanko-tech.github.io/VBA_tools/table.html)
+- `DataTable` 詳細: [DataTable Guide](https://kanko-tech.github.io/VBA_tools/datatable.html)
 
 ## モジュールの使い分け
 
@@ -31,7 +31,7 @@
 - 行追加、列追加、列更新を行う
 - シートへ一括出力する
 
-### `Table`
+### `DataTable`
 
 列名つきの実務データを読みやすく操作したいときに使います。
 
@@ -51,7 +51,7 @@
 
 - `src/ExcelVBA/Vector`
 - `src/ExcelVBA/Matrix`
-- `src/ExcelVBA/Table`
+- `src/ExcelVBA/DataTable`
 
 ## 詳細ドキュメントの位置づけ
 

@@ -2,7 +2,7 @@ VERSION 1.0 CLASS
 BEGIN
   MultiUse = -1
 END
-Attribute VB_Name = "Table"
+Attribute VB_Name = "DataTable"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
@@ -10,7 +10,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 '----------------------------
-' ƒvƒƒpƒeƒB
+' ï¿½vï¿½ï¿½ï¿½pï¿½eï¿½B
 '----------------------------
 Private mData As Matrix
 Private mColumnNames As Variant
@@ -18,10 +18,10 @@ Private mColumnIndexMap As Object
 Private mIsLoaded As Boolean
 
 '----------------------------
-' “ÇŒn
+' ï¿½Çï¿½ï¿½n
 '----------------------------
 Public Sub read_range(ByVal rng As Range, Optional ByVal hasHeader As Boolean = True)
-    If rng Is Nothing Then Err.Raise vbObjectError + 3001, "Table.read_range", "ˆø”rng‚ªNothing‚Å‚·B"
+    If rng Is Nothing Then Err.Raise vbObjectError + 3001, "DataTable.read_range", "ï¿½ï¿½ï¿½ï¿½rngï¿½ï¿½Nothingï¿½Å‚ï¿½ï¿½B"
 
     Dim raw As Variant
     Dim rows As Long, cols As Long
@@ -78,44 +78,44 @@ End Sub
 
 Public Sub read_matrix(ByVal src As Matrix, ByVal columnNames As Variant)
     If src Is Nothing Then
-        Err.Raise vbObjectError + 3003, "Table.read_matrix", "ˆø”src‚ªNothing‚Å‚·B"
+        Err.Raise vbObjectError + 3003, "DataTable.read_matrix", "ï¿½ï¿½ï¿½ï¿½srcï¿½ï¿½Nothingï¿½Å‚ï¿½ï¿½B"
     End If
     If Not IsArray(columnNames) Then
-        Err.Raise vbObjectError + 3004, "Table.read_matrix", "columnNames ‚ÍˆêŸŒ³”z—ñ‚Åw’è‚µ‚Ä‚­‚¾‚³‚¢B"
+        Err.Raise vbObjectError + 3004, "DataTable.read_matrix", "columnNames ï¿½ÍˆêŸï¿½ï¿½ï¿½zï¿½ï¿½Åwï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B"
     End If
 
     load_from_matrix src, columnNames
 End Sub
 
 '----------------------------
-' ƒK[ƒhŒn
+' ï¿½Kï¿½[ï¿½hï¿½n
 '----------------------------
 Private Sub ensure_loaded(Optional ByVal caller As String = "")
     If Not mIsLoaded Then
         Dim msg As String
-        msg = "ƒf[ƒ^‚ª“Ç‚İ‚Ü‚ê‚Ä‚¢‚Ü‚¹‚ñBread_range / read_matrix ‚ğæ‚ÉŒÄ‚Ño‚µ‚Ä‚­‚¾‚³‚¢B"
+        msg = "ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½Ç‚İï¿½ï¿½Ü‚ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½Bread_range / read_matrix ï¿½ï¿½ï¿½ÉŒÄ‚Ñoï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B"
 
         If caller <> "" Then
-            msg = msg & vbCrLf & "ŒÄ‚Ño‚µŒ³: " & caller
+            msg = msg & vbCrLf & "ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½: " & caller
         End If
 
-        Err.Raise vbObjectError + 3099, "Table.ensure_loaded", msg
+        Err.Raise vbObjectError + 3099, "DataTable.ensure_loaded", msg
     End If
 End Sub
 
 '----------------------------
-' “à•”•â•
+' ï¿½ï¿½ï¿½ï¿½â•
 '----------------------------
 Private Sub load_internal(ByVal dataArr As Variant, ByVal columnNames As Variant)
     If Not IsArray(columnNames) Then
-        Err.Raise vbObjectError + 3005, "Table.load_internal", "columnNames ‚ÍˆêŸŒ³”z—ñ‚Åw’è‚µ‚Ä‚­‚¾‚³‚¢B"
+        Err.Raise vbObjectError + 3005, "DataTable.load_internal", "columnNames ï¿½ÍˆêŸï¿½ï¿½ï¿½zï¿½ï¿½Åwï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B"
     End If
 
     Dim normalizedNames As Variant
     normalizedNames = normalize_column_names(columnNames)
 
     If (UBound(normalizedNames) - LBound(normalizedNames) + 1) <> (UBound(dataArr, 2) - LBound(dataArr, 2) + 1) Then
-        Err.Raise vbObjectError + 3006, "Table.load_internal", "—ñ–¼”‚Æ—ñ”‚ªˆê’v‚µ‚Ü‚¹‚ñB"
+        Err.Raise vbObjectError + 3006, "DataTable.load_internal", "ï¿½ñ–¼ï¿½ï¿½Æ—ñ”‚ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
     End If
 
     Set mData = New Matrix
@@ -131,7 +131,7 @@ Private Sub load_from_matrix(ByVal src As Matrix, ByVal columnNames As Variant)
     normalizedNames = normalize_column_names(columnNames)
 
     If (UBound(normalizedNames) - LBound(normalizedNames) + 1) <> src.col_count Then
-        Err.Raise vbObjectError + 3006, "Table.load_from_matrix", "—ñ–¼”‚Æ—ñ”‚ªˆê’v‚µ‚Ü‚¹‚ñB"
+        Err.Raise vbObjectError + 3006, "DataTable.load_from_matrix", "ï¿½ñ–¼ï¿½ï¿½Æ—ñ”‚ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
     End If
 
     Set mData = New Matrix
@@ -181,10 +181,10 @@ Private Sub rebuild_column_index_map()
 
     For i = LBound(mColumnNames) To UBound(mColumnNames)
         If Trim$(CStr(mColumnNames(i))) = "" Then
-            Err.Raise vbObjectError + 3009, "Table.rebuild_column_index_map", "‹ó‚Ì—ñ–¼‚Íg—p‚Å‚«‚Ü‚¹‚ñB"
+            Err.Raise vbObjectError + 3009, "DataTable.rebuild_column_index_map", "ï¿½ï¿½Ì—ñ–¼‚Ígï¿½pï¿½Å‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
         End If
         If mColumnIndexMap.Exists(CStr(mColumnNames(i))) Then
-            Err.Raise vbObjectError + 3007, "Table.rebuild_column_index_map", "—ñ–¼‚ªd•¡‚µ‚Ä‚¢‚Ü‚·: " & CStr(mColumnNames(i))
+            Err.Raise vbObjectError + 3007, "DataTable.rebuild_column_index_map", "ï¿½ñ–¼‚ï¿½ï¿½dï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½: " & CStr(mColumnNames(i))
         End If
         mColumnIndexMap.Add CStr(mColumnNames(i)), i
     Next i
@@ -194,7 +194,7 @@ Private Function resolve_column_index(ByVal columnName As String, ByVal caller A
     ensure_loaded caller
 
     If Not mColumnIndexMap.Exists(columnName) Then
-        Err.Raise vbObjectError + 3008, caller, "w’è‚³‚ê‚½—ñ–¼‚ª‘¶İ‚µ‚Ü‚¹‚ñ: " & columnName
+        Err.Raise vbObjectError + 3008, caller, "ï¿½wï¿½è‚³ï¿½ê‚½ï¿½ñ–¼‚ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½: " & columnName
     End If
 
     resolve_column_index = CLng(mColumnIndexMap(columnName))
@@ -226,7 +226,7 @@ Private Function build_mask_for_in(ByVal colIndex As Long, ByVal matchValues As 
     Dim lb As Long, ub As Long
 
     If Not IsArray(matchValues) Then
-        Err.Raise vbObjectError + 3013, "Table.build_mask_for_in", "matchValues ‚ÍˆêŸŒ³”z—ñ‚Åw’è‚µ‚Ä‚­‚¾‚³‚¢B"
+        Err.Raise vbObjectError + 3013, "DataTable.build_mask_for_in", "matchValues ï¿½ÍˆêŸï¿½ï¿½ï¿½zï¿½ï¿½Åwï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B"
     End If
 
     values = mData.col_values(colIndex)
@@ -361,19 +361,19 @@ Private Function create_empty_column_values() As Variant
     create_empty_column_values = values
 End Function
 
-Private Function clone_empty_table() As Table
-    Dim result As Table
+Private Function clone_empty_datatable() As DataTable
+    Dim result As DataTable
     Dim emptyMatrix As Matrix
 
-    Set result = New Table
+    Set result = New DataTable
     Set emptyMatrix = New Matrix
     emptyMatrix.read_empty mData.col_count
     result.read_matrix emptyMatrix, clone_column_names()
-    Set clone_empty_table = result
+    Set clone_empty_datatable = result
 End Function
 
 '----------------------------
-' QÆŒn
+' ï¿½Qï¿½ÆŒn
 '----------------------------
 Public Property Get is_loaded() As Boolean
     is_loaded = mIsLoaded
@@ -408,7 +408,7 @@ Public Property Get matrix() As Matrix
 End Property
 
 Public Function col(ByVal columnName As String) As Variant
-    col = mData.col_values(resolve_column_index(columnName, "Table.col"))
+    col = mData.col_values(resolve_column_index(columnName, "DataTable.col"))
 End Function
 
 Public Function col_vector(ByVal columnName As String) As Vector
@@ -419,59 +419,59 @@ Public Function col_vector(ByVal columnName As String) As Vector
 End Function
 
 '----------------------------
-' ’ŠoE‘I‘ğŒn
+' ï¿½ï¿½ï¿½oï¿½Eï¿½Iï¿½ï¿½n
 '----------------------------
-Public Function filter_by_mask(ByVal mask As Variant) As Table
+Public Function filter_by_mask(ByVal mask As Variant) As DataTable
     ensure_loaded
 
     If mData.row_count = 0 Then
-        Set filter_by_mask = clone_empty_table()
+        Set filter_by_mask = clone_empty_datatable()
         Exit Function
     End If
 
-    Dim result As Table
-    Set result = New Table
+    Dim result As DataTable
+    Set result = New DataTable
     result.read_matrix mData.filter_rows(mask), clone_column_names()
     Set filter_by_mask = result
 End Function
 
-Public Function filter_by_equals(ByVal columnName As String, ByVal matchValue As Variant) As Table
+Public Function filter_by_equals(ByVal columnName As String, ByVal matchValue As Variant) As DataTable
     ensure_loaded
     If mData.row_count = 0 Then
-        Set filter_by_equals = clone_empty_table()
+        Set filter_by_equals = clone_empty_datatable()
         Exit Function
     End If
-    Set filter_by_equals = Me.filter_by_mask(build_mask_for_equals(resolve_column_index(columnName, "Table.filter_by_equals"), matchValue))
+    Set filter_by_equals = Me.filter_by_mask(build_mask_for_equals(resolve_column_index(columnName, "DataTable.filter_by_equals"), matchValue))
 End Function
 
-Public Function filter_by_in(ByVal columnName As String, ByVal matchValues As Variant) As Table
+Public Function filter_by_in(ByVal columnName As String, ByVal matchValues As Variant) As DataTable
     ensure_loaded
     If mData.row_count = 0 Then
-        Set filter_by_in = clone_empty_table()
+        Set filter_by_in = clone_empty_datatable()
         Exit Function
     End If
-    Set filter_by_in = Me.filter_by_mask(build_mask_for_in(resolve_column_index(columnName, "Table.filter_by_in"), matchValues))
+    Set filter_by_in = Me.filter_by_mask(build_mask_for_in(resolve_column_index(columnName, "DataTable.filter_by_in"), matchValues))
 End Function
 
-Public Function filter_by_contains(ByVal columnName As String, ByVal searchText As String, Optional ByVal caseSensitive As Boolean = False) As Table
+Public Function filter_by_contains(ByVal columnName As String, ByVal searchText As String, Optional ByVal caseSensitive As Boolean = False) As DataTable
     ensure_loaded
     If mData.row_count = 0 Then
-        Set filter_by_contains = clone_empty_table()
+        Set filter_by_contains = clone_empty_datatable()
         Exit Function
     End If
-    Set filter_by_contains = Me.filter_by_mask(build_mask_for_contains(resolve_column_index(columnName, "Table.filter_by_contains"), searchText, caseSensitive))
+    Set filter_by_contains = Me.filter_by_mask(build_mask_for_contains(resolve_column_index(columnName, "DataTable.filter_by_contains"), searchText, caseSensitive))
 End Function
 
-Public Function filter_by_all_equals(ByVal columnNames As Variant, ByVal matchValues As Variant) As Table
+Public Function filter_by_all_equals(ByVal columnNames As Variant, ByVal matchValues As Variant) As DataTable
     ensure_loaded
 
     If mData.row_count = 0 Then
-        Set filter_by_all_equals = clone_empty_table()
+        Set filter_by_all_equals = clone_empty_datatable()
         Exit Function
     End If
 
     If Not IsArray(columnNames) Or Not IsArray(matchValues) Then
-        Err.Raise vbObjectError + 3014, "Table.filter_by_all_equals", "columnNames ‚Æ matchValues ‚ÍˆêŸŒ³”z—ñ‚Åw’è‚µ‚Ä‚­‚¾‚³‚¢B"
+        Err.Raise vbObjectError + 3014, "DataTable.filter_by_all_equals", "columnNames ï¿½ï¿½ matchValues ï¿½ÍˆêŸï¿½ï¿½ï¿½zï¿½ï¿½Åwï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B"
     End If
 
     Dim lb As Long, ub As Long, i As Long
@@ -480,27 +480,27 @@ Public Function filter_by_all_equals(ByVal columnNames As Variant, ByVal matchVa
     lb = LBound(columnNames)
     ub = UBound(columnNames)
     If (UBound(matchValues) - LBound(matchValues)) <> (ub - lb) Then
-        Err.Raise vbObjectError + 3015, "Table.filter_by_all_equals", "columnNames ‚Æ matchValues ‚Ì’·‚³‚ªˆê’v‚µ‚Ü‚¹‚ñB"
+        Err.Raise vbObjectError + 3015, "DataTable.filter_by_all_equals", "columnNames ï¿½ï¿½ matchValues ï¿½Ì’ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
     End If
 
-    mask = build_mask_for_equals(resolve_column_index(CStr(columnNames(lb)), "Table.filter_by_all_equals"), matchValues(LBound(matchValues)))
+    mask = build_mask_for_equals(resolve_column_index(CStr(columnNames(lb)), "DataTable.filter_by_all_equals"), matchValues(LBound(matchValues)))
     For i = lb + 1 To ub
-        mask = combine_masks(mask, build_mask_for_equals(resolve_column_index(CStr(columnNames(i)), "Table.filter_by_all_equals"), matchValues(LBound(matchValues) + (i - lb))), True)
+        mask = combine_masks(mask, build_mask_for_equals(resolve_column_index(CStr(columnNames(i)), "DataTable.filter_by_all_equals"), matchValues(LBound(matchValues) + (i - lb))), True)
     Next i
 
     Set filter_by_all_equals = Me.filter_by_mask(mask)
 End Function
 
-Public Function filter_by_any_equals(ByVal columnNames As Variant, ByVal matchValues As Variant) As Table
+Public Function filter_by_any_equals(ByVal columnNames As Variant, ByVal matchValues As Variant) As DataTable
     ensure_loaded
 
     If mData.row_count = 0 Then
-        Set filter_by_any_equals = clone_empty_table()
+        Set filter_by_any_equals = clone_empty_datatable()
         Exit Function
     End If
 
     If Not IsArray(columnNames) Or Not IsArray(matchValues) Then
-        Err.Raise vbObjectError + 3016, "Table.filter_by_any_equals", "columnNames ‚Æ matchValues ‚ÍˆêŸŒ³”z—ñ‚Åw’è‚µ‚Ä‚­‚¾‚³‚¢B"
+        Err.Raise vbObjectError + 3016, "DataTable.filter_by_any_equals", "columnNames ï¿½ï¿½ matchValues ï¿½ÍˆêŸï¿½ï¿½ï¿½zï¿½ï¿½Åwï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B"
     End If
 
     Dim lb As Long, ub As Long, i As Long
@@ -509,52 +509,52 @@ Public Function filter_by_any_equals(ByVal columnNames As Variant, ByVal matchVa
     lb = LBound(columnNames)
     ub = UBound(columnNames)
     If (UBound(matchValues) - LBound(matchValues)) <> (ub - lb) Then
-        Err.Raise vbObjectError + 3017, "Table.filter_by_any_equals", "columnNames ‚Æ matchValues ‚Ì’·‚³‚ªˆê’v‚µ‚Ü‚¹‚ñB"
+        Err.Raise vbObjectError + 3017, "DataTable.filter_by_any_equals", "columnNames ï¿½ï¿½ matchValues ï¿½Ì’ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
     End If
 
-    mask = build_mask_for_equals(resolve_column_index(CStr(columnNames(lb)), "Table.filter_by_any_equals"), matchValues(LBound(matchValues)))
+    mask = build_mask_for_equals(resolve_column_index(CStr(columnNames(lb)), "DataTable.filter_by_any_equals"), matchValues(LBound(matchValues)))
     For i = lb + 1 To ub
-        mask = combine_masks(mask, build_mask_for_equals(resolve_column_index(CStr(columnNames(i)), "Table.filter_by_any_equals"), matchValues(LBound(matchValues) + (i - lb))), False)
+        mask = combine_masks(mask, build_mask_for_equals(resolve_column_index(CStr(columnNames(i)), "DataTable.filter_by_any_equals"), matchValues(LBound(matchValues) + (i - lb))), False)
     Next i
 
     Set filter_by_any_equals = Me.filter_by_mask(mask)
 End Function
 
-Public Function select_columns(ByVal columnNames As Variant) As Table
+Public Function select_columns(ByVal columnNames As Variant) As DataTable
     ensure_loaded
 
     If Not IsArray(columnNames) Then
-        Err.Raise vbObjectError + 3010, "Table.select_columns", "columnNames ‚ÍˆêŸŒ³”z—ñ‚Åw’è‚µ‚Ä‚­‚¾‚³‚¢B"
+        Err.Raise vbObjectError + 3010, "DataTable.select_columns", "columnNames ï¿½ÍˆêŸï¿½ï¿½ï¿½zï¿½ï¿½Åwï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B"
     End If
 
     Dim lb As Long, ub As Long, i As Long
     Dim indexes As Variant
-    Dim result As Table
+    Dim result As DataTable
 
     lb = LBound(columnNames)
     ub = UBound(columnNames)
     ReDim indexes(lb To ub)
 
     For i = lb To ub
-        indexes(i) = resolve_column_index(CStr(columnNames(i)), "Table.select_columns")
+        indexes(i) = resolve_column_index(CStr(columnNames(i)), "DataTable.select_columns")
     Next i
 
-    Set result = New Table
+    Set result = New DataTable
     result.read_matrix mData.select_columns(indexes), subset_column_names(indexes)
     Set select_columns = result
 End Function
 
 '----------------------------
-' XVE®Œ`Œn
+' ï¿½Xï¿½Vï¿½Eï¿½ï¿½ï¿½`ï¿½n
 '----------------------------
 Public Sub add_column(ByVal columnName As String, Optional ByVal values As Variant)
     ensure_loaded
 
     If Trim$(columnName) = "" Then
-        Err.Raise vbObjectError + 3018, "Table.add_column", "columnName ‚Í‹ó•¶š‚É‚Å‚«‚Ü‚¹‚ñB"
+        Err.Raise vbObjectError + 3018, "DataTable.add_column", "columnName ï¿½Í‹ó•¶ï¿½ï¿½É‚Å‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
     End If
     If mColumnIndexMap.Exists(columnName) Then
-        Err.Raise vbObjectError + 3019, "Table.add_column", "Šù‚É‘¶İ‚·‚é—ñ–¼‚Å‚·: " & columnName
+        Err.Raise vbObjectError + 3019, "DataTable.add_column", "ï¿½ï¿½ï¿½É‘ï¿½ï¿½İ‚ï¿½ï¿½ï¿½ñ–¼‚Å‚ï¿½: " & columnName
     End If
 
     If mData.row_count > 0 And IsMissing(values) Then
@@ -579,13 +579,13 @@ Public Sub rename_column(ByVal oldName As String, ByVal newName As String)
     ensure_loaded
 
     Dim colIndex As Long
-    colIndex = resolve_column_index(oldName, "Table.rename_column")
+    colIndex = resolve_column_index(oldName, "DataTable.rename_column")
 
     If Trim$(newName) = "" Then
-        Err.Raise vbObjectError + 3021, "Table.rename_column", "newName ‚Í‹ó•¶š‚É‚Å‚«‚Ü‚¹‚ñB"
+        Err.Raise vbObjectError + 3021, "DataTable.rename_column", "newName ï¿½Í‹ó•¶ï¿½ï¿½É‚Å‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
     End If
     If StrComp(oldName, newName, vbTextCompare) <> 0 And mColumnIndexMap.Exists(newName) Then
-        Err.Raise vbObjectError + 3022, "Table.rename_column", "Šù‚É‘¶İ‚·‚é—ñ–¼‚Å‚·: " & newName
+        Err.Raise vbObjectError + 3022, "DataTable.rename_column", "ï¿½ï¿½ï¿½É‘ï¿½ï¿½İ‚ï¿½ï¿½ï¿½ñ–¼‚Å‚ï¿½: " & newName
     End If
 
     mColumnNames(colIndex) = newName
@@ -602,7 +602,7 @@ Public Sub sort_by(ByVal columnName As String, Optional ByVal ascending As Boole
     Dim i As Long, j As Long
     Dim shouldSwap As Boolean
 
-    colIndex = resolve_column_index(columnName, "Table.sort_by")
+    colIndex = resolve_column_index(columnName, "DataTable.sort_by")
     arr = mData.data
 
     For i = 1 To mData.row_count - 1
@@ -619,7 +619,7 @@ Public Sub set_by_mask(ByVal mask As Variant, ByVal columnName As String, ByVal 
     ensure_loaded
 
     If Not IsArray(mask) Then
-        Err.Raise vbObjectError + 3011, "Table.set_by_mask", "mask ‚ÍˆêŸŒ³”z—ñ‚Åw’è‚µ‚Ä‚­‚¾‚³‚¢B"
+        Err.Raise vbObjectError + 3011, "DataTable.set_by_mask", "mask ï¿½ÍˆêŸï¿½ï¿½ï¿½zï¿½ï¿½Åwï¿½è‚µï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B"
     End If
 
     If mData.row_count = 0 Then Exit Sub
@@ -628,11 +628,11 @@ Public Sub set_by_mask(ByVal mask As Variant, ByVal columnName As String, ByVal 
     Dim values As Variant
     Dim i As Long
 
-    colIndex = resolve_column_index(columnName, "Table.set_by_mask")
+    colIndex = resolve_column_index(columnName, "DataTable.set_by_mask")
     values = mData.col_values(colIndex)
 
     If (UBound(mask) - LBound(mask) + 1) <> mData.row_count Then
-        Err.Raise vbObjectError + 3012, "Table.set_by_mask", "mask ‚Ì’·‚³‚ªs”‚Æˆê’v‚µ‚Ü‚¹‚ñB"
+        Err.Raise vbObjectError + 3012, "DataTable.set_by_mask", "mask ï¿½Ì’ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Æˆï¿½vï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B"
     End If
 
     For i = 1 To mData.row_count
@@ -645,20 +645,20 @@ Public Sub set_by_mask(ByVal mask As Variant, ByVal columnName As String, ByVal 
 End Sub
 
 Public Sub set_by_equals(ByVal conditionColumnName As String, ByVal matchValue As Variant, ByVal targetColumnName As String, ByVal newValue As Variant)
-    Me.set_by_mask build_mask_for_equals(resolve_column_index(conditionColumnName, "Table.set_by_equals"), matchValue), targetColumnName, newValue
+    Me.set_by_mask build_mask_for_equals(resolve_column_index(conditionColumnName, "DataTable.set_by_equals"), matchValue), targetColumnName, newValue
 End Sub
 
 Public Sub set_column(ByVal columnName As String, ByVal values As Variant)
     ensure_loaded
-    mData.set_column_values resolve_column_index(columnName, "Table.set_column"), values
+    mData.set_column_values resolve_column_index(columnName, "DataTable.set_column"), values
 End Sub
 
 '----------------------------
-' o—ÍŒn
+' ï¿½oï¿½ÍŒn
 '----------------------------
 Public Sub to_range(ByVal topLeft As Range, Optional ByVal includeHeader As Boolean = True)
     ensure_loaded
-    If topLeft Is Nothing Then Err.Raise vbObjectError + 3020, "Table.to_range", "topLeft ‚ª Nothing ‚Å‚·B"
+    If topLeft Is Nothing Then Err.Raise vbObjectError + 3020, "DataTable.to_range", "topLeft ï¿½ï¿½ Nothing ï¿½Å‚ï¿½ï¿½B"
 
     Dim outputArr As Variant
     Dim body As Variant
@@ -694,7 +694,7 @@ Public Sub to_range(ByVal topLeft As Range, Optional ByVal includeHeader As Bool
 End Sub
 
 '----------------------------
-' ó‘ÔŠÇ—Œn
+' ï¿½ï¿½ÔŠÇ—ï¿½ï¿½n
 '----------------------------
 Public Sub clear()
     Set mData = Nothing

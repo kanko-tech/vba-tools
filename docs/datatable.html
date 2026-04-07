@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Table | VBA_tools</title>
+  <title>DataTable | VBA_tools</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -15,20 +15,20 @@
   <div class="page-shell">
     <header class="hero detail-hero">
       <p class="eyebrow">Module Guide</p>
-      <h1>Table</h1>
+      <h1>DataTable</h1>
       <p class="lead">
         列名付きの表データを、列名ベースで読みやすく操作するためのクラスです。
         実務データの抽出、更新、並べ替え、列追加を簡潔に書きたい場面に向いています。
       </p>
       <div class="hero-actions">
         <a href="index.html">Back to Docs</a>
-        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Table/README.md" target="_blank" rel="noreferrer">Source README</a>
+        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/DataTable/README.md" target="_blank" rel="noreferrer">Source README</a>
       </div>
       <nav class="page-nav" aria-label="Page navigation">
         <a href="index.html">Overview</a>
         <a href="vector.html">Vector</a>
         <a href="matrix.html">Matrix</a>
-        <a href="table.html" class="current">Table</a>
+        <a href="datatable.html" class="current">DataTable</a>
       </nav>
     </header>
 
@@ -59,12 +59,11 @@
           <p class="eyebrow">Quick Start</p>
           <h2>最小例</h2>
         </div>
-        <pre class="code-block"><code>Sub Sample_Table_QuickStart()
-    Dim tbl As New Table
-    Dim okRows As Table
+        <pre class="code-block"><code>Sub Sample_DataTable_QuickStart()
+    Dim tbl As New DataTable
+    Dim okRows As DataTable
 
     tbl.read_range Sheet1.Range("A1:D8"), hasHeader:=True
-    tbl.set_by_equals "status", "NG", "score", 0
     Set okRows = tbl.filter_by_equals("status", "OK")
 
     okRows.to_range Sheet1.Range("G1"), includeHeader:=True
@@ -122,18 +121,18 @@ End Sub</code></pre>
         <div class="grid two">
           <article class="card">
             <h3>`status="OK"` の行だけ抽出</h3>
-            <pre class="code-block compact"><code>Dim tbl As New Table
-Dim okRows As Table
+            <pre class="code-block compact"><code>Dim tbl As New DataTable
+Dim okRows As DataTable
 
 tbl.read_range Sheet1.Range("A1:D20"), hasHeader:=True
 Set okRows = tbl.filter_by_equals("status", "OK")</code></pre>
           </article>
           <article class="card">
             <h3>`Vector` で条件を作って戻す</h3>
-            <pre class="code-block compact"><code>Dim tbl As New Table
+            <pre class="code-block compact"><code>Dim tbl As New DataTable
 Dim amountVec As Vector
 Dim mask As Variant
-Dim highRows As Table
+Dim highRows As DataTable
 
 tbl.read_range Sheet1.Range("A1:D20"), hasHeader:=True
 Set amountVec = tbl.col_vector("amount")
@@ -149,7 +148,7 @@ Set highRows = tbl.filter_by_mask(mask)</code></pre>
           <p class="eyebrow">Reference</p>
           <h2>メソッド早見表・補足・全メソッド解説</h2>
         </div>
-        <article class="markdown-body" data-markdown-source="content/table.md"></article>
+        <article class="markdown-body" data-markdown-source="content/datatable.md"></article>
       </section>
     </main>
   </div>

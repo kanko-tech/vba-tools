@@ -3,6 +3,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggle = document.querySelector("[data-toc-toggle]");
   const closeButtons = document.querySelectorAll("[data-toc-close]");
   const tocTargets = document.querySelectorAll("[data-toc-source]");
+  const scrollTopButton = document.createElement("button");
+
+  scrollTopButton.type = "button";
+  scrollTopButton.className = "scroll-top-button";
+  scrollTopButton.setAttribute("aria-label", "ページ上部へ戻る");
+  scrollTopButton.textContent = "∧";
 
   const slugify = (text) =>
     text
@@ -16,6 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (toggle) toggle.setAttribute("aria-expanded", "false");
   };
 
+  const updateScrollTopButton = () => {
+    scrollTopButton.classList.toggle("is-visible", window.scrollY > 320);
+  };
+
   if (toggle) {
     toggle.addEventListener("click", () => {
       const isOpen = body.classList.toggle("toc-open");
@@ -26,6 +36,23 @@ document.addEventListener("DOMContentLoaded", () => {
   closeButtons.forEach((button) => {
     button.addEventListener("click", closeToc);
   });
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (!body.classList.contains("toc-open")) return;
+    if (target.closest(".doc-sidebar")) return;
+    if (target.closest("[data-toc-toggle]")) return;
+    closeToc();
+  });
+
+  scrollTopButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  body.appendChild(scrollTopButton);
+  updateScrollTopButton();
+  window.addEventListener("scroll", updateScrollTopButton, { passive: true });
 
   tocTargets.forEach((tocRoot) => {
     const sourceSelector = tocRoot.getAttribute("data-toc-source");

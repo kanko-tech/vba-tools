@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DataTable Setup | VBA_tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="page.js" defer></script>
+</head>
+<body>
+  <div class="page-shell docs-layout">
+    <header class="hero detail-hero">
+      <div class="position-strip" aria-label="Page position">
+        <span class="position-chip">Tool Box</span>
+        <a class="position-chip" href="index.html">VBA_tools</a>
+        <a class="position-chip" href="excelvba.html">Excel VBA</a>
+        <a class="position-chip" href="datatable.html">DataTable</a>
+        <span class="position-chip current">導入方法</span>
+      </div>
+      <div class="hero-meta">
+        <h1>DataTable</h1>
+        <p class="hero-subline">ヘッダー付きの表を列名ベースで扱うためのクラス</p>
+      </div>
+
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
+    </header>
+
+    <div class="docs-columns">
+      <main class="doc-main" id="doc-content">
+        <section class="panel" id="import">
+          <div class="section-heading">
+            <p class="eyebrow">Import</p>
+            <h2>取り込むファイル</h2>
+          </div>
+          <div class="directory-stack">
+        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/DataTable/DataTable.cls" target="_blank" rel="noreferrer">DataTable.cls<small>表形式ロジックの本体</small></a>
+        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Matrix/Matrix.cls" target="_blank" rel="noreferrer">Matrix.cls<small>内部で行列を扱うために必要</small></a>
+        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Vector/Vector.cls" target="_blank" rel="noreferrer">Vector.cls<small>列を Vector 化する API を使う場合に必要</small></a>
+          </div>
+        </section>
+
+        <section class="panel" id="steps">
+          <div class="section-heading">
+            <p class="eyebrow">Steps</p>
+            <h2>導入手順</h2>
+          </div>
+          <div class="number-grid">
+            <article class="number-card"><strong>1</strong><p><code>DataTable</code> と依存クラスを VBE に取り込みます。</p></article>
+            <article class="number-card"><strong>2</strong><p>1 行目にヘッダーが入った矩形範囲を用意し、列名の重複を避けます。</p></article>
+            <article class="number-card"><strong>3</strong><p><code>read_range</code> で読み込み、条件に合う行を <code>filter_by_equals</code> などで抽出します。</p></article>
+            <article class="number-card"><strong>4</strong><p><code>to_range</code> で結果を書き戻し、ヘッダーごと確認します。</p></article>
+          </div>
+        </section>
+
+        <section class="panel" id="first-run">
+          <div class="section-heading">
+            <p class="eyebrow">First Run</p>
+            <h2>最初の実行コード</h2>
+          </div>
+          <pre class="code-block"><code>Sub DataTable_FirstRun()
+    Dim tbl As New DataTable
+    Dim result As DataTable
+
+    tbl.read_range Sheet1.Range("A1:D6"), hasHeader:=True
+    Set result = tbl.filter_by_equals("status", "OK")
+
+    result.to_range Sheet1.Range("G1"), includeHeader:=True
+End Sub</code></pre>
+        </section>
+
+        <section class="panel" id="checks">
+          <div class="section-heading">
+            <p class="eyebrow">Checks</p>
+            <h2>確認ポイント</h2>
+          </div>
+          <ul class="checklist">
+            <li>ヘッダー行に空欄や重複名がないこと</li>
+            <li>条件列の値の表記ゆれを事前にそろえておくこと</li>
+            <li>列前処理が必要なら <code>col_vector</code> で Vector に渡すこと</li>
+          </ul>
+        </section>
+      </main>
+
+      <aside class="doc-sidebar">
+        <div class="sidebar-card">
+          <p class="eyebrow">DataTable Pages</p>
+          <h2>ローカルナビ</h2>
+          <nav class="local-nav-list">
+            <a href="datatable-setup.html" class="current">導入方法</a>
+            <a href="datatable-examples.html">使い方</a>
+            <a href="datatable-reference.html">リファレンス</a>
+          </nav>
+          <hr class="sidebar-sep">
+          <p class="eyebrow">On This Page</p>
+          <h3>目次</h3>
+          <nav data-toc-source="#doc-content"></nav>
+          <button class="mobile-toc-close" type="button" data-toc-close>閉じる</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/DataTable" target="_blank" rel="noreferrer">GitHub<small>DataTable のソースディレクトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
+</body>
+</html>
+
+
+
+

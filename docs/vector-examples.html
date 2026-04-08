@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vector Examples | VBA_tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="page.js" defer></script>
+</head>
+<body>
+  <div class="page-shell docs-layout">
+    <header class="hero detail-hero">
+      <div class="position-strip" aria-label="Page position">
+        <span class="position-chip">Tool Box</span>
+        <a class="position-chip" href="index.html">VBA_tools</a>
+        <a class="position-chip" href="excelvba.html">Excel VBA</a>
+        <a class="position-chip" href="vector.html">Vector</a>
+        <span class="position-chip current">使い方</span>
+      </div>
+      <div class="hero-meta">
+        <h1>Vector</h1>
+        <p class="hero-subline">1 次元データの読み込み、条件マスク、型変換、集計のためのクラス</p>
+      </div>
+
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
+    </header>
+
+    <div class="docs-columns">
+      <main class="doc-main" id="doc-content">
+        <section class="panel" id="sample-data">
+          <div class="section-heading">
+            <p class="eyebrow">Sample Data</p>
+            <h2>共通サンプルデータ</h2>
+          </div>
+          <div class="table-wrap">
+            <table class="sample-table">
+              <thead><tr><th>セル</th><th>値</th></tr></thead>
+              <tbody>
+                <tr><td>B2</td><td>120</td></tr>
+                <tr><td>B3</td><td>95</td></tr>
+                <tr><td>B4</td><td>(空欄)</td></tr>
+                <tr><td>B5</td><td>210</td></tr>
+                <tr><td>B6</td><td>88</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel" id="example-filter">
+          <div class="section-heading">
+            <p class="eyebrow">Example 1</p>
+            <h2>閾値を超える行のマスクを作る</h2>
+          </div>
+          <pre class="code-block"><code>Dim vec As New Vector
+Dim mask As Variant
+
+vec.read_col_range Sheet1.Range("B2:B6")
+vec.fill_empty 0
+vec.cast_to_double_safe emptyAsZero:=True, invalidAsZero:=True
+mask = vec.gt(100)</code></pre>
+          <p class="panel-lead">出力は <code>Array(True, False, False, True, False)</code> のような Boolean 配列です。Matrix や DataTable の抽出条件としてそのまま使えます。</p>
+        </section>
+
+        <section class="panel" id="example-summary">
+          <div class="section-heading">
+            <p class="eyebrow">Example 2</p>
+            <h2>空欄を補完して合計と平均を出す</h2>
+          </div>
+          <pre class="code-block"><code>Dim vec As New Vector
+
+vec.read_col_range Sheet1.Range("B2:B6")
+vec.fill_empty 0
+vec.cast_to_double_safe emptyAsZero:=True, invalidAsZero:=True
+
+Debug.Print vec.sum
+Debug.Print vec.mean</code></pre>
+          <p class="panel-lead">売上や件数のような列を、レポート前に軽く整形して集計したいときの最小パターンです。</p>
+        </section>
+
+        <section class="panel" id="example-output">
+          <div class="section-heading">
+            <p class="eyebrow">Example 3</p>
+            <h2>整形した列を別領域へ出力する</h2>
+          </div>
+          <pre class="code-block"><code>Dim vec As New Vector
+
+vec.read_col_range Sheet1.Range("B2:B6")
+vec.fill_empty "(missing)"
+vec.cast_to_string_safe
+vec.to_range_vertical Sheet1.Range("D2")</code></pre>
+          <p class="panel-lead">入力列をそのまま壊さず、別領域に整形済みの結果を並べたいときに使います。</p>
+        </section>
+      </main>
+
+      <aside class="doc-sidebar">
+        <div class="sidebar-card">
+          <p class="eyebrow">Vector Pages</p>
+          <h2>ローカルナビ</h2>
+          <nav class="local-nav-list">
+            <a href="vector-setup.html">導入方法</a>
+            <a href="vector-examples.html" class="current">使い方</a>
+            <a href="vector-reference.html">リファレンス</a>
+          </nav>
+          <hr class="sidebar-sep">
+          <p class="eyebrow">On This Page</p>
+          <h3>目次</h3>
+          <nav data-toc-source="#doc-content"></nav>
+          <button class="mobile-toc-close" type="button" data-toc-close>閉じる</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/Vector" target="_blank" rel="noreferrer">GitHub<small>Vector のソースディレクトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
+</body>
+</html>
+
+
+
+

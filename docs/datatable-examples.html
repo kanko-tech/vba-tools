@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DataTable Examples | VBA_tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="page.js" defer></script>
+</head>
+<body>
+  <div class="page-shell docs-layout">
+    <header class="hero detail-hero">
+      <div class="position-strip" aria-label="Page position">
+        <span class="position-chip">Tool Box</span>
+        <a class="position-chip" href="index.html">VBA_tools</a>
+        <a class="position-chip" href="excelvba.html">Excel VBA</a>
+        <a class="position-chip" href="datatable.html">DataTable</a>
+        <span class="position-chip current">使い方</span>
+      </div>
+      <div class="hero-meta">
+        <h1>DataTable</h1>
+        <p class="hero-subline">ヘッダー付きの表を列名ベースで扱うためのクラス</p>
+      </div>
+
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
+    </header>
+
+    <div class="docs-columns">
+      <main class="doc-main" id="doc-content">
+        <section class="panel" id="sample-data">
+          <div class="section-heading">
+            <p class="eyebrow">Sample Data</p>
+            <h2>共通サンプルデータ</h2>
+          </div>
+          <div class="table-wrap">
+            <table class="sample-table">
+              <thead><tr><th>id</th><th>status</th><th>amount</th><th>owner</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>OK</td><td>120</td><td>A</td></tr>
+                <tr><td>2</td><td>NG</td><td>80</td><td>B</td></tr>
+                <tr><td>3</td><td>OK</td><td>210</td><td>A</td></tr>
+                <tr><td>4</td><td>WAIT</td><td>95</td><td>C</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel" id="example-filter">
+          <div class="section-heading">
+            <p class="eyebrow">Example 1</p>
+            <h2>状態が OK の行だけ抽出する</h2>
+          </div>
+          <pre class="code-block"><code>Dim tbl As New DataTable
+Dim okRows As DataTable
+
+tbl.read_range Sheet1.Range("A1:D5"), hasHeader:=True
+Set okRows = tbl.filter_by_equals("status", "OK")
+okRows.to_range Sheet1.Range("G1"), includeHeader:=True</code></pre>
+          <p class="panel-lead">レポート対象の行だけを残し、ヘッダーごと別の場所へ出力できます。</p>
+        </section>
+
+        <section class="panel" id="example-add">
+          <div class="section-heading">
+            <p class="eyebrow">Example 2</p>
+            <h2>派生列を追加する</h2>
+          </div>
+          <pre class="code-block"><code>Dim tbl As New DataTable
+
+tbl.read_range Sheet1.Range("A1:D5"), hasHeader:=True
+tbl.add_column "priority", Array("high", "low", "high", "mid")
+tbl.to_range Sheet1.Range("G1"), includeHeader:=True</code></pre>
+          <p class="panel-lead">後続の判定や表示用に、元データにはない派生列を付け足せます。</p>
+        </section>
+
+        <section class="panel" id="example-update">
+          <div class="section-heading">
+            <p class="eyebrow">Example 3</p>
+            <h2>条件に合う行だけ値を更新する</h2>
+          </div>
+          <pre class="code-block"><code>Dim tbl As New DataTable
+
+tbl.read_range Sheet1.Range("A1:D5"), hasHeader:=True
+tbl.set_by_equals "status", "WAIT", "owner", "UNASSIGNED"
+tbl.sort_by "amount", ascending:=False
+tbl.to_range Sheet1.Range("G1"), includeHeader:=True</code></pre>
+          <p class="panel-lead">業務上のルールを列名ベースで書けるので、セル位置依存のコードを減らせます。</p>
+        </section>
+      </main>
+
+      <aside class="doc-sidebar">
+        <div class="sidebar-card">
+          <p class="eyebrow">DataTable Pages</p>
+          <h2>ローカルナビ</h2>
+          <nav class="local-nav-list">
+            <a href="datatable-setup.html">導入方法</a>
+            <a href="datatable-examples.html" class="current">使い方</a>
+            <a href="datatable-reference.html">リファレンス</a>
+          </nav>
+          <hr class="sidebar-sep">
+          <p class="eyebrow">On This Page</p>
+          <h3>目次</h3>
+          <nav data-toc-source="#doc-content"></nav>
+          <button class="mobile-toc-close" type="button" data-toc-close>閉じる</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/DataTable" target="_blank" rel="noreferrer">GitHub<small>DataTable のソースディレクトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
+</body>
+</html>
+
+
+
+

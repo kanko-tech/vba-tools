@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vector | VBA_tools</title>
+  <title>Vector Overview | VBA_tools</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,121 +14,77 @@
   <div class="page-shell docs-layout">
     <header class="hero detail-hero">
       <div class="position-strip" aria-label="Page position">
-        <a class="position-chip" href="index.html">Docs Home</a>
-        <span class="position-chip">ExcelVBA</span>
-        <span class="position-chip">Vector</span>
-        <span class="position-chip current">Guide</span>
+        <span class="position-chip">Tool Box</span>
+        <a class="position-chip" href="index.html">VBA_tools</a>
+        <a class="position-chip" href="excelvba.html">Excel VBA</a>
+        <a class="position-chip current" href="vector.html">Vector</a>
       </div>
       <div class="hero-meta">
-        <p class="eyebrow">Module Guide</p>
         <h1>Vector</h1>
-        <p class="hero-subline">一次元データ操作モジュールの概要ページ</p>
+        <p class="hero-subline">1 次元データの読み込み、条件マスク、型変換、集計のためのクラス</p>
       </div>
-      <p class="lead">
-        <code>Vector</code> は 1 列または 1 行の値を、まとめて読み込み、条件マスク作成や型変換、集計に使うためのクラスです。
-        Excel の列データを VBA で扱う処理を、セル単位の繰り返しより短く明確に書けます。
-      </p>
-      <div class="detail-nav-stack">
-        <div class="context-bar" aria-label="Context links">
-          <a class="context-link" href="index.html"><strong>Docs Home</strong></a>
-          <a class="context-link" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Vector/README.md" target="_blank" rel="noreferrer"><strong>Source README</strong></a>
-        </div>
-        <nav class="page-nav" aria-label="Module navigation">
-          <a href="vector.html" class="current">Vector</a>
-          <a href="matrix.html">Matrix</a>
-          <a href="datatable.html">DataTable</a>
-        </nav>
-        <div class="tab-switch" aria-label="Vector page type">
-          <a href="vector.html" class="current">Guide</a>
-          <a href="vector-reference.html">Reference</a>
-        </div>
-      </div>
+
       <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
     </header>
 
     <div class="docs-columns">
       <main class="doc-main" id="doc-content">
-        <section class="panel" id="overview">
+        <section class="panel" id="purpose">
           <div class="section-heading">
-            <p class="eyebrow">Overview</p>
-            <h2>Vector でできること</h2>
+            <p class="eyebrow">Purpose</p>
+            <h2>Vector が向いている処理</h2>
           </div>
-          <div class="grid three">
-            <article class="module-card">
-              <h3>列データの読み込み</h3>
-              <p><code>read_col_range</code> と <code>read_row_range</code> で、シート上の 1 列または 1 行をそのまま取り込めます。</p>
-            </article>
-            <article class="module-card">
-              <h3>条件マスクの作成</h3>
-              <p><code>eq</code> <code>gt</code> <code>is_empty</code> などで、後続処理に渡しやすいブール配列を作れます。</p>
-            </article>
-            <article class="module-card">
-              <h3>型変換と集計</h3>
-              <p><code>cast_to_double_safe</code> や <code>sum</code> <code>mean</code> で、実務データの整形と集計をまとめて行えます。</p>
-            </article>
+          <div class="metric-strip">
+            <div class="metric-card">
+              <strong>入力</strong>
+              <span>縦 1 列、横 1 行、または 1 次元配列</span>
+            </div>
+            <div class="metric-card">
+              <strong>得意な操作</strong>
+              <span>条件マスク、空値補完、型変換、集計</span>
+            </div>
+            <div class="metric-card">
+              <strong>主な出力</strong>
+              <span>Boolean 配列、集計値、縦横どちらかの Range</span>
+            </div>
           </div>
-        </section>
-
-        <section class="panel" id="who">
-          <div class="section-heading">
-            <p class="eyebrow">Audience</p>
-            <h2>向いている場面</h2>
-          </div>
-          <div class="summary-list">
-            <article class="summary-item">
-              <strong>1 列の値をまとめて扱いたいとき</strong>
-              セルを 1 つずつ読むのではなく、列全体を値の配列として扱いたいケースに向いています。
-            </article>
-            <article class="summary-item">
-              <strong>条件判定だけを独立させたいとき</strong>
-              しきい値判定や空欄判定をマスクとして取り出し、<code>Matrix</code> や <code>DataTable</code> の抽出へ渡せます。
-            </article>
-            <article class="summary-item">
-              <strong>数値化や平均計算をまとめたいとき</strong>
-              文字列混じりの実務データを安全に変換し、そのまま集計までつなげられます。
-            </article>
-          </div>
-        </section>
-
-        <section class="panel" id="setup">
-          <div class="section-heading">
-            <p class="eyebrow">Setup</p>
-            <h2>導入方法</h2>
-          </div>
-          <div class="step-grid">
-            <article class="step-card">
-              <h3>1. インポート</h3>
-              <p><code>src/ExcelVBA/Vector/Vector.cls</code> を VBA プロジェクトへ取り込みます。</p>
-            </article>
-            <article class="step-card">
-              <h3>2. 読み込み</h3>
-              <p><code>read_col_range</code> または <code>read_row_range</code> で対象範囲を読み込みます。</p>
-            </article>
-            <article class="step-card">
-              <h3>3. 加工</h3>
-              <p>必要に応じて空欄補完、型変換、条件判定、集計を行います。</p>
-            </article>
-            <article class="step-card">
-              <h3>4. 連携</h3>
-              <p>マスクを別モジュールへ渡すか、<code>to_range_vertical</code> などでシートへ戻します。</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="panel" id="quickstart">
-          <div class="section-heading">
-            <p class="eyebrow">Quick Start</p>
-            <h2>最小例</h2>
-          </div>
-          <p class="card-copy">
-            以下は <code>B2:B6</code> の列を読み込み、空欄を <code>0</code> で補完したうえで数値化し、
-            合計と平均を出力する例です。
+          <p class="section-intro">
+            シート上の 1 列データを読み込み、空欄を埋め、数値へ変換し、閾値判定のマスクを作る。
+            その一連の処理を Excel のセル操作ではなくクラスのメソッドでまとめたいときに使います。
           </p>
-          <pre class="code-block"><code>Sub Sample_Vector_QuickStart()
+        </section>
+
+        <section class="panel" id="fit">
+          <div class="section-heading">
+            <p class="eyebrow">When to Use</p>
+            <h2>利用シーンの目安</h2>
+          </div>
+          <div class="note-grid">
+            <article class="note-card">
+              <h3>列単位の前処理をしたい</h3>
+              <p>売上列やステータス列のように、ひとつの系列に対して同じ処理をまとめて適用したい場面に向きます。</p>
+            </article>
+            <article class="note-card">
+              <h3>マスクを他モジュールへ渡したい</h3>
+              <p><code>eq</code> や <code>gt</code> で作った Boolean 配列を、<code>Matrix.filter_rows</code> や <code>DataTable.filter_by_mask</code> に流し込めます。</p>
+            </article>
+            <article class="note-card">
+              <h3>集計前に型をそろえたい</h3>
+              <p><code>cast_to_double_safe</code> や <code>fill_empty</code> を先に通すことで、合計や平均の前提を明示できます。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="quick-flow">
+          <div class="section-heading">
+            <p class="eyebrow">Quick Flow</p>
+            <h2>最小フロー</h2>
+          </div>
+          <pre class="code-block"><code>Sub Sample_Vector_Flow()
     Dim vec As New Vector
     Dim mask As Variant
 
-    vec.read_col_range Sheet1.Range("B2:B6")
+    vec.read_col_range Sheet1.Range("B2:B8")
     vec.fill_empty 0
     vec.cast_to_double_safe emptyAsZero:=True, invalidAsZero:=True
 
@@ -137,69 +93,55 @@
     Debug.Print vec.sum
     Debug.Print vec.mean
 End Sub</code></pre>
-        </section>
-
-        <section class="panel" id="workflow">
-          <div class="section-heading">
-            <p class="eyebrow">Workflow</p>
-            <h2>よくある使い方</h2>
-          </div>
-          <div class="grid two">
-            <article class="doc-note">
-              <h3>マスク作成の部品として使う</h3>
-              <p><code>eq</code> や <code>gt</code> で作ったブール配列は、<code>Matrix.filter_rows</code> や <code>DataTable.set_by_mask</code> の入力に使えます。</p>
-            </article>
-            <article class="doc-note">
-              <h3>集計前の整形に使う</h3>
-              <p>空欄や文字列を含む列でも、<code>fill_empty</code> と <code>cast_to_double_safe</code> を先に通すことで、その後の計算が安定します。</p>
-            </article>
+          <div class="status-line">
+            <span class="status-pill">読み込み</span>
+            <span class="status-pill">前処理</span>
+            <span class="status-pill">条件判定</span>
+            <span class="status-pill">集計</span>
           </div>
         </section>
 
-        <section class="panel" id="methods">
+        <section class="panel" id="page-map">
           <div class="section-heading">
-            <p class="eyebrow">Method Groups</p>
-            <h2>メソッドの見取り図</h2>
+            <p class="eyebrow">Page Map</p>
+            <h2>このモジュールの読み方</h2>
+          </div>
+          <div class="directory-stack">
+            <a href="vector-setup.html">導入方法<small>インポート、最初の読み込み、出力確認まで</small></a>
+            <a href="vector-examples.html">使い方<small>入力、処理、出力、ユースケースをセットで確認</small></a>
+            <a href="vector-reference.html">リファレンス<small>プロパティ、メソッド、主要引数を一覧化</small></a>
+          </div>
+        </section>
+
+        <section class="panel" id="relations">
+          <div class="section-heading">
+            <p class="eyebrow">Relations</p>
+            <h2>他モジュールとの関係</h2>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>カテゴリ</th>
-                  <th>主なメソッド</th>
-                  <th>用途</th>
+                  <th>連携先</th>
+                  <th>つなぎ方</th>
+                  <th>向いている場面</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>読込</td>
-                  <td><code>read_col_range</code> <code>read_row_range</code> <code>read_array</code></td>
-                  <td>1 列または 1 行の値を読み込む</td>
+                  <td>Matrix</td>
+                  <td>Vector のマスクを <code>Matrix.filter_rows</code> に渡す</td>
+                  <td>行列から条件に合う行だけ抜き出したいとき</td>
                 </tr>
                 <tr>
-                  <td>参照</td>
-                  <td><code>data</code> <code>count</code> <code>item</code> <code>type_names</code></td>
-                  <td>読み込んだ値と型を確認する</td>
+                  <td>DataTable</td>
+                  <td>列を <code>col_vector</code> で Vector 化してから前処理する</td>
+                  <td>列名付きテーブルの特定列だけを整形したいとき</td>
                 </tr>
                 <tr>
-                  <td>条件判定</td>
-                  <td><code>eq</code> <code>gt</code> <code>is_empty</code></td>
-                  <td>抽出や更新に使うマスクを作る</td>
-                </tr>
-                <tr>
-                  <td>変換・集計</td>
-                  <td><code>cast_to_double_safe</code> <code>fill_empty</code> <code>sum</code> <code>mean</code></td>
-                  <td>実務データの整形と集計を行う</td>
-                </tr>
-                <tr>
-                  <td>出力</td>
-                  <td><code>to_range_vertical</code> <code>to_range_horizontal</code></td>
-                  <td>加工後の値をシートへ戻す</td>
-                </tr>
-                <tr>
-                  <td>状態管理</td>
-                  <td><code>clear</code></td>
-                  <td>インスタンスを初期化して再利用しやすくする</td>
+                  <td>Sheet</td>
+                  <td><code>to_range_vertical</code> / <code>to_range_horizontal</code> で書き戻す</td>
+                  <td>前処理後の結果をシートに可視化したいとき</td>
                 </tr>
               </tbody>
             </table>
@@ -209,20 +151,34 @@ End Sub</code></pre>
 
       <aside class="doc-sidebar">
         <div class="sidebar-card">
+          <p class="eyebrow">Vector Pages</p>
+          <h2>ローカルナビ</h2>
+          <nav class="local-nav-list" aria-label="Vector local navigation">
+            <a href="vector-setup.html">導入方法</a>
+            <a href="vector-examples.html">使い方</a>
+            <a href="vector-reference.html">リファレンス</a>
+          </nav>
+          <hr class="sidebar-sep">
           <p class="eyebrow">On This Page</p>
-          <h2>目次</h2>
+          <h3>目次</h3>
           <nav data-toc-source="#doc-content"></nav>
-          <div class="doc-note">
-            <h3>次に見るページ</h3>
-            <p>プロパティとメソッドの全解説は Reference ページにまとめています。</p>
-            <div class="tab-switch">
-              <a href="vector-reference.html">Vector Reference</a>
-            </div>
-          </div>
           <button class="mobile-toc-close" type="button" data-toc-close>閉じる</button>
         </div>
       </aside>
     </div>
   </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/Vector" target="_blank" rel="noreferrer">GitHub<small>Vector のソースディレクトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
 </body>
 </html>
+
+
+
+

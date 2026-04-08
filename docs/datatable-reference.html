@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DataTable | VBA_tools</title>
+  <title>DataTable Reference | VBA_tools</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,174 +14,189 @@
   <div class="page-shell docs-layout">
     <header class="hero detail-hero">
       <div class="position-strip" aria-label="Page position">
-        <a class="position-chip" href="index.html">Docs Home</a>
-        <span class="position-chip">ExcelVBA</span>
-        <span class="position-chip">DataTable</span>
-        <span class="position-chip current">Reference</span>
+        <span class="position-chip">Tool Box</span>
+        <a class="position-chip" href="index.html">VBA_tools</a>
+        <a class="position-chip" href="excelvba.html">Excel VBA</a>
+        <a class="position-chip" href="datatable.html">DataTable</a>
+        <span class="position-chip current">リファレンス</span>
       </div>
       <div class="hero-meta">
-        <p class="eyebrow">Technical Detail</p>
         <h1>DataTable</h1>
-        <p class="hero-subline">列名付き表データモジュールの API 詳細</p>
+        <p class="hero-subline">ヘッダー付きの表を列名ベースで扱うためのクラス</p>
       </div>
-      <p class="lead">
-        <code>DataTable</code> は、ヘッダー行つきの表を列名ベースで扱うクラスです。
-        このページでは、クラスの位置づけ、プロパティ、各メソッドの入力例・コード例・実行結果を確認できます。
-      </p>
-      <div class="detail-nav-stack">
-        <div class="context-bar" aria-label="Context links">
-          <a class="context-link" href="datatable.html"><strong>Back to Guide</strong></a>
-          <a class="context-link" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/DataTable/DataTable.cls" target="_blank" rel="noreferrer"><strong>Source Class</strong></a>
-        </div>
-        <nav class="page-nav" aria-label="Module navigation">
-          <a href="vector.html">Vector</a>
-          <a href="matrix.html">Matrix</a>
-          <a href="datatable.html" class="current">DataTable</a>
-        </nav>
-        <div class="tab-switch" aria-label="DataTable page type">
-          <a href="datatable.html">Guide</a>
-          <a href="datatable-reference.html" class="current">Reference</a>
-        </div>
-      </div>
+
       <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
     </header>
 
     <div class="docs-columns">
       <main class="doc-main" id="doc-content">
-        <section class="panel" id="class-design">
+        <section class="panel" id="class-outline">
           <div class="section-heading">
-            <p class="eyebrow">CLASS DESIGN</p>
-            <h2>クラスデザイン</h2>
+            <p class="eyebrow">Class Outline</p>
+            <h2>クラス概要</h2>
           </div>
-          <div class="reference-intro">
-            <article class="class-rel class-overview">
-              <strong>DataTable の位置づけ</strong><br>
-              DataTable は、本文データを <code>Matrix</code> として持ちながら、
-              列名一覧と列名マップを併用して「列名で読む・絞る・更新する」ためのクラスです。
-              セル番地や列番号ではなく、<code>"status"</code> や <code>"amount"</code> といった意味のある名前で処理を書きたい場面に向いています。
-            </article>
-            <div class="info-pills">
-              <div class="info-pill"><strong>責務</strong> ヘッダー付き表の列名ベース操作</div>
-              <div class="info-pill"><strong>主な入力</strong> Range / Matrix / 列名配列 / 条件値</div>
-              <div class="info-pill"><strong>主な出力</strong> DataTable / Vector / Matrix / シート出力</div>
-            </div>
+          <div class="info-pills">
+            <div class="info-pill"><strong>責務</strong> ヘッダー付き表の読込、列名解決、抽出、更新、並び替え、出力</div>
+            <div class="info-pill"><strong>主な入力</strong> ヘッダー付き Range、Matrix、列名配列</div>
+            <div class="info-pill"><strong>主な出力</strong> DataTable、列配列、Vector、Range</div>
           </div>
         </section>
 
         <section class="panel" id="properties">
           <div class="section-heading">
             <p class="eyebrow">Properties</p>
-            <h2>プロパティ</h2>
+            <h2>主要プロパティ</h2>
           </div>
-          <div class="api-directory">
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>is_loaded</strong> <code>Property Get is_loaded() As Boolean</code></span></span><span class="api-summary-copy">読込済みかを返す</span></summary><div class="api-body"><p>表データが読み込まれているかを返します。</p></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>row_count</strong> <code>Property Get row_count() As Long</code></span></span><span class="api-summary-copy">本文行数を返す</span></summary><div class="api-body"><p>ヘッダーを除いた本文の行数を返します。</p></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>col_count</strong> <code>Property Get col_count() As Long</code></span></span><span class="api-summary-copy">列数を返す</span></summary><div class="api-body"><p>現在の列数を返します。</p></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>column_names</strong> <code>Property Get column_names() As Variant</code></span></span><span class="api-summary-copy">列名配列を返す</span></summary><div class="api-body"><p>現在の列名一覧を一次元配列で返します。</p></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Property</span><span class="api-name-row"><strong>matrix</strong> <code>Property Get matrix() As Matrix</code></span></span><span class="api-summary-copy">本文を Matrix で返す</span></summary><div class="api-body"><p>本文部分だけを Matrix として返します。</p></div></details>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>名前</th>
+                  <th>型</th>
+                  <th>意味</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>is_loaded</code></td>
+                  <td><code>Boolean</code></td>
+                  <td>表データが読み込まれているかを返します。</td>
+                </tr>
+                <tr>
+                  <td><code>row_count</code></td>
+                  <td><code>Long</code></td>
+                  <td>データ行数を返します。</td>
+                </tr>
+                <tr>
+                  <td><code>col_count</code></td>
+                  <td><code>Long</code></td>
+                  <td>列数を返します。</td>
+                </tr>
+                <tr>
+                  <td><code>column_names</code></td>
+                  <td><code>Variant</code></td>
+                  <td>列名配列を返します。</td>
+                </tr>
+                <tr>
+                  <td><code>matrix</code></td>
+                  <td><code>Matrix</code></td>
+                  <td>内部データを Matrix として返します。</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
         <section class="panel" id="methods">
           <div class="section-heading">
-            <p class="eyebrow">Methods</p>
-            <h2>メソッド</h2>
+            <p class="eyebrow">Method Groups</p>
+            <h2>主要メソッド群</h2>
           </div>
-
-          <div class="method-group" id="loading-methods">
-            <h3>読込メソッド</h3>
-            <p class="method-group-note">表データを DataTable として読み込む入口です。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>read_range</strong> <code>Sub read_range(ByVal rng As Range, Optional ByVal hasHeader As Boolean = True)</code></span></span><span class="api-summary-copy">Range から読む</span></summary><div class="api-body"><p>シート上の範囲をヘッダー付き表として読み込みます。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>id</th><th>status</th><th>amount</th></tr></thead><tbody><tr><td>1</td><td>OK</td><td>100</td></tr><tr><td>2</td><td>NG</td><td>50</td></tr><tr><td>3</td><td>OK</td><td>80</td></tr></tbody></table></div></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Dim tbl As New DataTable
-tbl.read_range Sheet1.Range("A1:C4"), hasHeader:=True</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>tbl.row_count = 3
-tbl.column_names = Array("id", "status", "amount")</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>read_matrix</strong> <code>Sub read_matrix(ByVal src As Matrix, ByVal columnNames As Variant)</code></span></span><span class="api-summary-copy">Matrix と列名配列から読む</span></summary><div class="api-body"><p>本文データと列名を別々に持っている場合に使います。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>src = [[1,"OK",100],[2,"NG",50]]
-columnNames = Array("id", "status", "amount")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Dim tbl As New DataTable
-tbl.read_matrix src, columnNames</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>tbl.col_count = 3</code></pre></div></div></div></details>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>カテゴリ</th>
+                  <th>主なメソッド</th>
+                  <th>戻り値 / 効果</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>読込</td>
+                  <td><code>read_range</code> <code>read_matrix</code></td>
+                  <td>ヘッダー情報つきの表をロードします。</td>
+                </tr>
+                <tr>
+                  <td>列参照</td>
+                  <td><code>col</code> <code>col_vector</code></td>
+                  <td>指定列を配列または Vector として返します。</td>
+                </tr>
+                <tr>
+                  <td>抽出</td>
+                  <td><code>filter_by_mask</code> <code>filter_by_equals</code> <code>filter_by_in</code> <code>filter_by_contains</code> <code>filter_by_all_equals</code> <code>filter_by_any_equals</code> <code>select_columns</code></td>
+                  <td>条件に合う DataTable を返します。</td>
+                </tr>
+                <tr>
+                  <td>更新</td>
+                  <td><code>add_column</code> <code>rename_column</code> <code>set_by_mask</code> <code>set_by_equals</code> <code>set_column</code></td>
+                  <td>表の構造や値を更新します。</td>
+                </tr>
+                <tr>
+                  <td>整列</td>
+                  <td><code>sort_by</code></td>
+                  <td>指定列を基準に並び替えます。</td>
+                </tr>
+                <tr>
+                  <td>出力</td>
+                  <td><code>to_range</code></td>
+                  <td>ヘッダー有無を選んでシートへ出力します。</td>
+                </tr>
+                <tr>
+                  <td>状態管理</td>
+                  <td><code>clear</code></td>
+                  <td>内部状態を空に戻します。</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+        </section>
 
-          <div class="method-group" id="access-methods">
-            <h3>取得メソッド</h3>
-            <p class="method-group-note">列や内部表現を取り出して他処理へつなぐためのメソッドです。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>col</strong> <code>Function col(ByVal columnName As String) As Variant</code></span></span><span class="api-summary-copy">列を配列で返す</span></summary><div class="api-body"><p>列名指定で本文列を一次元配列として返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>columnName = "amount"</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>values = tbl.col("amount")</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>values = Array(100, 50, 80)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>col_vector</strong> <code>Function col_vector(ByVal columnName As String) As Vector</code></span></span><span class="api-summary-copy">列を Vector で返す</span></summary><div class="api-body"><p>指定列を Vector として返し、そのまま条件判定や集計へ使えます。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>columnName = "amount"</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Dim vec As Vector
-Set vec = tbl.col_vector("amount")</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>vec.sum() = 230</code></pre></div></div></div></details>
+        <section class="panel" id="signatures">
+          <div class="section-heading">
+            <p class="eyebrow">Key Signatures</p>
+            <h2>よく使うシグネチャ</h2>
           </div>
+          <pre class="code-block"><code>Public Sub read_range(ByVal rng As Range, Optional ByVal hasHeader As Boolean = True)
+Public Function filter_by_equals(ByVal columnName As String, ByVal matchValue As Variant) As DataTable
+Public Sub add_column(ByVal columnName As String, Optional ByVal values As Variant)
+Public Sub sort_by(ByVal columnName As String, Optional ByVal ascending As Boolean = True)
+Public Sub to_range(ByVal topLeft As Range, Optional ByVal includeHeader As Boolean = True)</code></pre>
+        </section>
 
-          <div class="method-group" id="filter-methods">
-            <h3>抽出・選択メソッド</h3>
-            <p class="method-group-note">列名を基準に必要な行や列だけを取り出します。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>filter_by_mask</strong> <code>Function filter_by_mask(ByVal mask As Variant) As DataTable</code></span></span><span class="api-summary-copy">マスクで抽出</span></summary><div class="api-body"><p>ブール配列に対応する行だけを残します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>mask = Array(True, False, True)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set picked = tbl.filter_by_mask(mask)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>picked.row_count = 2
-picked.col("id") = Array(1, 3)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>filter_by_equals</strong> <code>Function filter_by_equals(ByVal columnName As String, ByVal matchValue As Variant) As DataTable</code></span></span><span class="api-summary-copy">一致条件で抽出</span></summary><div class="api-body"><p>指定列が一致する行だけを返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>columnName = "status"
-matchValue = "OK"</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set okRows = tbl.filter_by_equals("status", "OK")</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>okRows.row_count = 2
-okRows.col("id") = Array(1, 3)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>filter_by_in</strong> <code>Function filter_by_in(ByVal columnName As String, ByVal matchValues As Variant) As DataTable</code></span></span><span class="api-summary-copy">候補群で抽出</span></summary><div class="api-body"><p>候補配列のいずれかに一致する行だけを返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>matchValues = Array("OK", "HOLD")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set rows = tbl.filter_by_in("status", matchValues)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>rows.row_count = 2</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>filter_by_contains</strong> <code>Function filter_by_contains(ByVal columnName As String, ByVal searchText As String, Optional ByVal caseSensitive As Boolean = False) As DataTable</code></span></span><span class="api-summary-copy">部分一致で抽出</span></summary><div class="api-body"><p>文字列表現が検索語を含む行だけを返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>columnName = "status"
-searchText = "O"</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set rows = tbl.filter_by_contains("status", "O")</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>rows.col("id") = Array(1, 3)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>filter_by_all_equals</strong> <code>Function filter_by_all_equals(ByVal columnNames As Variant, ByVal matchValues As Variant) As DataTable</code></span></span><span class="api-summary-copy">複数列 AND 抽出</span></summary><div class="api-body"><p>複数列条件をすべて満たす行を返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>columnNames = Array("status", "amount")
-matchValues = Array("OK", 100)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set rows = tbl.filter_by_all_equals(columnNames, matchValues)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>rows.row_count = 1
-rows.col("id") = Array(1)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>filter_by_any_equals</strong> <code>Function filter_by_any_equals(ByVal columnNames As Variant, ByVal matchValues As Variant) As DataTable</code></span></span><span class="api-summary-copy">複数列 OR 抽出</span></summary><div class="api-body"><p>複数列条件のいずれかを満たす行を返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>columnNames = Array("status", "amount")
-matchValues = Array("NG", 80)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set rows = tbl.filter_by_any_equals(columnNames, matchValues)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>rows.col("id") = Array(2, 3)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>select_columns</strong> <code>Function select_columns(ByVal columnNames As Variant) As DataTable</code></span></span><span class="api-summary-copy">列選択</span></summary><div class="api-body"><p>必要な列名だけを残した新しい DataTable を返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>columnNames = Array("id", "amount")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Set thin = tbl.select_columns(columnNames)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>thin.column_names = Array("id", "amount")</code></pre></div></div></div></details>
+        <section class="panel" id="notes">
+          <div class="section-heading">
+            <p class="eyebrow">Usage Notes</p>
+            <h2>利用上の注意</h2>
           </div>
-
-          <div class="method-group" id="mutation-methods">
-            <h3>更新・整形メソッド</h3>
-            <p class="method-group-note">列追加、列名変更、並べ替え、値更新を行います。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>add_column</strong> <code>Sub add_column(ByVal columnName As String, Optional ByVal values As Variant)</code></span></span><span class="api-summary-copy">列追加</span></summary><div class="api-body"><p>末尾に新しい列を追加します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>columnName = "flag"
-values = Array("A", "B", "A")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>tbl.add_column "flag", values</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>tbl.column_names に "flag" が追加される</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>rename_column</strong> <code>Sub rename_column(ByVal oldName As String, ByVal newName As String)</code></span></span><span class="api-summary-copy">列名変更</span></summary><div class="api-body"><p>既存列の名前を変更します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>oldName = "amount"
-newName = "score"</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>tbl.rename_column "amount", "score"</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>tbl.column_names = Array("id", "status", "score")</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>sort_by</strong> <code>Sub sort_by(ByVal columnName As String, Optional ByVal ascending As Boolean = True)</code></span></span><span class="api-summary-copy">並べ替え</span></summary><div class="api-body"><p>指定列で本文行を並べ替えます。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>columnName = "amount"</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>tbl.sort_by "amount", ascending:=False</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>id の並び = Array(1, 3, 2)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>set_by_mask</strong> <code>Sub set_by_mask(ByVal mask As Variant, ByVal columnName As String, ByVal newValue As Variant)</code></span></span><span class="api-summary-copy">条件行だけ更新</span></summary><div class="api-body"><p>マスクが True の行だけ、対象列を更新します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>mask = Array(True, False, True)
-columnName = "status"
-newValue = "DONE"</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>tbl.set_by_mask mask, "status", "DONE"</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>tbl.col("status") = Array("DONE", "NG", "DONE")</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>set_by_equals</strong> <code>Sub set_by_equals(ByVal conditionColumnName As String, ByVal matchValue As Variant, ByVal targetColumnName As String, ByVal newValue As Variant)</code></span></span><span class="api-summary-copy">一致条件で更新</span></summary><div class="api-body"><p>条件列が一致した行だけ、対象列を書き換えます。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>conditionColumnName = "status"
-matchValue = "NG"
-targetColumnName = "amount"
-newValue = 0</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>tbl.set_by_equals "status", "NG", "amount", 0</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>tbl.col("amount") = Array(100, 0, 80)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>set_column</strong> <code>Sub set_column(ByVal columnName As String, ByVal values As Variant)</code></span></span><span class="api-summary-copy">列全体を置換</span></summary><div class="api-body"><p>指定列の値を丸ごと差し替えます。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>values = Array(110, 55, 88)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>tbl.set_column "amount", values</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>tbl.col("amount") = Array(110, 55, 88)</code></pre></div></div></div></details>
-          </div>
-
-          <div class="method-group" id="output-methods">
-            <h3>出力メソッド</h3>
-            <p class="method-group-note">加工した表をシートへ書き戻します。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>to_range</strong> <code>Sub to_range(ByVal topLeft As Range, Optional ByVal includeHeader As Boolean = True)</code></span></span><span class="api-summary-copy">シート出力</span></summary><div class="api-body"><p>現在の表をヘッダー付き、または本文のみでシートへ出力します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>topLeft = Sheet1.Range("E2")
-includeHeader = True</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>tbl.to_range Sheet1.Range("E2"), includeHeader:=True</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>E</th><th>F</th><th>G</th></tr></thead><tbody><tr><td>id</td><td>status</td><td>amount</td></tr><tr><td>1</td><td>OK</td><td>100</td></tr><tr><td>2</td><td>NG</td><td>50</td></tr><tr><td>3</td><td>OK</td><td>80</td></tr></tbody></table></div></div></div></div></details>
-          </div>
-
-          <div class="method-group" id="state-methods">
-            <h3>状態管理メソッド</h3>
-            <p class="method-group-note">インスタンスを初期状態へ戻します。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>clear</strong> <code>Sub clear()</code></span></span><span class="api-summary-copy">初期化</span></summary><div class="api-body"><p>本文、列名、マップ、読込状態をまとめて消します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>tbl.is_loaded = True
-tbl.row_count = 3</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>tbl.clear</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>tbl.is_loaded = False</code></pre></div></div></div></details>
-          </div>
+          <ul class="checklist">
+            <li><code>read_range</code> でヘッダーを読む場合、1 行目に重複しない列名がある前提です。</li>
+            <li>列名ベースの API を使う前に、列名のゆれや余分な空白を整えておくと安全です。</li>
+            <li>列の値を前処理したい場合は <code>col_vector</code> で Vector に渡すと責務が分かれます。</li>
+          </ul>
         </section>
       </main>
 
       <aside class="doc-sidebar">
         <div class="sidebar-card">
+          <p class="eyebrow">DataTable Pages</p>
+          <h2>ローカルナビ</h2>
+          <nav class="local-nav-list" aria-label="DataTable local navigation">
+            <a href="datatable-setup.html">導入方法</a>
+            <a href="datatable-examples.html">使い方</a>
+            <a href="datatable-reference.html" class="current">リファレンス</a>
+          </nav>
+          <hr class="sidebar-sep">
           <p class="eyebrow">On This Page</p>
-          <h2>目次</h2>
+          <h3>目次</h3>
           <nav data-toc-source="#doc-content"></nav>
-          <div class="doc-note">
-            <h3>関連ページ</h3>
-            <p>導入と利用場面は Guide ページで確認できます。</p>
-            <div class="tab-switch">
-              <a href="datatable.html">DataTable Guide</a>
-            </div>
-          </div>
           <button class="mobile-toc-close" type="button" data-toc-close>閉じる</button>
         </div>
       </aside>
     </div>
   </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/DataTable" target="_blank" rel="noreferrer">GitHub<small>DataTable のソースディレクトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
 </body>
 </html>
+
+
+
+

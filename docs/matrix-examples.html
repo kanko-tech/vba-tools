@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Matrix Examples | VBA_tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="page.js" defer></script>
+</head>
+<body>
+  <div class="page-shell docs-layout">
+    <header class="hero detail-hero">
+      <div class="position-strip" aria-label="Page position">
+        <span class="position-chip">Tool Box</span>
+        <a class="position-chip" href="index.html">VBA_tools</a>
+        <a class="position-chip" href="excelvba.html">Excel VBA</a>
+        <a class="position-chip" href="matrix.html">Matrix</a>
+        <span class="position-chip current">使い方</span>
+      </div>
+      <div class="hero-meta">
+        <h1>Matrix</h1>
+        <p class="hero-subline">矩形データの読み込み、行抽出、列選択、転置のための 2 次元クラス</p>
+      </div>
+
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
+    </header>
+
+    <div class="docs-columns">
+      <main class="doc-main" id="doc-content">
+        <section class="panel" id="sample-data">
+          <div class="section-heading">
+            <p class="eyebrow">Sample Data</p>
+            <h2>共通サンプルデータ</h2>
+          </div>
+          <div class="table-wrap">
+            <table class="sample-table">
+              <thead><tr><th>ID</th><th>Status</th><th>Amount</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>OK</td><td>120</td></tr>
+                <tr><td>2</td><td>NG</td><td>80</td></tr>
+                <tr><td>3</td><td>OK</td><td>210</td></tr>
+                <tr><td>4</td><td>WAIT</td><td>95</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel" id="example-rows">
+          <div class="section-heading">
+            <p class="eyebrow">Example 1</p>
+            <h2>マスクで行抽出する</h2>
+          </div>
+          <pre class="code-block"><code>Dim mat As New Matrix
+Dim mask(1 To 4) As Boolean
+
+mat.read_range Sheet1.Range("A2:C5")
+mask(1) = True
+mask(2) = False
+mask(3) = True
+mask(4) = False
+
+mat.filter_rows(mask).to_range Sheet1.Range("F2")</code></pre>
+          <p class="panel-lead">別モジュールで作ったマスクを受けて、対象行だけを別領域へ展開できます。</p>
+        </section>
+
+        <section class="panel" id="example-columns">
+          <div class="section-heading">
+            <p class="eyebrow">Example 2</p>
+            <h2>必要な列だけに絞る</h2>
+          </div>
+          <pre class="code-block"><code>Dim mat As New Matrix
+
+mat.read_range Sheet1.Range("A2:C5")
+mat.select_columns(Array(1, 3)).to_range Sheet1.Range("J2")</code></pre>
+          <p class="panel-lead">ID と Amount だけを抜き出して、報告用の表を別で作るような使い方に向きます。</p>
+        </section>
+
+        <section class="panel" id="example-transpose">
+          <div class="section-heading">
+            <p class="eyebrow">Example 3</p>
+            <h2>転置して比較しやすくする</h2>
+          </div>
+          <pre class="code-block"><code>Dim mat As New Matrix
+
+mat.read_range Sheet1.Range("A2:C5")
+mat.transpose.to_range Sheet1.Range("N2")</code></pre>
+          <p class="panel-lead">行方向に並ぶ比較表を作りたいときや、別モジュールへ渡す前に形を整えたいときに便利です。</p>
+        </section>
+      </main>
+
+      <aside class="doc-sidebar">
+        <div class="sidebar-card">
+          <p class="eyebrow">Matrix Pages</p>
+          <h2>ローカルナビ</h2>
+          <nav class="local-nav-list">
+            <a href="matrix-setup.html">導入方法</a>
+            <a href="matrix-examples.html" class="current">使い方</a>
+            <a href="matrix-reference.html">リファレンス</a>
+          </nav>
+          <hr class="sidebar-sep">
+          <p class="eyebrow">On This Page</p>
+          <h3>目次</h3>
+          <nav data-toc-source="#doc-content"></nav>
+          <button class="mobile-toc-close" type="button" data-toc-close>閉じる</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/Matrix" target="_blank" rel="noreferrer">GitHub<small>Matrix のソースディレクトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
+</body>
+</html>
+
+
+
+

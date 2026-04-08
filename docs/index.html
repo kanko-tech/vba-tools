@@ -1,166 +1,71 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>VBA_tools Documentation</title>
+  <title>VBA_tools Docs Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="page.js" defer></script>
 </head>
 <body>
   <div class="page-shell">
     <header class="hero">
       <div class="position-strip" aria-label="Page position">
-        <span class="position-chip">kanko-tech</span>
-        <span class="position-chip">VBA_tools</span>
-        <span class="position-chip current">Docs Home</span>
+        <span class="position-chip">Tool Box</span>
+        <span class="position-chip current">VBA_tools</span>
       </div>
       <div class="hero-meta">
-        <p class="eyebrow">Documentation Portal</p>
         <h1>VBA_tools</h1>
-        <p class="hero-subline">ExcelVBA モジュール群の入口ページ</p>
+        <p class="hero-subline">VBAコーディングで使える汎用的で便利な部品をまとめたツールボックス</p>
       </div>
-      <p class="lead">
-        Excel VBA で再利用しやすいクラスモジュールを、概要を読む <strong>Guide</strong> と、
-        技術詳細を確認する <strong>Reference</strong> に分けて整理したドキュメントサイトです。
-      </p>
-      <div class="site-pill-row">
-        <span class="site-pill">Home は全体の地図</span>
-        <span class="site-pill">Guide は導入と使いどころ</span>
-        <span class="site-pill">Reference は API 詳細</span>
-      </div>
-      <div class="hero-actions">
-        <a href="https://github.com/kanko-tech/VBA_tools" target="_blank" rel="noreferrer">Repository</a>
-        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA" target="_blank" rel="noreferrer">Source Directory</a>
-      </div>
-      <nav class="page-nav" aria-label="Main navigation">
-        <a href="index.html" class="current">Overview</a>
-        <a href="vector.html">Vector</a>
-        <a href="matrix.html">Matrix</a>
-        <a href="datatable.html">DataTable</a>
+      <nav class="global-nav" aria-label="Global site navigation">
+        <ul class="global-nav-list">
+          <li class="global-nav-item">
+            <a class="global-nav-link" href="excelvba.html">Excel VBA</a>
+          </li>
+        </ul>
       </nav>
     </header>
 
     <main class="doc-main">
       <section class="panel">
         <div class="section-heading">
-          <p class="eyebrow">How To Read</p>
-          <h2>ページの役割</h2>
+          <p class="eyebrow">Overview</p>
+          <h2>VBA の部品をカテゴリごとにまとめる場所</h2>
         </div>
-        <div class="grid two">
-          <article class="module-card">
-            <h3>Guide</h3>
-            <p>README を拡張した案内ページです。用途、向いている場面、導入方法、最小例を先に把握できます。</p>
-          </article>
-          <article class="module-card">
-            <h3>Reference</h3>
-            <p>プロパティとメソッドの技術詳細です。クラス図、前提条件、注意点、ユースケースを見ながら実装できます。</p>
-          </article>
-        </div>
+        <p class="section-intro">
+          VBA コーディングで再利用できる部品を、対象アプリごとのカテゴリで整理していくリポジトリです。
+          現在は Excel VBA を公開しており、今後は Word VBA や Outlook VBA などのカテゴリ追加も想定しています。
+        </p>
       </section>
 
       <section class="panel">
         <div class="section-heading">
-          <p class="eyebrow">Modules</p>
-          <h2>モジュール一覧</h2>
+          <p class="eyebrow">Categories</p>
+          <h2>カテゴリ入口</h2>
         </div>
-        <div class="grid three">
-          <article class="module-card">
-            <h3>Vector</h3>
-            <p>一次元データを読み込み、条件マスク、型変換、集計、出力までを扱うクラスです。</p>
-            <div class="tab-switch">
-              <a href="vector.html">Guide</a>
-              <a href="vector-reference.html">Reference</a>
-            </div>
-          </article>
-          <article class="module-card">
-            <h3>Matrix</h3>
-            <p>列名を持たない表データを、二次元配列として組み替えたり抽出したりするための基盤クラスです。</p>
-            <div class="tab-switch">
-              <a href="matrix.html">Guide</a>
-              <a href="matrix-reference.html">Reference</a>
-            </div>
-          </article>
-          <article class="module-card">
-            <h3>DataTable</h3>
-            <p>ヘッダー付き表データを列名ベースで扱い、実務寄りの抽出や更新を読みやすく書くためのクラスです。</p>
-            <div class="tab-switch">
-              <a href="datatable.html">Guide</a>
-              <a href="datatable-reference.html">Reference</a>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-heading">
-          <p class="eyebrow">Choose</p>
-          <h2>使い分けの目安</h2>
-        </div>
-        <div class="grid three">
-          <article class="doc-note">
-            <h3>Vector を選ぶ</h3>
-            <p>列や行の値だけをまとめて扱い、条件判定や集計を独立した部品として使いたいときに向いています。</p>
-          </article>
-          <article class="doc-note">
-            <h3>Matrix を選ぶ</h3>
-            <p>列名を使わず、表全体を配列として切り出したり並べ替えたりする中間処理の土台に向いています。</p>
-          </article>
-          <article class="doc-note">
-            <h3>DataTable を選ぶ</h3>
-            <p>列名を基準に抽出や更新を書きたいときや、セル番地依存のコードを減らしたいときに向いています。</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-heading">
-          <p class="eyebrow">Flow</p>
-          <h2>読み進め方</h2>
-        </div>
-        <div class="step-grid">
-          <article class="step-card">
-            <h3>1. Home で選ぶ</h3>
-            <p>まずどのモジュールを使うかを決めます。</p>
-          </article>
-          <article class="step-card">
-            <h3>2. Guide でつかむ</h3>
-            <p>用途、導入方法、最小例を見て、使い始め方を把握します。</p>
-          </article>
-          <article class="step-card">
-            <h3>3. Reference で詰める</h3>
-            <p>API の詳細、前提条件、注意事項、ユースケースを確認します。</p>
-          </article>
-          <article class="step-card">
-            <h3>4. README とソースで補う</h3>
-            <p>実装に近い補足や内部動作は README とクラス本体をあわせて確認します。</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="section-heading">
-          <p class="eyebrow">Sources</p>
-          <h2>関連リンク</h2>
-        </div>
-        <div class="links-grid">
-          <a class="link-tile" href="https://github.com/kanko-tech/VBA_tools/blob/main/README.md" target="_blank" rel="noreferrer">
-            <span>Root README</span>
-            <small>リポジトリ全体の入口</small>
-          </a>
-          <a class="link-tile" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/README.md" target="_blank" rel="noreferrer">
-            <span>ExcelVBA README</span>
-            <small>ExcelVBA 配下の概要</small>
-          </a>
-          <a class="link-tile" href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA" target="_blank" rel="noreferrer">
-            <span>Source Directory</span>
-            <small>クラスファイルの配置場所</small>
-          </a>
+        <div class="directory-stack category-stack">
+          <a href="excelvba.html">Excel VBA<small>現在公開しているカテゴリ</small></a>
         </div>
       </section>
     </main>
+
   </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools" target="_blank" rel="noreferrer">GitHub<small>VBA_tools のリポジトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
 </body>
 </html>
+
+
+
+

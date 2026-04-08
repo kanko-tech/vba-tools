@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Matrix | VBA_tools</title>
+  <title>Matrix Overview | VBA_tools</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,117 +14,73 @@
   <div class="page-shell docs-layout">
     <header class="hero detail-hero">
       <div class="position-strip" aria-label="Page position">
-        <a class="position-chip" href="index.html">Docs Home</a>
-        <span class="position-chip">ExcelVBA</span>
-        <span class="position-chip">Matrix</span>
-        <span class="position-chip current">Guide</span>
+        <span class="position-chip">Tool Box</span>
+        <a class="position-chip" href="index.html">VBA_tools</a>
+        <a class="position-chip" href="excelvba.html">Excel VBA</a>
+        <a class="position-chip current" href="matrix.html">Matrix</a>
       </div>
       <div class="hero-meta">
-        <p class="eyebrow">Module Guide</p>
         <h1>Matrix</h1>
-        <p class="hero-subline">二次元表データ操作モジュールの概要ページ</p>
+        <p class="hero-subline">矩形データの読み込み、行抽出、列選択、転置のための 2 次元クラス</p>
       </div>
-      <p class="lead">
-        <code>Matrix</code> は 2 次元配列を扱うための基本クラスです。
-        列名を持たない表データを読み込み、行抽出、列選択、追加、転置、シート出力を組み合わせて扱えます。
-      </p>
-      <div class="detail-nav-stack">
-        <div class="context-bar" aria-label="Context links">
-          <a class="context-link" href="index.html"><strong>Docs Home</strong></a>
-          <a class="context-link" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Matrix/README.md" target="_blank" rel="noreferrer"><strong>Source README</strong></a>
-        </div>
-        <nav class="page-nav" aria-label="Module navigation">
-          <a href="vector.html">Vector</a>
-          <a href="matrix.html" class="current">Matrix</a>
-          <a href="datatable.html">DataTable</a>
-        </nav>
-        <div class="tab-switch" aria-label="Matrix page type">
-          <a href="matrix.html" class="current">Guide</a>
-          <a href="matrix-reference.html">Reference</a>
-        </div>
-      </div>
+
       <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
     </header>
 
     <div class="docs-columns">
       <main class="doc-main" id="doc-content">
-        <section class="panel" id="overview">
+        <section class="panel" id="purpose">
           <div class="section-heading">
-            <p class="eyebrow">Overview</p>
-            <h2>Matrix でできること</h2>
+            <p class="eyebrow">Purpose</p>
+            <h2>Matrix が向いている処理</h2>
           </div>
-          <div class="grid three">
-            <article class="module-card">
-              <h3>表の読み込み</h3>
-              <p><code>read_range</code> や <code>read_array</code> で、列名なしの表データをそのまま 2 次元配列として保持できます。</p>
-            </article>
-            <article class="module-card">
-              <h3>行列の切り出し</h3>
-              <p><code>filter_rows</code> <code>slice_rows</code> <code>select_columns</code> で必要な部分だけを抜き出せます。</p>
-            </article>
-            <article class="module-card">
-              <h3>更新と出力</h3>
-              <p><code>append_row</code> <code>append_column</code> <code>to_range</code> を使って加工結果を戻せます。</p>
-            </article>
+          <div class="metric-strip">
+            <div class="metric-card">
+              <strong>入力</strong>
+              <span>矩形の Range、2 次元配列、空行列</span>
+            </div>
+            <div class="metric-card">
+              <strong>得意な操作</strong>
+              <span>行抽出、列選択、行列の追加、転置</span>
+            </div>
+            <div class="metric-card">
+              <strong>主な出力</strong>
+              <span>新しい Matrix、または Range への書き戻し</span>
+            </div>
           </div>
+          <p class="section-intro">
+            シート上の範囲をいったん読み込んでから、必要な行だけ残し、
+            列を絞って別の場所へ出力する。そうした 2 次元処理の中間状態を安全に扱いたいときに役立ちます。
+          </p>
         </section>
 
-        <section class="panel" id="when">
+        <section class="panel" id="fit">
           <div class="section-heading">
             <p class="eyebrow">When to Use</p>
-            <h2>向いている場面</h2>
+            <h2>利用シーンの目安</h2>
           </div>
-          <div class="summary-list">
-            <article class="summary-item">
-              <strong>列名より表構造を重視したいとき</strong>
-              シンプルに「行と列の塊」として扱いたい処理に向いています。
+          <div class="note-grid">
+            <article class="note-card">
+              <h3>表の一部だけを抜き出したい</h3>
+              <p>ブールマスクによる行抽出や、列番号指定による列選択を段階的に進めたいときに向きます。</p>
             </article>
-            <article class="summary-item">
-              <strong>DataTable より一段低いレベルで組み立てたいとき</strong>
-              行抽出や列追加を配列ベースで組みたい場合の土台として使いやすいです。
+            <article class="note-card">
+              <h3>シートと処理ロジックを分けたい</h3>
+              <p>シート上の範囲操作を最初と最後に閉じ込め、中間の変換は Matrix 内で完結できます。</p>
             </article>
-            <article class="summary-item">
-              <strong>最終的に列名をあと付けしたいとき</strong>
-              途中までは <code>Matrix</code> で加工し、最後に <code>DataTable.read_matrix</code> へ渡す流れにも向いています。
-            </article>
-          </div>
-        </section>
-
-        <section class="panel" id="setup">
-          <div class="section-heading">
-            <p class="eyebrow">Setup</p>
-            <h2>導入方法</h2>
-          </div>
-          <div class="step-grid">
-            <article class="step-card">
-              <h3>1. インポート</h3>
-              <p><code>src/ExcelVBA/Matrix/Matrix.cls</code> を VBA プロジェクトへ取り込みます。</p>
-            </article>
-            <article class="step-card">
-              <h3>2. 読み込み</h3>
-              <p><code>read_range</code> でシート上の表を読み込みます。ヘッダーは値の一部として扱われます。</p>
-            </article>
-            <article class="step-card">
-              <h3>3. 加工</h3>
-              <p>行抽出、列選択、列追加などを組み合わせて必要な形へ整えます。</p>
-            </article>
-            <article class="step-card">
-              <h3>4. 出力</h3>
-              <p><code>to_range</code> で結果を書き戻すか、<code>DataTable</code> の入力に渡します。</p>
+            <article class="note-card">
+              <h3>DataTable の土台にしたい</h3>
+              <p>最終的に列名付き表へ進めたい場合も、まずは Matrix で形を整えてから <code>DataTable.read_matrix</code> に渡せます。</p>
             </article>
           </div>
         </section>
 
-        <section class="panel" id="quickstart">
+        <section class="panel" id="quick-flow">
           <div class="section-heading">
-            <p class="eyebrow">Quick Start</p>
-            <h2>最小例</h2>
+            <p class="eyebrow">Quick Flow</p>
+            <h2>最小フロー</h2>
           </div>
-          <p class="card-copy">
-            以下は <code>A2:C5</code> の表を読み込み、ブール配列で行を抽出したあと、
-            1 列目と 3 列目だけを残して <code>F2</code> へ書き出す例です。
-          </p>
-          <pre class="code-block"><code>Sub Sample_Matrix_QuickStart()
+          <pre class="code-block"><code>Sub Sample_Matrix_Flow()
     Dim mat As New Matrix
     Dim filtered As Matrix
     Dim picked As Matrix
@@ -139,77 +95,57 @@
 
     Set filtered = mat.filter_rows(mask)
     Set picked = filtered.select_columns(Array(1, 3))
-
     picked.to_range Sheet1.Range("F2")
 End Sub</code></pre>
-        </section>
-
-        <section class="panel" id="workflow">
-          <div class="section-heading">
-            <p class="eyebrow">Workflow</p>
-            <h2>よくある使い方</h2>
-          </div>
-          <div class="grid two">
-            <article class="doc-note">
-              <h3>中間処理の土台にする</h3>
-              <p>ヘッダーを意識せずにまず表を整えたいときは、<code>Matrix</code> のまま加工を進めたほうが単純です。</p>
-            </article>
-            <article class="doc-note">
-              <h3>DataTable へ引き渡す</h3>
-              <p>列名が必要になった段階で <code>DataTable.read_matrix</code> に渡せば、責務を分けて扱えます。</p>
-            </article>
+          <div class="status-line">
+            <span class="status-pill">読み込み</span>
+            <span class="status-pill">行抽出</span>
+            <span class="status-pill">列選択</span>
+            <span class="status-pill">出力</span>
           </div>
         </section>
 
-        <section class="panel" id="methods">
+        <section class="panel" id="page-map">
           <div class="section-heading">
-            <p class="eyebrow">Method Groups</p>
-            <h2>メソッドの見取り図</h2>
+            <p class="eyebrow">Page Map</p>
+            <h2>このモジュールの読み方</h2>
+          </div>
+          <div class="directory-stack">
+            <a href="matrix-setup.html">導入方法<small>クラス追加、読み込み、空行列の作成まで</small></a>
+            <a href="matrix-examples.html">使い方<small>行抽出、列選択、転置を実務寄りに確認</small></a>
+            <a href="matrix-reference.html">リファレンス<small>プロパティと主要メソッド群を一覧化</small></a>
+          </div>
+        </section>
+
+        <section class="panel" id="relations">
+          <div class="section-heading">
+            <p class="eyebrow">Relations</p>
+            <h2>他モジュールとの関係</h2>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>カテゴリ</th>
-                  <th>主なメソッド</th>
-                  <th>用途</th>
+                  <th>連携先</th>
+                  <th>つなぎ方</th>
+                  <th>向いている場面</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>読込</td>
-                  <td><code>read_range</code> <code>read_array</code> <code>read_empty</code></td>
-                  <td>表データや空の行列を構築する</td>
+                  <td>Vector</td>
+                  <td>Vector のマスクを <code>filter_rows</code> に渡す</td>
+                  <td>条件判定を列単位で作ってから行抽出したいとき</td>
                 </tr>
                 <tr>
-                  <td>参照</td>
-                  <td><code>row_count</code> <code>col_count</code> <code>item</code> <code>row_values</code></td>
-                  <td>現在の表構造や個別値を確認する</td>
+                  <td>DataTable</td>
+                  <td>整形後に <code>read_matrix</code> へ渡す</td>
+                  <td>列名付きの表へ段階的に昇格させたいとき</td>
                 </tr>
                 <tr>
-                  <td>抽出</td>
-                  <td><code>filter_rows</code> <code>slice_rows</code> <code>select_columns</code></td>
-                  <td>必要な行や列だけを取り出す</td>
-                </tr>
-                <tr>
-                  <td>更新</td>
-                  <td><code>set_column_values</code> <code>append_row</code> <code>append_column</code></td>
-                  <td>表の内容とサイズを変更する</td>
-                </tr>
-                <tr>
-                  <td>整形</td>
-                  <td><code>transpose</code></td>
-                  <td>行列を入れ替えて別の向きへ整える</td>
-                </tr>
-                <tr>
-                  <td>出力</td>
-                  <td><code>to_range</code></td>
-                  <td>整えた結果をシートへ戻す</td>
-                </tr>
-                <tr>
-                  <td>状態管理</td>
-                  <td><code>clear</code></td>
-                  <td>インスタンスを初期化して再利用しやすくする</td>
+                  <td>Sheet</td>
+                  <td><code>to_range</code> で矩形のまま出力する</td>
+                  <td>集計前後の表を別領域に並べて確認したいとき</td>
                 </tr>
               </tbody>
             </table>
@@ -219,20 +155,34 @@ End Sub</code></pre>
 
       <aside class="doc-sidebar">
         <div class="sidebar-card">
+          <p class="eyebrow">Matrix Pages</p>
+          <h2>ローカルナビ</h2>
+          <nav class="local-nav-list" aria-label="Matrix local navigation">
+            <a href="matrix-setup.html">導入方法</a>
+            <a href="matrix-examples.html">使い方</a>
+            <a href="matrix-reference.html">リファレンス</a>
+          </nav>
+          <hr class="sidebar-sep">
           <p class="eyebrow">On This Page</p>
-          <h2>目次</h2>
+          <h3>目次</h3>
           <nav data-toc-source="#doc-content"></nav>
-          <div class="doc-note">
-            <h3>次に見るページ</h3>
-            <p>プロパティとメソッドの全解説は Reference ページにまとめています。</p>
-            <div class="tab-switch">
-              <a href="matrix-reference.html">Matrix Reference</a>
-            </div>
-          </div>
           <button class="mobile-toc-close" type="button" data-toc-close>閉じる</button>
         </div>
       </aside>
     </div>
   </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/Matrix" target="_blank" rel="noreferrer">GitHub<small>Matrix のソースディレクトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
 </body>
 </html>
+
+
+
+

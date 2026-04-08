@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vector Setup | VBA_tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="page.js" defer></script>
+</head>
+<body>
+  <div class="page-shell docs-layout">
+    <header class="hero detail-hero">
+      <div class="position-strip" aria-label="Page position">
+        <span class="position-chip">Tool Box</span>
+        <a class="position-chip" href="index.html">VBA_tools</a>
+        <a class="position-chip" href="excelvba.html">Excel VBA</a>
+        <a class="position-chip" href="vector.html">Vector</a>
+        <span class="position-chip current">導入方法</span>
+      </div>
+      <div class="hero-meta">
+        <h1>Vector</h1>
+        <p class="hero-subline">1 次元データの読み込み、条件マスク、型変換、集計のためのクラス</p>
+      </div>
+
+      <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
+    </header>
+
+    <div class="docs-columns">
+      <main class="doc-main" id="doc-content">
+        <section class="panel" id="import">
+          <div class="section-heading">
+            <p class="eyebrow">Import</p>
+            <h2>取り込むファイル</h2>
+          </div>
+          <div class="directory-stack">
+        <a href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Vector/Vector.cls" target="_blank" rel="noreferrer">Vector.cls<small>このモジュールだけで単独利用できます</small></a>
+          </div>
+        </section>
+
+        <section class="panel" id="steps">
+          <div class="section-heading">
+            <p class="eyebrow">Steps</p>
+            <h2>導入手順</h2>
+          </div>
+          <div class="number-grid">
+            <article class="number-card"><strong>1</strong><p>VBE でクラスモジュールをインポートし、名前が <code>Vector</code> であることを確認します。</p></article>
+            <article class="number-card"><strong>2</strong><p>シート上に 1 列または 1 行のサンプルデータを用意します。</p></article>
+            <article class="number-card"><strong>3</strong><p><code>read_col_range</code> か <code>read_row_range</code> を呼び、読み込みます。</p></article>
+            <article class="number-card"><strong>4</strong><p><code>count</code> や <code>to_range_vertical</code> で正しく読み込めたか確認します。</p></article>
+          </div>
+        </section>
+
+        <section class="panel" id="first-run">
+          <div class="section-heading">
+            <p class="eyebrow">First Run</p>
+            <h2>最初の実行コード</h2>
+          </div>
+          <pre class="code-block"><code>Sub Vector_FirstRun()
+    Dim vec As New Vector
+
+    vec.read_col_range Sheet1.Range("B2:B5")
+    vec.fill_empty 0
+
+    Debug.Print vec.count
+    vec.to_range_vertical Sheet1.Range("D2")
+End Sub</code></pre>
+        </section>
+
+        <section class="panel" id="checks">
+          <div class="section-heading">
+            <p class="eyebrow">Checks</p>
+            <h2>確認ポイント</h2>
+          </div>
+          <ul class="checklist">
+            <li>対象 Range が 1 列または 1 行になっていること</li>
+            <li>数値集計前に必要なら <code>fill_empty</code> や <code>cast_to_double_safe</code> を通すこと</li>
+            <li>別モジュールへ渡す場合は戻り値のマスクの長さをそろえること</li>
+          </ul>
+        </section>
+      </main>
+
+      <aside class="doc-sidebar">
+        <div class="sidebar-card">
+          <p class="eyebrow">Vector Pages</p>
+          <h2>ローカルナビ</h2>
+          <nav class="local-nav-list">
+            <a href="vector-setup.html" class="current">導入方法</a>
+            <a href="vector-examples.html">使い方</a>
+            <a href="vector-reference.html">リファレンス</a>
+          </nav>
+          <hr class="sidebar-sep">
+          <p class="eyebrow">On This Page</p>
+          <h3>目次</h3>
+          <nav data-toc-source="#doc-content"></nav>
+          <button class="mobile-toc-close" type="button" data-toc-close>閉じる</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/Vector" target="_blank" rel="noreferrer">GitHub<small>Vector のソースディレクトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
+</body>
+</html>
+
+
+
+

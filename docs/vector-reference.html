@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vector | VBA_tools</title>
+  <title>Vector Reference | VBA_tools</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,296 +14,184 @@
   <div class="page-shell docs-layout">
     <header class="hero detail-hero">
       <div class="position-strip" aria-label="Page position">
-        <a class="position-chip" href="index.html">Docs Home</a>
-        <span class="position-chip">ExcelVBA</span>
-        <span class="position-chip">Vector</span>
-        <span class="position-chip current">Reference</span>
+        <span class="position-chip">Tool Box</span>
+        <a class="position-chip" href="index.html">VBA_tools</a>
+        <a class="position-chip" href="excelvba.html">Excel VBA</a>
+        <a class="position-chip" href="vector.html">Vector</a>
+        <span class="position-chip current">リファレンス</span>
       </div>
       <div class="hero-meta">
-        <p class="eyebrow">Technical Detail</p>
         <h1>Vector</h1>
-        <p class="hero-subline">一次元データ操作モジュールの API 詳細</p>
+        <p class="hero-subline">1 次元データの読み込み、条件マスク、型変換、集計のためのクラス</p>
       </div>
-      <p class="lead">
-        <code>Vector</code> は、一次元データを読んで、条件判定・変換・集計・出力までを行うクラスです。
-        このページでは、クラスの位置づけ、プロパティ、メソッドの使い方を、入力例と結果つきで確認できます。
-      </p>
-      <div class="detail-nav-stack">
-        <div class="context-bar" aria-label="Context links">
-          <a class="context-link" href="vector.html"><strong>Back to Guide</strong></a>
-          <a class="context-link" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/Vector/Vector.cls" target="_blank" rel="noreferrer"><strong>Source Class</strong></a>
-        </div>
-        <nav class="page-nav" aria-label="Module navigation">
-          <a href="vector.html" class="current">Vector</a>
-          <a href="matrix.html">Matrix</a>
-          <a href="datatable.html">DataTable</a>
-        </nav>
-        <div class="tab-switch" aria-label="Vector page type">
-          <a href="vector.html">Guide</a>
-          <a href="vector-reference.html" class="current">Reference</a>
-        </div>
-      </div>
+
       <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
     </header>
 
     <div class="docs-columns">
       <main class="doc-main" id="doc-content">
-        <section class="panel" id="class-design">
+        <section class="panel" id="class-outline">
           <div class="section-heading">
-            <p class="eyebrow">CLASS DESIGN</p>
-            <h2>クラスデザイン</h2>
+            <p class="eyebrow">Class Outline</p>
+            <h2>クラス概要</h2>
           </div>
-          <div class="reference-intro">
-            <article class="class-rel class-overview">
-              <strong>Vector の位置づけ</strong><br>
-              Vector は 1 列または 1 行ぶんの値を、そのまま一次元配列として保持する軽量クラスです。
-              行列全体を扱う <code>Matrix</code> や、列名付き表を扱う <code>DataTable</code> よりも粒度が小さく、
-              「特定列だけを条件判定したい」「数値列だけを集計したい」といった局面で活きます。
-            </article>
-            <div class="info-pills">
-              <div class="info-pill"><strong>責務</strong> 一次元データの読込・条件判定・変換・集計</div>
-              <div class="info-pill"><strong>主な入力</strong> Range / 一次元配列</div>
-              <div class="info-pill"><strong>主な出力</strong> 配列 / Double / シート出力</div>
-            </div>
+          <div class="info-pills">
+            <div class="info-pill"><strong>責務</strong> 1 次元データの読み込み、条件判定、型変換、集計、書き戻し</div>
+            <div class="info-pill"><strong>主な入力</strong> <code>Range</code>、1 次元配列</div>
+            <div class="info-pill"><strong>主な出力</strong> <code>Variant</code> 配列、<code>Double</code>、Range</div>
           </div>
         </section>
 
         <section class="panel" id="properties">
           <div class="section-heading">
             <p class="eyebrow">Properties</p>
-            <h2>プロパティ</h2>
+            <h2>主要プロパティ</h2>
           </div>
-          <div class="api-directory">
-            <details class="api-entry">
-              <summary>
-                <span class="api-entry-main">
-                  <span class="api-kicker">Property</span>
-                  <span class="api-name-row"><strong>is_loaded</strong> <code>Property Get is_loaded() As Boolean</code></span>
-                </span>
-                <span class="api-summary-copy">読込済みかを返す</span>
-              </summary>
-              <div class="api-body">
-                <p>値が読み込まれているかを返します。事前チェック用です。</p>
-              </div>
-            </details>
-            <details class="api-entry">
-              <summary>
-                <span class="api-entry-main">
-                  <span class="api-kicker">Property</span>
-                  <span class="api-name-row"><strong>data</strong> <code>Property Get data() As Variant</code></span>
-                </span>
-                <span class="api-summary-copy">内部配列を返す</span>
-              </summary>
-              <div class="api-body">
-                <p>内部の一次元配列を複製して返します。</p>
-              </div>
-            </details>
-            <details class="api-entry">
-              <summary>
-                <span class="api-entry-main">
-                  <span class="api-kicker">Property</span>
-                  <span class="api-name-row"><strong>count</strong> <code>Property Get count() As Long</code></span>
-                </span>
-                <span class="api-summary-copy">要素数を返す</span>
-              </summary>
-              <div class="api-body">
-                <p>現在保持している要素数を返します。</p>
-              </div>
-            </details>
-            <details class="api-entry">
-              <summary>
-                <span class="api-entry-main">
-                  <span class="api-kicker">Property</span>
-                  <span class="api-name-row"><strong>item</strong> <code>Property Get item(ByVal index As Long) As Variant</code></span>
-                </span>
-                <span class="api-summary-copy">指定位置の値を返す</span>
-              </summary>
-              <div class="api-body">
-                <p>インデックス指定で個別の値を返します。</p>
-              </div>
-            </details>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>名前</th>
+                  <th>型</th>
+                  <th>意味</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>is_loaded</code></td>
+                  <td><code>Boolean</code></td>
+                  <td>データが読み込まれているかを返します。</td>
+                </tr>
+                <tr>
+                  <td><code>data</code></td>
+                  <td><code>Variant</code></td>
+                  <td>内部の 1 次元配列を返します。</td>
+                </tr>
+                <tr>
+                  <td><code>count</code></td>
+                  <td><code>Long</code></td>
+                  <td>要素数を返します。</td>
+                </tr>
+                <tr>
+                  <td><code>item(index)</code></td>
+                  <td><code>Variant</code></td>
+                  <td>指定位置の要素を返します。</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
         <section class="panel" id="methods">
           <div class="section-heading">
-            <p class="eyebrow">Methods</p>
-            <h2>メソッド</h2>
+            <p class="eyebrow">Method Groups</p>
+            <h2>主要メソッド群</h2>
           </div>
-
-          <div class="method-group" id="loading-methods">
-            <h3>読込メソッド</h3>
-            <p class="method-group-note">シートや配列から一次元データを読み込む入口です。</p>
-
-            <details class="api-entry">
-              <summary>
-                <span class="api-entry-main">
-                  <span class="api-kicker">Method</span>
-                  <span class="api-name-row"><strong>read_col_range</strong> <code>Sub read_col_range(ByVal rng As Range)</code></span>
-                </span>
-                <span class="api-summary-copy">1 列の Range を読む</span>
-              </summary>
-              <div class="api-body">
-                <p>縦方向の 1 列範囲を読み込みます。</p>
-                <div class="example-stack">
-                  <div class="example-block">
-                    <span class="example-label">入力例</span>
-                    <div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>A</th></tr></thead><tbody><tr><td>10</td></tr><tr><td>20</td></tr><tr><td>30</td></tr></tbody></table></div>
-                  </div>
-                  <div class="example-block">
-                    <span class="example-label">コード例</span>
-                    <pre class="api-mini-code"><code>Dim vec As New Vector
-vec.read_col_range Sheet1.Range("A1:A3")</code></pre>
-                  </div>
-                  <div class="example-block">
-                    <span class="example-label">実行結果</span>
-                    <pre class="result-box"><code>vec.count = 3
-vec.data = Array(10, 20, 30)</code></pre>
-                  </div>
-                </div>
-              </div>
-            </details>
-
-            <details class="api-entry">
-              <summary>
-                <span class="api-entry-main">
-                  <span class="api-kicker">Method</span>
-                  <span class="api-name-row"><strong>read_row_range</strong> <code>Sub read_row_range(ByVal rng As Range)</code></span>
-                </span>
-                <span class="api-summary-copy">1 行の Range を読む</span>
-              </summary>
-              <div class="api-body">
-                <p>横方向の 1 行範囲を読み込みます。</p>
-                <div class="example-stack">
-                  <div class="example-block">
-                    <span class="example-label">入力例</span>
-                    <div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>4</td><td>5</td><td>6</td></tr></tbody></table></div>
-                  </div>
-                  <div class="example-block">
-                    <span class="example-label">コード例</span>
-                    <pre class="api-mini-code"><code>Dim vec As New Vector
-vec.read_row_range Sheet1.Range("A1:C1")</code></pre>
-                  </div>
-                  <div class="example-block">
-                    <span class="example-label">実行結果</span>
-                    <pre class="result-box"><code>vec.count = 3
-vec.data = Array(4, 5, 6)</code></pre>
-                  </div>
-                </div>
-              </div>
-            </details>
-
-            <details class="api-entry">
-              <summary>
-                <span class="api-entry-main">
-                  <span class="api-kicker">Method</span>
-                  <span class="api-name-row"><strong>read_array</strong> <code>Sub read_array(ByVal arr As Variant)</code></span>
-                </span>
-                <span class="api-summary-copy">一次元配列を読む</span>
-              </summary>
-              <div class="api-body">
-                <p>既存の一次元配列をそのまま読み込みます。</p>
-                <div class="example-stack">
-                  <div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>arr = Array("A", "B", "C")</code></pre></div>
-                  <div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Dim vec As New Vector
-vec.read_array arr</code></pre></div>
-                  <div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>vec.data = Array("A", "B", "C")</code></pre></div>
-                </div>
-              </div>
-            </details>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>カテゴリ</th>
+                  <th>主なメソッド</th>
+                  <th>戻り値 / 効果</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>読込</td>
+                  <td><code>read_col_range</code> <code>read_row_range</code> <code>read_array</code></td>
+                  <td>内部に 1 次元データをロードします。</td>
+                </tr>
+                <tr>
+                  <td>確認</td>
+                  <td><code>type_names</code></td>
+                  <td>要素ごとの型名配列を返します。</td>
+                </tr>
+                <tr>
+                  <td>条件判定</td>
+                  <td><code>eq</code> <code>ne</code> <code>gt</code> <code>ge</code> <code>lt</code> <code>le</code> <code>is_empty</code></td>
+                  <td>Boolean 配列のマスクを返します。</td>
+                </tr>
+                <tr>
+                  <td>型変換 / 整形</td>
+                  <td><code>cast_to_double_safe</code> <code>cast_to_string_safe</code> <code>cast_to_date_safe</code> <code>fill_empty</code> <code>map</code></td>
+                  <td>内部データを更新します。</td>
+                </tr>
+                <tr>
+                  <td>集計</td>
+                  <td><code>unique</code> <code>sum</code> <code>mean</code></td>
+                  <td>ユニーク値配列または数値を返します。</td>
+                </tr>
+                <tr>
+                  <td>出力</td>
+                  <td><code>to_range_vertical</code> <code>to_range_horizontal</code></td>
+                  <td>シートへ縦または横に書き戻します。</td>
+                </tr>
+                <tr>
+                  <td>状態管理</td>
+                  <td><code>clear</code></td>
+                  <td>内部状態を空に戻します。</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+        </section>
 
-          <div class="method-group" id="inspection-methods">
-            <h3>確認メソッド</h3>
-            <p class="method-group-note">中身の型や値の状態を把握するためのメソッドです。</p>
-
-            <details class="api-entry">
-              <summary>
-                <span class="api-entry-main">
-                  <span class="api-kicker">Method</span>
-                  <span class="api-name-row"><strong>type_names</strong> <code>Function type_names() As Variant</code></span>
-                </span>
-                <span class="api-summary-copy">型名の配列を返す</span>
-              </summary>
-              <div class="api-body">
-                <p>各要素の型を文字列で返します。</p>
-                <div class="example-stack">
-                  <div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array(10, "A", Empty)</code></pre></div>
-                  <div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>Dim types As Variant
-types = vec.type_names()</code></pre></div>
-                  <div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>types = Array("Integer", "String", "Empty")</code></pre></div>
-                </div>
-              </div>
-            </details>
+        <section class="panel" id="signatures">
+          <div class="section-heading">
+            <p class="eyebrow">Key Signatures</p>
+            <h2>よく使うシグネチャ</h2>
           </div>
+          <pre class="code-block"><code>Public Sub read_col_range(ByVal rng As Range)
+Public Function gt(ByVal threshold As Variant) As Variant
+Public Sub cast_to_double_safe(Optional ByVal emptyAsZero As Boolean = False, ...)
+Public Function sum() As Double
+Public Sub to_range_vertical(ByVal topLeft As Range)</code></pre>
+        </section>
 
-          <div class="method-group" id="condition-methods">
-            <h3>条件判定メソッド</h3>
-            <p class="method-group-note">抽出に使うブール配列を作るメソッド群です。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>eq</strong> <code>Function eq(ByVal matchValue As Variant) As Variant</code></span></span><span class="api-summary-copy">一致マスク</span></summary><div class="api-body"><p>値が一致する要素だけ <code>True</code> にします。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array("OK", "NG", "OK")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mask = vec.eq("OK")</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mask = Array(True, False, True)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>ne</strong> <code>Function ne(ByVal matchValue As Variant) As Variant</code></span></span><span class="api-summary-copy">不一致マスク</span></summary><div class="api-body"><p>値が一致しない要素だけ <code>True</code> にします。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array("OK", "NG", "OK")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mask = vec.ne("OK")</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mask = Array(False, True, False)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>gt</strong> <code>Function gt(ByVal threshold As Variant) As Variant</code></span></span><span class="api-summary-copy">より大きい条件</span></summary><div class="api-body"><p>しきい値より大きい要素を判定します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array(10, 25, 40)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mask = vec.gt(20)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mask = Array(False, True, True)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>ge</strong> <code>Function ge(ByVal threshold As Variant) As Variant</code></span></span><span class="api-summary-copy">以上条件</span></summary><div class="api-body"><p>しきい値以上の要素を判定します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array(10, 20, 30)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mask = vec.ge(20)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mask = Array(False, True, True)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>lt</strong> <code>Function lt(ByVal threshold As Variant) As Variant</code></span></span><span class="api-summary-copy">より小さい条件</span></summary><div class="api-body"><p>しきい値より小さい要素を判定します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array(10, 20, 30)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mask = vec.lt(20)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mask = Array(True, False, False)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>le</strong> <code>Function le(ByVal threshold As Variant) As Variant</code></span></span><span class="api-summary-copy">以下条件</span></summary><div class="api-body"><p>しきい値以下の要素を判定します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array(10, 20, 30)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mask = vec.le(20)</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mask = Array(True, True, False)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>is_empty</strong> <code>Function is_empty(Optional ByVal treatBlankStringAsEmpty As Boolean = True) As Variant</code></span></span><span class="api-summary-copy">空欄判定</span></summary><div class="api-body"><p>Empty や空文字を空欄として判定します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array("", Empty, "A")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>mask = vec.is_empty()</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>mask = Array(True, True, False)</code></pre></div></div></div></details>
+        <section class="panel" id="notes">
+          <div class="section-heading">
+            <p class="eyebrow">Usage Notes</p>
+            <h2>利用上の注意</h2>
           </div>
-
-          <div class="method-group" id="transform-methods">
-            <h3>変換・更新メソッド</h3>
-            <p class="method-group-note">値の型や内容を整えるためのメソッド群です。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>cast_to_double_safe</strong> <code>Sub cast_to_double_safe(...)</code></span></span><span class="api-summary-copy">Double へ変換</span></summary><div class="api-body"><p>数値化できる値を安全に <code>Double</code> へ変換します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array("10", "", "30")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>vec.cast_to_double_safe emptyAsZero:=True</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>vec.data = Array(10#, 0#, 30#)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>cast_to_string_safe</strong> <code>Sub cast_to_string_safe(...)</code></span></span><span class="api-summary-copy">文字列へ変換</span></summary><div class="api-body"><p>全要素を比較しやすい文字列へそろえます。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array(100, Empty, 300)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>vec.cast_to_string_safe</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>vec.data = Array("100", "", "300")</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>cast_to_date_safe</strong> <code>Sub cast_to_date_safe(...)</code></span></span><span class="api-summary-copy">Date へ変換</span></summary><div class="api-body"><p>日付として読める値だけを Date にします。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array("2026/04/01", "not date", "2026/04/03")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>vec.cast_to_date_safe</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>vec.data = Array(#2026/04/01#, Empty, #2026/04/03#)</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>fill_empty</strong> <code>Sub fill_empty(ByVal fillValue As Variant, ...)</code></span></span><span class="api-summary-copy">空欄を埋める</span></summary><div class="api-body"><p>空欄や空文字を指定値で埋めます。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array("", Empty, "A")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>vec.fill_empty "(未設定)"</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>vec.data = Array("(未設定)", "(未設定)", "A")</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>map</strong> <code>Sub map(ByVal functionName As String)</code></span></span><span class="api-summary-copy">関数を一括適用</span></summary><div class="api-body"><p>各要素に同じ変換関数を適用します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array(" A ", "B ", " C")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>' TrimValue(value, index) を別途定義
-vec.map "TrimValue"</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>vec.data = Array("A", "B", "C")</code></pre></div></div></div></details>
-          </div>
-
-          <div class="method-group" id="aggregate-methods">
-            <h3>集計メソッド</h3>
-            <p class="method-group-note">一覧や合計値など、計算結果を得るためのメソッドです。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>unique</strong> <code>Function unique() As Variant</code></span></span><span class="api-summary-copy">重複を除く</span></summary><div class="api-body"><p>順序を保ったまま重複を除外します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array("A", "B", "A", "C")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>res = vec.unique()</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>res = Array("A", "B", "C")</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>sum</strong> <code>Function sum() As Double</code></span></span><span class="api-summary-copy">合計を返す</span></summary><div class="api-body"><p>数値要素の合計を返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array(10#, 20#, 30#)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>total = vec.sum()</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>total = 60</code></pre></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>mean</strong> <code>Function mean() As Double</code></span></span><span class="api-summary-copy">平均を返す</span></summary><div class="api-body"><p>数値要素の平均を返します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array(10#, 20#, 30#)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>avg = vec.mean()</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>avg = 20</code></pre></div></div></div></details>
-          </div>
-
-          <div class="method-group" id="output-methods">
-            <h3>出力メソッド</h3>
-            <p class="method-group-note">結果をシートへ書き戻すためのメソッドです。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>to_range_vertical</strong> <code>Sub to_range_vertical(ByVal topLeft As Range)</code></span></span><span class="api-summary-copy">縦に出力する</span></summary><div class="api-body"><p>ベクトルを 1 列として書き出します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array("A", "B", "C")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>vec.to_range_vertical Sheet1.Range("E2")</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>E</th></tr></thead><tbody><tr><td>A</td></tr><tr><td>B</td></tr><tr><td>C</td></tr></tbody></table></div></div></div></div></details>
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>to_range_horizontal</strong> <code>Sub to_range_horizontal(ByVal topLeft As Range)</code></span></span><span class="api-summary-copy">横に出力する</span></summary><div class="api-body"><p>ベクトルを 1 行として書き出します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array("A", "B", "C")</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>vec.to_range_horizontal Sheet1.Range("E2")</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><div class="table-wrap compact-table"><table class="example-table"><thead><tr><th>E</th><th>F</th><th>G</th></tr></thead><tbody><tr><td>A</td><td>B</td><td>C</td></tr></tbody></table></div></div></div></div></details>
-          </div>
-
-          <div class="method-group" id="state-methods">
-            <h3>状態管理メソッド</h3>
-            <p class="method-group-note">インスタンスの内部状態をリセットするときに使います。</p>
-
-            <details class="api-entry"><summary><span class="api-entry-main"><span class="api-kicker">Method</span><span class="api-name-row"><strong>clear</strong> <code>Sub clear()</code></span></span><span class="api-summary-copy">内部状態を初期化する</span></summary><div class="api-body"><p>保持していた値と読込状態を初期化します。</p><div class="example-stack"><div class="example-block"><span class="example-label">入力例</span><pre class="result-box"><code>vec.data = Array(10, 20, 30)</code></pre></div><div class="example-block"><span class="example-label">コード例</span><pre class="api-mini-code"><code>vec.clear</code></pre></div><div class="example-block"><span class="example-label">実行結果</span><pre class="result-box"><code>vec.is_loaded = False</code></pre></div></div></div></details>
-          </div>
+          <ul class="checklist">
+            <li>読込前に集計や判定を呼ぶと成立しないため、先に <code>read_*</code> 系を実行します。</li>
+            <li>数値集計前は <code>cast_to_double_safe</code> や <code>fill_empty</code> で前提をそろえるのが安全です。</li>
+            <li>戻り値のマスクは Variant 配列なので、そのまま Matrix や DataTable の抽出に流用できます。</li>
+          </ul>
         </section>
       </main>
 
       <aside class="doc-sidebar">
         <div class="sidebar-card">
+          <p class="eyebrow">Vector Pages</p>
+          <h2>ローカルナビ</h2>
+          <nav class="local-nav-list" aria-label="Vector local navigation">
+            <a href="vector-setup.html">導入方法</a>
+            <a href="vector-examples.html">使い方</a>
+            <a href="vector-reference.html" class="current">リファレンス</a>
+          </nav>
+          <hr class="sidebar-sep">
           <p class="eyebrow">On This Page</p>
-          <h2>目次</h2>
+          <h3>目次</h3>
           <nav data-toc-source="#doc-content"></nav>
-          <div class="doc-note">
-            <h3>関連ページ</h3>
-            <p>導入と利用場面は Guide ページで確認できます。</p>
-            <div class="tab-switch">
-              <a href="vector.html">Vector Guide</a>
-            </div>
-          </div>
           <button class="mobile-toc-close" type="button" data-toc-close>閉じる</button>
         </div>
       </aside>
     </div>
   </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/Vector" target="_blank" rel="noreferrer">GitHub<small>Vector のソースディレクトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
 </body>
 </html>
+
+
+
+

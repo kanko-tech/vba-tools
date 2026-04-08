@@ -1,59 +1,22 @@
-# ExcelVBA
+# Excel VBA
 
-`src/ExcelVBA` ディレクトリには、Excel VBA で再利用しやすいクラスモジュールを整理して配置しています。  
-現在は、一次元配列を扱う `Vector`、二次元配列を扱う `Matrix`、列名付きテーブルを扱う `DataTable` を中心に構成しています。
+`src/ExcelVBA` には、Excel VBA で使うクラスモジュール群を配置しています。  
+現在は `Vector`、`Matrix`、`DataTable` を中心に構成しています。
 
-## まず見るページ
+## 入口
 
-- ルート README: `README.md`
-- GitHub Pages トップ: [Overview](https://kanko-tech.github.io/VBA_tools/)
-- `Vector` 詳細: [Vector Guide](https://kanko-tech.github.io/VBA_tools/vector.html)
-- `Matrix` 詳細: [Matrix Guide](https://kanko-tech.github.io/VBA_tools/matrix.html)
-- `DataTable` 詳細: [DataTable Guide](https://kanko-tech.github.io/VBA_tools/datatable.html)
+- GitHub Pages: [Excel VBA](https://kanko-tech.github.io/VBA_tools/excelvba.html)
+- Repository Root: `README.md`
+- Source Directory: `src/ExcelVBA`
 
-## モジュールの使い分け
+## Modules
 
-### `Vector`
+- `Vector`
+- `Matrix`
+- `DataTable`
 
-単一列や単一行の値をまとめて処理したいときに使います。
+## Pages
 
-- `Range` から 1 次元配列を読み込む
-- 比較マスクを作る
-- 型変換や欠損補完を行う
-- 合計や平均を計算する
-
-### `Matrix`
-
-列名を持たない表データ全体を扱いたいときに使います。
-
-- 矩形 `Range` を 2 次元配列として読む
-- 行抽出や列選択を行う
-- 行追加、列追加、列更新を行う
-- シートへ一括出力する
-
-### `DataTable`
-
-列名つきの実務データを読みやすく操作したいときに使います。
-
-- ヘッダー付きの表を読む
-- 列名ベースで抽出や更新を行う
-- 列追加や並べ替えを行う
-- `Vector` や `Matrix` と連携する
-
-## 推奨する読み進め方
-
-1. まずこの README で全体像をつかむ
-2. [Overview](https://kanko-tech.github.io/VBA_tools/) でディレクトリ構成と使い分けを確認する
-3. 必要なモジュールの詳細ページを見る
-4. 実装ファイルと同梱 README で個別メソッドを確認する
-
-## ディレクトリ一覧
-
-- `src/ExcelVBA/Vector`
-- `src/ExcelVBA/Matrix`
-- `src/ExcelVBA/DataTable`
-
-## 詳細ドキュメントの位置づけ
-
-この README は入口に絞り、詳しい説明や使い方は GitHub Pages 側へ段階的に移しています。  
-実装に密着したメソッド仕様は、各ディレクトリの README もあわせて参照してください。
+- [Vector](https://kanko-tech.github.io/VBA_tools/vector.html)
+- [Matrix](https://kanko-tech.github.io/VBA_tools/matrix.html)
+- [DataTable](https://kanko-tech.github.io/VBA_tools/datatable.html)

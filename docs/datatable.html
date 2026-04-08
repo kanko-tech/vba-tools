@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DataTable | VBA_tools</title>
+  <title>DataTable Overview | VBA_tools</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -14,117 +14,73 @@
   <div class="page-shell docs-layout">
     <header class="hero detail-hero">
       <div class="position-strip" aria-label="Page position">
-        <a class="position-chip" href="index.html">Docs Home</a>
-        <span class="position-chip">ExcelVBA</span>
-        <span class="position-chip">DataTable</span>
-        <span class="position-chip current">Guide</span>
+        <span class="position-chip">Tool Box</span>
+        <a class="position-chip" href="index.html">VBA_tools</a>
+        <a class="position-chip" href="excelvba.html">Excel VBA</a>
+        <a class="position-chip current" href="datatable.html">DataTable</a>
       </div>
       <div class="hero-meta">
-        <p class="eyebrow">Module Guide</p>
         <h1>DataTable</h1>
-        <p class="hero-subline">列名付き表データモジュールの概要ページ</p>
+        <p class="hero-subline">ヘッダー付きの表を列名ベースで扱うためのクラス</p>
       </div>
-      <p class="lead">
-        <code>DataTable</code> は、ヘッダー行を持つ表データを列名ベースで扱うためのクラスです。
-        条件抽出、列の追加・更新、並べ替え、シートへの書き戻しを、セル座標ではなく列名中心で書けます。
-      </p>
-      <div class="detail-nav-stack">
-        <div class="context-bar" aria-label="Context links">
-          <a class="context-link" href="index.html"><strong>Docs Home</strong></a>
-          <a class="context-link" href="https://github.com/kanko-tech/VBA_tools/blob/main/src/ExcelVBA/DataTable/README.md" target="_blank" rel="noreferrer"><strong>Source README</strong></a>
-        </div>
-        <nav class="page-nav" aria-label="Module navigation">
-          <a href="vector.html">Vector</a>
-          <a href="matrix.html">Matrix</a>
-          <a href="datatable.html" class="current">DataTable</a>
-        </nav>
-        <div class="tab-switch" aria-label="DataTable page type">
-          <a href="datatable.html" class="current">Guide</a>
-          <a href="datatable-reference.html">Reference</a>
-        </div>
-      </div>
+
       <button class="toc-toggle" type="button" data-toc-toggle aria-expanded="false">目次を開く</button>
     </header>
 
     <div class="docs-columns">
       <main class="doc-main" id="doc-content">
-        <section class="panel" id="overview">
+        <section class="panel" id="purpose">
           <div class="section-heading">
-            <p class="eyebrow">Overview</p>
-            <h2>DataTable でできること</h2>
+            <p class="eyebrow">Purpose</p>
+            <h2>DataTable が向いている処理</h2>
           </div>
-          <div class="grid three">
-            <article class="module-card">
-              <h3>ヘッダー付き表の読込</h3>
-              <p><code>read_range</code> で、シート上の表を列名つきデータとして読み込めます。</p>
-            </article>
-            <article class="module-card">
-              <h3>列名ベースの抽出と更新</h3>
-              <p><code>filter_by_equals</code> や <code>set_by_equals</code> で、意味の分かるコードを書きやすくなります。</p>
-            </article>
-            <article class="module-card">
-              <h3>シートへの再出力</h3>
-              <p><code>to_range</code> でヘッダー込みの結果をそのまま書き戻せます。</p>
-            </article>
+          <div class="metric-strip">
+            <div class="metric-card">
+              <strong>入力</strong>
+              <span>ヘッダー付きの Range または Matrix</span>
+            </div>
+            <div class="metric-card">
+              <strong>得意な操作</strong>
+              <span>列名解決、条件抽出、列追加、値更新、並び替え</span>
+            </div>
+            <div class="metric-card">
+              <strong>主な出力</strong>
+              <span>絞り込まれた DataTable、列配列、Range</span>
+            </div>
           </div>
-        </section>
-
-        <section class="panel" id="audience">
-          <div class="section-heading">
-            <p class="eyebrow">Audience</p>
-            <h2>向いている場面</h2>
-          </div>
-          <div class="summary-list">
-            <article class="summary-item">
-              <strong>列名つきの実務データを扱うとき</strong>
-              売上表、一覧表、CSV 由来のデータなど、列名を前提に処理を書くケースに向いています。
-            </article>
-            <article class="summary-item">
-              <strong>セル番地のハードコードを減らしたいとき</strong>
-              <code>"status"</code> や <code>"amount"</code> を基準に処理できるため、保守時の見通しが良くなります。
-            </article>
-            <article class="summary-item">
-              <strong>Vector と Matrix を組み合わせたいとき</strong>
-              列単位の判定は <code>Vector</code>、内部の表構造は <code>Matrix</code> と連携して扱えます。
-            </article>
-          </div>
-        </section>
-
-        <section class="panel" id="setup">
-          <div class="section-heading">
-            <p class="eyebrow">Setup</p>
-            <h2>導入方法</h2>
-          </div>
-          <div class="step-grid">
-            <article class="step-card">
-              <h3>1. インポート</h3>
-              <p><code>DataTable.cls</code> に加えて、依存する <code>Vector.cls</code> と <code>Matrix.cls</code> も取り込みます。</p>
-            </article>
-            <article class="step-card">
-              <h3>2. 読み込み</h3>
-              <p>ヘッダー行を含む範囲を <code>read_range</code> へ渡し、列名と本文を読み込みます。</p>
-            </article>
-            <article class="step-card">
-              <h3>3. 加工</h3>
-              <p>抽出、更新、並べ替え、列追加を列名ベースで組み合わせます。</p>
-            </article>
-            <article class="step-card">
-              <h3>4. 出力</h3>
-              <p><code>to_range</code> で、ヘッダー付きの結果をシートへ戻します。</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="panel" id="quickstart">
-          <div class="section-heading">
-            <p class="eyebrow">Quick Start</p>
-            <h2>最小例</h2>
-          </div>
-          <p class="card-copy">
-            以下は <code>A1:D8</code> の表をヘッダー行付きで読み込み、
-            <code>status = "OK"</code> の行だけを抽出して <code>A10</code> から書き出す例です。
+          <p class="section-intro">
+            「status 列が OK の行だけ残す」「amount 列を更新する」「必要な列だけ別表にする」といった、
+            列名を基準にした実務処理を明快に書きたいときに向いています。
           </p>
-          <pre class="code-block"><code>Sub Sample_DataTable_QuickStart()
+        </section>
+
+        <section class="panel" id="fit">
+          <div class="section-heading">
+            <p class="eyebrow">When to Use</p>
+            <h2>利用シーンの目安</h2>
+          </div>
+          <div class="note-grid">
+            <article class="note-card">
+              <h3>列位置ではなく列名で書きたい</h3>
+              <p><code>"status"</code> や <code>"amount"</code> のような名前で処理を書くことで、列順の変更に強くなります。</p>
+            </article>
+            <article class="note-card">
+              <h3>抽出と更新を続けて行いたい</h3>
+              <p><code>filter_by_equals</code>、<code>set_by_mask</code>、<code>sort_by</code> などを同じ表オブジェクトの文脈で扱えます。</p>
+            </article>
+            <article class="note-card">
+              <h3>Vector / Matrix と役割分担したい</h3>
+              <p>列単位の前処理は Vector、矩形の構造調整は Matrix、列名付きの業務ロジックは DataTable が担当します。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel" id="quick-flow">
+          <div class="section-heading">
+            <p class="eyebrow">Quick Flow</p>
+            <h2>最小フロー</h2>
+          </div>
+          <pre class="code-block"><code>Sub Sample_DataTable_Flow()
     Dim tbl As New DataTable
     Dim okRows As DataTable
 
@@ -133,69 +89,55 @@
 
     okRows.to_range Sheet1.Range("A10"), includeHeader:=True
 End Sub</code></pre>
-        </section>
-
-        <section class="panel" id="benefits">
-          <div class="section-heading">
-            <p class="eyebrow">Benefits</p>
-            <h2>使うメリット</h2>
-          </div>
-          <div class="grid two">
-            <article class="doc-note">
-              <h3>読みやすい条件処理</h3>
-              <p><code>filter_by_equals("status", "OK")</code> のように、処理対象がそのままコードに現れます。</p>
-            </article>
-            <article class="doc-note">
-              <h3>保守しやすい更新処理</h3>
-              <p>列の並びが変わっても、列名が同じであればコードを大きく崩さずに済みます。</p>
-            </article>
+          <div class="status-line">
+            <span class="status-pill">表読込</span>
+            <span class="status-pill">列名解決</span>
+            <span class="status-pill">条件抽出</span>
+            <span class="status-pill">出力</span>
           </div>
         </section>
 
-        <section class="panel" id="method-map">
+        <section class="panel" id="page-map">
           <div class="section-heading">
-            <p class="eyebrow">Method Groups</p>
-            <h2>メソッドの見取り図</h2>
+            <p class="eyebrow">Page Map</p>
+            <h2>このモジュールの読み方</h2>
+          </div>
+          <div class="directory-stack">
+            <a href="datatable-setup.html">導入方法<small>依存クラス、読み込み手順、最初の抽出まで</small></a>
+            <a href="datatable-examples.html">使い方<small>絞り込み、列追加、更新、並び替えを確認</small></a>
+            <a href="datatable-reference.html">リファレンス<small>プロパティと主要メソッド群を一覧化</small></a>
+          </div>
+        </section>
+
+        <section class="panel" id="relations">
+          <div class="section-heading">
+            <p class="eyebrow">Relations</p>
+            <h2>他モジュールとの関係</h2>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>カテゴリ</th>
-                  <th>主なメソッド</th>
-                  <th>用途</th>
+                  <th>連携先</th>
+                  <th>つなぎ方</th>
+                  <th>向いている場面</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>読込</td>
-                  <td><code>read_range</code> <code>read_matrix</code></td>
-                  <td>表データを DataTable として構築する</td>
+                  <td>Matrix</td>
+                  <td><code>read_matrix</code> で整形済みの行列を受け取る</td>
+                  <td>先に行列を加工してから表として扱いたいとき</td>
                 </tr>
                 <tr>
-                  <td>参照</td>
-                  <td><code>column_names</code> <code>matrix</code> <code>col</code> <code>col_vector</code></td>
-                  <td>列や内部データを取り出す</td>
+                  <td>Vector</td>
+                  <td><code>col_vector</code> で列を Vector に変換する</td>
+                  <td>特定列だけ型変換や集計をしたいとき</td>
                 </tr>
                 <tr>
-                  <td>抽出</td>
-                  <td><code>filter_by_equals</code> <code>filter_by_in</code> <code>select_columns</code></td>
-                  <td>必要な行と列だけを残す</td>
-                </tr>
-                <tr>
-                  <td>更新</td>
-                  <td><code>add_column</code> <code>rename_column</code> <code>set_by_mask</code> <code>sort_by</code></td>
-                  <td>表の構造と値を変更する</td>
-                </tr>
-                <tr>
-                  <td>出力</td>
-                  <td><code>to_range</code></td>
-                  <td>シートへヘッダー付きの結果を戻す</td>
-                </tr>
-                <tr>
-                  <td>状態管理</td>
-                  <td><code>clear</code></td>
-                  <td>インスタンスを初期化して再利用しやすくする</td>
+                  <td>Sheet</td>
+                  <td><code>to_range</code> でヘッダー付きのまま出力する</td>
+                  <td>抽出結果を報告用シートへ転記したいとき</td>
                 </tr>
               </tbody>
             </table>
@@ -205,20 +147,34 @@ End Sub</code></pre>
 
       <aside class="doc-sidebar">
         <div class="sidebar-card">
+          <p class="eyebrow">DataTable Pages</p>
+          <h2>ローカルナビ</h2>
+          <nav class="local-nav-list" aria-label="DataTable local navigation">
+            <a href="datatable-setup.html">導入方法</a>
+            <a href="datatable-examples.html">使い方</a>
+            <a href="datatable-reference.html">リファレンス</a>
+          </nav>
+          <hr class="sidebar-sep">
           <p class="eyebrow">On This Page</p>
-          <h2>目次</h2>
+          <h3>目次</h3>
           <nav data-toc-source="#doc-content"></nav>
-          <div class="doc-note">
-            <h3>次に見るページ</h3>
-            <p>プロパティとメソッドの全解説は Reference ページにまとめています。</p>
-            <div class="tab-switch">
-              <a href="datatable-reference.html">DataTable Reference</a>
-            </div>
-          </div>
           <button class="mobile-toc-close" type="button" data-toc-close>閉じる</button>
         </div>
       </aside>
     </div>
   </div>
+  <footer class="site-footer">
+    <div class="footer-link-block">
+      <div class="inline-link-list">
+        <a href="https://github.com/kanko-tech/VBA_tools/tree/main/src/ExcelVBA/DataTable" target="_blank" rel="noreferrer">GitHub<small>DataTable のソースディレクトリ</small></a>
+      </div>
+    </div>
+    <p class="footer-title"><strong>kanko-techのツールボックス</strong></p>
+    <p>Copyright &copy; 2026 kanko-tech All Rights Reserved.</p>
+  </footer>
 </body>
 </html>
+
+
+
+
